@@ -9,8 +9,8 @@ To run this demo:
  1. Install demo dependencies
     1. `cd demo`
     1. `npm ci`
- 1. We need to link things up for the demo to work properly in dev mode using the local version of the forms package.
-    1. `cd .. && npm run link`
+ 1. We need to link things up for the demo to work properly in dev mode using the local version of the forms package. (Run this from the demo directory).
+    1. `npm run link`
  1. Start the demo
     1. `cd demo`
     1. `npm start`

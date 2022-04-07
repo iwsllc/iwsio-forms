@@ -10,7 +10,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "link": "npm-run-all -s link:*",
+    "link:forms-self": "cd .. && npm link",
+    "link:forms-to-react": "cd .. && npm link ./demo/node_modules/react",
+    "link:forms": "npm link @iwsio/forms"
   },
   "eslintConfig": {
     "extends": [

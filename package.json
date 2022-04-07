@@ -9,11 +9,7 @@
     "prebuild": "rimraf dist samples/dist",
     "build": "npm-run-all build:*",
     "build:js": "babel src --out-dir dist --minified --no-comments --source-maps --compact --ignore \"test/**/*\",\"**/*.test.js\"",
-    "build:ts": "tsc",
-    "link": "npm-run-all -s link:*",
-    "link:self": "npm link",
-    "link:react": "npm link ./demo/node_modules/react",
-    "link:demo": "cd demo && npm link @iwsio/forms"
+    "build:ts": "tsc"
   },
   "repository": {
     "type": "git",
