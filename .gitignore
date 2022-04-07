@@ -1,0 +1,13 @@
+.DS_Store
+.orig
+.npmrc
+.zip
+.log
+.yalc
+*.tgz
+
+node_modules
+/dist
+
+Thumbs.db
+coverage
