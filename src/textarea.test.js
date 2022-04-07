@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { render } from '@testing-library/react'
+import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import TextArea from './textarea'
-import { act } from 'react-dom/test-utils'
 
 describe('TextArea', function() {
   const InputContainer = ({ changeSpy, init, formClass, initError, fakeErrorValue, validationMessageComponent, ...props }) => {
