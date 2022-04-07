@@ -25,20 +25,18 @@ const DemoForm1 = () => {
 
   return (
     <ValidatedForm onValidSubmit={handleSubmit}>
-      <div className="col">
-        <label className="form-label" htmlFor='name'>Name</label>
-        <TextInput className="form-control" id="name" name="name" error={number1Error} value={name} onChange={(e) => { setName(e.target.value); if (e.target.value === '12') setNumber1Error('custom error') }} required validationMessageComponent={<div className="form-text invalid-feedback" />} />
+      <label className="form-label" htmlFor='name'>Name</label>
+      <TextInput className="form-control" id="name" name="name" error={number1Error} value={name} onChange={(e) => { setName(e.target.value); if (e.target.value === '12') setNumber1Error('custom error') }} required validationMessageComponent={<div className="form-text invalid-feedback" />} />
 
-        <label className="form-label" htmlFor="number1">Number</label>
-        <TextInput className="form-control" type="number" step="0.1" min="0" max="1" id="number1" name="number1" value={number1} onChange={(e) => { setNumber1(e.target.value) }}  validationMessageComponent={<div className="form-text invalid-feedback" />} />
+      <label className="form-label" htmlFor="number1">Number</label>
+      <TextInput className="form-control" type="number" step="0.1" min="0" max="1" id="number1" name="number1" value={number1} onChange={(e) => { setNumber1(e.target.value) }}  validationMessageComponent={<div className="form-text invalid-feedback" />} />
 
 
-        <label className="form-label" htmlFor="number2">Number (as Text) (&gt; 0, &gt;= 1)</label>
-        <TextInput className="form-control" error={number2Error} id="number2" name="number2" value={number2} onChange={handleNumber2Change} pattern="^[\d.]*$"  validationMessageComponent={<div className="form-text invalid-feedback" />} />
-      </div>
-      <div className="col">
-        <button type="submit">Submit</button>
-      </div>
+      <label className="form-label" htmlFor="number2">Number (as Text) (&gt; 0, &gt;= 1)</label>
+      <TextInput className="form-control" error={number2Error} id="number2" name="number2" value={number2} onChange={handleNumber2Change} pattern="^[\d.]*$"  validationMessageComponent={<div className="form-text invalid-feedback" />} />
+      <p className="mt-3">
+        <button type="submit" className="btn btn-primary">Submit</button>
+      </p>
     </ValidatedForm>
   )
 }
