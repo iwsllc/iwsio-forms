@@ -23,6 +23,6 @@
     "jsx": "react-jsx",
     "outDir": "dist"
   },
-  "exclude": ["**/*.test.*"],
+  "exclude": ["**/*.test.*", "src/setupTests.js"],
   "include": ["src/**/*"]
 }
