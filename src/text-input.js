@@ -15,6 +15,7 @@ export const TextInput = forwardRef(({ error, name, onChange, value, type, valid
 
   function localOnChange(e) {
     e.target.setCustomValidity('')
+    setLocalError(undefined)
     onChange(e)
     e.target.checkValidity()
   }
@@ -32,7 +33,7 @@ export const TextInput = forwardRef(({ error, name, onChange, value, type, valid
   }, [handleInvalid, localRef])
 
   useEffect(() => {
-    if (!error) return localRef.current?.setCustomValidity('')
+    if (error == null) return localRef.current?.setCustomValidity('')
     localRef.current.setCustomValidity(error)
   }, [localRef, error])
 
@@ -49,7 +50,7 @@ export const TextInput = forwardRef(({ error, name, onChange, value, type, valid
       {validationMessageComponent
         ? React.Children.map(validationMessageComponent, (child, cx) => (
           // NOTE: child.props should override this custom data-testid
-          React.cloneElement(child, { 'data-testid': `text-input-${name}-child-${cx}`, ...child.props }, localError)
+          React.cloneElement(child, { 'data-testid': `text-input-${name}-child-${cx}`, ...child.props }, localError || error)
         ))
         : null}
     </>
