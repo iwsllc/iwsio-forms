@@ -17,7 +17,9 @@ describe('TextInput', function() {
           onChange={(e) => {
             changeSpy(e.target.value)
             setValue(e.target.value)
-            if (e.target.value === fakeErrorValue) setError('upstream error')
+            if (e.target.value === fakeErrorValue) {
+              setError('upstream error')
+            }
           }}
           validationMessageComponent={validationMessageComponent}
           {...props}
@@ -46,13 +48,16 @@ describe('TextInput', function() {
     // no errors, should clear validation state on the dom.
     await userEvent.type(input, '3')
     expect(input.value).toEqual('123')
-    expect(input.validationMessage).toEqual('')
+    waitFor(() => {
+      expect(input.validationMessage).toEqual('') // happens in effect
+    })
   })
 
   it('should show validation if manual error provided', async function() {
     const handleSpy = jest.fn()
     const { getByTestId } = render(<InputContainer changeSpy={handleSpy} init="" required initError="custom error" validationMessageComponent={<span />} />)
     expect(getByTestId('text-input-test-child-0')).toHaveTextContent('custom error')
+    expect(handleSpy).not.toHaveBeenCalled()
   })
 
   it('should always show validation child DOM if provided', async function() {
