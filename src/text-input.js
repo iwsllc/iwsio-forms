@@ -13,12 +13,13 @@ export const TextInput = forwardRef(({ error, name, onChange, value, type, valid
 
   const [localError, setLocalError] = useState(error)
 
-  function localOnChange(e) {
-    e.target.setCustomValidity('')
+  const localOnChange = useCallback((e) => {
     setLocalError(undefined)
     onChange(e)
+    if (error) e.target.setCustomValidity(error)
+    else e.target.setCustomValidity('')
     e.target.checkValidity()
-  }
+  }, [error])
 
   const handleInvalid = useCallback((e) => {
     setLocalError(localRef.current.validationMessage)
@@ -33,9 +34,14 @@ export const TextInput = forwardRef(({ error, name, onChange, value, type, valid
   }, [handleInvalid, localRef])
 
   useEffect(() => {
-    if (error == null) return localRef.current?.setCustomValidity('')
+    if (error == null) {
+      if (localRef.current.validationMessage === localError) setLocalError(undefined)
+      localRef.current?.setCustomValidity('')
+      return
+    }
     localRef.current.setCustomValidity(error)
-  }, [localRef, error])
+    setLocalError(error)
+  }, [error])
 
   return (
     <>
