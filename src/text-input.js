@@ -13,13 +13,11 @@ export const TextInput = forwardRef(({ error, name, onChange, value, type, valid
 
   const [localError, setLocalError] = useState(error)
 
-  const localOnChange = useCallback((e) => {
+  function localOnChange(e) {
     setLocalError(undefined)
     onChange(e)
-    if (error) e.target.setCustomValidity(error)
-    else e.target.setCustomValidity('')
     e.target.checkValidity()
-  }, [error])
+  }
 
   const handleInvalid = useCallback((e) => {
     setLocalError(localRef.current.validationMessage)
