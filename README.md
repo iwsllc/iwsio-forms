@@ -2,7 +2,7 @@
 
 [![Tests CI](https://github.com/IWSLLC/iwsio-forms/actions/workflows/test.yaml/badge.svg)](https://github.com/IWSLLC/iwsio-forms/actions/workflows/test.yaml)
 
-This is just a basic module to simplify the use of browser validation in forms with React.
+This is just a basic module to simplify the use of browser validation in forms with React. This package is **incomplete**. I've pretty much only worked with/tested `TextInput` for demos. If there is any interest in this, I'll continue to improve and expand it.
 
 ## MDN Forms validation
 https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation
