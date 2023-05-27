@@ -1,15 +1,10 @@
 {
-  "name": "@iwsio/forms",
-  "version": "0.1.4",
+  "name": "@iwsio/forms-root",
+  "version": "0.2.0",
   "description": "Simple library with useful React forms components and browser validation.",
-  "main": "dist/index.js",
-  "types": "./dist/index.d.ts",
-  "scripts": {
-    "test": "jest --verbose",
-    "prebuild": "rimraf dist samples/dist",
-    "build": "npm-run-all build:*",
-    "build:js": "babel src --out-dir dist --minified --no-comments --source-maps --compact --ignore \"test/**/*\",\"**/*.test.js\"",
-    "build:ts": "tsc"
+  "files": [],
+  "engines": {
+    "node": ">=18"
   },
   "repository": {
     "type": "git",
@@ -28,41 +23,20 @@
   "bugs": {
     "url": "https://github.com/iwsllc/iws-forms/issues"
   },
+  "scripts": {
+    "test": "npm run test -ws",
+    "dev": "npm-run-all -p dev:*",
+    "build": "npm run build -w forms && npm run build -w demo",
+    "dev:demo": "npm start -w demo",
+    "dev:forms": "npm run watch -w forms"
+  },
   "homepage": "https://github.com/iwsllc/iws-forms#readme",
-  "browserslist": [
-    "defaults"
+  "workspaces": [
+    "forms",
+    "demo"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.17.6",
-    "@babel/core": "^7.17.5",
-    "@babel/eslint-parser": "^7.17.0",
-    "@babel/preset-env": "^7.16.11",
-    "@babel/preset-react": "^7.16.7",
-    "@babel/register": "^7.17.0",
-    "@babel/runtime": "^7.17.2",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.0.0",
-    "@testing-library/user-event": "^14.0.4",
-    "@types/jest": "^27.4.1",
-    "babel-jest": "^27.5.1",
-    "eslint": "^8.10.0",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jest": "^26.1.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-react": "^7.29.3",
-    "jest": "^27.5.1",
-    "npm-run-all": "^4.1.5",
-    "prop-types": "^15.8.1",
-    "regenerator-runtime": "^0.13.9",
-    "ts-node": "^10.7.0",
-    "typescript": "^4.6.2"
-  },
-  "peerDependencies": {
-    "@babel/runtime": "*",
-    "react": "^18"
-  },
-  "dependencies": {
-    "react": "^18.0.0"
+    "demo": "file:demo",
+    "markdown-it": "^13.0.1"
   }
 }
