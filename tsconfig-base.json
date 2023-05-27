@@ -1,0 +1,22 @@
+
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"composite": true,
+		"declaration": true,
+		"declarationMap": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"incremental": true,
+		"inlineSourceMap": true,
+		"jsx": "react-jsx",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"module": "CommonJS",
+		"moduleResolution": "node16",
+		"resolveJsonModule": true,
+		"skipDefaultLibCheck": true,
+		"skipLibCheck": true,
+		"target": "ES5",
+		"types": ["vitest/globals"]
+	}
+}
