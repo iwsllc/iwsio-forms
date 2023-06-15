@@ -12,6 +12,6 @@ jobs:
           node-version: 18
       - run: npm ci -w forms
       - run: npm run build -w forms
-      - run: npm publish --access public
+      - run: npm publish -w forms --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

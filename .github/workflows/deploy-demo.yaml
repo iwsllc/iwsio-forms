@@ -1,7 +1,10 @@
 name: Deploy Demo
 
 on:
-  workflow_call:
+  push:
+    branches: [ main ]
+    paths:
+      - 'demo/**'
 
 jobs:
   deploy:
