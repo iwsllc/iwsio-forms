@@ -34,7 +34,7 @@
   "bugs": {
     "url": "https://github.com/iwsllc/iws-forms/issues"
   },
-  "homepage": "https://github.com/iwsllc/iws-forms#readme",
+  "homepage": "https://forms.iws.io",
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^14.0.0",

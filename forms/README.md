@@ -2,7 +2,9 @@
 
 [![Tests CI](https://github.com/IWSLLC/iwsio-forms/actions/workflows/test.yaml/badge.svg)](https://github.com/IWSLLC/iwsio-forms/actions/workflows/test.yaml)
 
-I found myself recreating similar code in every proejct I worked on that performed the simple task of local state management with controlled inputs and client validation. So I abstracted it out into this library for re-use. 
+## For more info and working examples, see the [documentation site](https://forms.iws.io)
+
+I found myself recreating similar code in every project I worked on that performed the simple task of local state management with controlled inputs and client validation. So I abstracted it out into this library for re-use. 
 
 ## Install
  - `npm install @iwsio/forms`
