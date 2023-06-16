@@ -43,7 +43,7 @@ export const UncontrolledFieldWrapper = () => {
 
 export const FullyControlledFieldWrapper = () => {
 	const fieldState = useFieldState({ field: '' })
-	const { onChange: fieldStateOnChange, setFieldError: setError } = fieldState
+	const { handleChange: fieldStateOnChange, setFieldError: setError } = fieldState
 	const handleChange = (e) => {
 		fieldStateOnChange(e)
 		if (e.target.value === 'abc') setError(e.target.name, "Cannot enter 'abc'.")
@@ -129,7 +129,7 @@ describe('Input', function() {
 
 	it('should work as an controlled checkbox input', async() => {
 		const FullyControlledCheckboxTest = () => {
-			const { onChange, fields, fieldErrors, setFieldError } = useFieldState({ field: '' })
+			const { handleChange: onChange, fields, fieldErrors, setFieldError } = useFieldState({ field: '' })
 			return <Input name="field" value="123" checked={fields.field === '123'} type="checkbox" onChange={onChange} required data-testid="field" fieldError={fieldErrors.field} onFieldError={setFieldError} />
 		}
 
@@ -153,7 +153,7 @@ describe('Input', function() {
 
 	it('should work as an controlled radio input', async() => {
 		const FullyControlledRadioTest = () => {
-			const { onChange, fields, fieldErrors, setFieldError } = useFieldState({ field: '' })
+			const { handleChange: onChange, fields, fieldErrors, setFieldError } = useFieldState({ field: '' })
 			return (
 				<>
 					<Input name="field" value="1" checked={fields.field === '1'} type="radio" onChange={onChange} required data-testid="field1" fieldError={fieldErrors.field} onFieldError={setFieldError} />

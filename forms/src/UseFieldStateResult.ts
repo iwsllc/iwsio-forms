@@ -26,5 +26,11 @@ export type UseFieldStateResult = {
 	 * @param e passthrough of native change event arguments
 	 * @returns Returns the latest field value state after change applied.
 	 */
+	handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => Record<string, string>;
+	/**
+	 * @deprecated Please use handleChange
+	 * @param e passthrough of native change event arguments
+	 * @returns Returns the latest field value state after change applied.
+	 */
 	onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => Record<string, string>;
 };

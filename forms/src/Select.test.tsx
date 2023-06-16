@@ -57,7 +57,7 @@ export const UncontrolledFieldWrapper = () => {
 
 export const FullyControlledFieldWrapper = () => {
 	const fieldState = useFieldState({ field: '' })
-	const { onChange: fieldStateOnChange, setFieldError: setError } = fieldState
+	const { handleChange: fieldStateOnChange, setFieldError: setError } = fieldState
 	const handleChange = (e) => {
 		fieldStateOnChange(e)
 		if (e.target.value === '2') setError(e.target.name, "Cannot select '2'.")

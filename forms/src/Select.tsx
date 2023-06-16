@@ -48,7 +48,7 @@ Select.displayName = 'Select'
 
 export const SelectField = forwardRef<Ref, SelectProps>(({ name, onChange, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
-	const { onChange: managerOnChange, fields, setFieldError, fieldErrors } = useFieldManager()
+	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors } = useFieldManager()
 
 	const handleOnChange: ChangeEventHandler<Ref> = (e) => {
 		managerOnChange(e)

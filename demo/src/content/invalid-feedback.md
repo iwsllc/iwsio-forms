@@ -39,15 +39,11 @@ export const InvalidFeedbackDemo = () => {
 	return (
 		<FieldManager fieldState={fieldState}> {/** FieldManager just shares fieldState **/}
 			<ValidatedForm onValidSubmit={handleSubmit}>
-				<fieldset className="border p-5">
+				<fieldset>
 					<legend>Invalid Feedback</legend>
-					<div className="flex flex-col gap-5">
-						<Field />
-						<div className="flex flex-row gap-4">
-							<button type="reset" className="btn" onClick={() => resetForm()}>Reset</button>
-							<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>Submit</button>
-						</div>
-					</div>
+					<Field />
+					<button type="reset" className="btn" onClick={() => resetForm()}>Reset</button>
+					<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>Submit</button>
 				</fieldset>
 			</ValidatedForm>
 		</FieldManager>
@@ -58,3 +54,6 @@ export const InvalidFeedbackDemo = () => {
 </div>
 
 ## Try it out!
+
+You can find the [code for this demo here](https://github.com/iwsllc/iwsio-forms/blob/main/demo/src/samples/InvalidFeedback.tsx).
+

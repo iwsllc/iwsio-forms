@@ -62,11 +62,11 @@ Next there is a [`useFieldState`](/use-field-state) hook, which simplifies state
 
 ```javascript
 const Sample = () => {
-	const { fields, onChange } = useFieldState({field1: ''})
+	const { fields, handleChange } = useFieldState({field1: ''})
 
 	return (
 		<form>
-			<input type="text" name="field1" required pattern="^\w+$" onChange={onChange} value={fields.field1} />
+			<input type="text" name="field1" required pattern="^\w+$" onChange={handleChange} value={fields.field1} />
 		</form>
 	)
 }

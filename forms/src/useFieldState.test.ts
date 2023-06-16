@@ -7,14 +7,14 @@ describe('useFieldState', () => {
 	test('When initializing, getting, and setting fields', async() => {
 		const { result } = renderHook(() => useFieldState({ firstName: '', lastName: '' }, { firstName: 'fred', lastName: 'flintstone' }))
 
-		const { fields, fieldErrors, onChange } = result.current
+		const { fields, fieldErrors, handleChange } = result.current
 		expect(fields.firstName).toEqual('')
 		expect(fields.lastName).toEqual('')
 		expect(Object.keys(fieldErrors).length).toEqual(0)
 
 		let updates
 		act(() => {
-			updates = onChange({ target: { name: 'firstName', value: '123' } } as any)
+			updates = handleChange({ target: { name: 'firstName', value: '123' } } as any)
 		})
 
 		expect(updates.firstName).toEqual('123')

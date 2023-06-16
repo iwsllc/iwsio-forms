@@ -50,7 +50,7 @@ Input.defaultProps = {
 
 export const InputField = forwardRef<Ref, InputProps>(({ type, name, onChange, value, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
-	const { onChange: managerOnChange, fields, setFieldError, fieldErrors } = useFieldManager()
+	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors } = useFieldManager()
 
 	const handleOnChange: ChangeEventHandler<Ref> = (e) => {
 		managerOnChange(e)

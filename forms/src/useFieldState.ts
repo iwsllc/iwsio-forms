@@ -4,9 +4,9 @@ import omitBy from 'lodash.omitby'
 import { UseFieldStateResult } from './UseFieldStateResult'
 
 /**
- * Setup handler and state for a form.
+ * Manages field state via change handler, values and error state.
  * @param initValues Default values for all fields; should include blank strings for fields without values.
- * @returns Form helpers
+ * @param defaultValues Default values to be set when invoking `reset()`
  */
 export function useFieldState(initValues: Record<string, any>, defaultValues?: Record<string, string>): UseFieldStateResult {
 	const defaultFieldValues = defaultValues != null ? defaults(omitBy(initValues, (v) => v == null || v === ''), defaultValues) : initValues
@@ -27,7 +27,7 @@ export function useFieldState(initValues: Record<string, any>, defaultValues?: R
 		setFields(defaultFieldValues)
 	}
 
-	const onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => Record<string, any> = (e) => {
+	const handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => Record<string, string> = (e) => {
 		let value = e.target.value
 		const name = e.target.name
 		let updatedFields
@@ -53,6 +53,7 @@ export function useFieldState(initValues: Record<string, any>, defaultValues?: R
 		fieldErrors,
 		setFieldError,
 		setFieldErrors,
-		onChange
+		handleChange,
+		onChange: handleChange // alias
 	}
 }
