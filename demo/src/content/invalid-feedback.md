@@ -9,26 +9,46 @@ To do this now, you would follow this pattern with `useFieldManager()` hook to g
 <div class="not-prose border-2">
 
 ```javascript
-const InvalidFeedbackLabel = ({ children }) => <label className="peer-invalid:visible text-error font-light">{children}</label>
+const InvalidFeedbackLabel = ({ children }) => <label className="peer-invalid:visible font-light">{children}</label>
 
-const Fields = () => {
+export const Field = () => {
 	const { fieldErrors } = useFieldManager()
+	const hasError = useMemo(() => fieldErrors?.field != null, [fieldErrors])
+
 	return (
-		<>
-			<InputField name="field" required /> {/** value, checked, onChange, fieldError, etc are all automatically bound in InputField; regular <input/> requires bindings **/}
-			{ /**Here, we're placing feedback dom adjacent to field **/}
+		<label className={`flex flex-row gap-4 items-center ${hasError ? 'text-error' : ''}`}>
+			Generic field:
+			<InputField name="field" required className={`input input-bordered ${hasError ? 'input-error' : ''}`} /> {/** value, checked, onChange, fieldError, etc are all automatically bound in InputField; regular <input/> requires bindings **/}
+			{/** Here, we're placing feedback dom adjacent to field **/}
 			{fieldErrors?.field && <InvalidFeedbackLabel>{fieldErrors.field}</InvalidFeedbackLabel>}
-		</>
+		</label>
 	)
 }
 
-const Form = () => {
-	const fieldState = useFieldState({field: ''})
-	const { fieldErrors } = fieldState // NOTE: you can destructure/access fieldErrors at the top level too.
+export const InvalidFeedbackDemo = () => {
+	const [success, setSuccess] = useState(false)
+	const fieldState = useFieldState({ field: '' })
+	const { setField } = fieldState
+	const handleSubmit = () => {
+		setSuccess(true)
+	}
+	const reset = () => {
+		setField('field', '')
+		setSuccess(false)
+	}
 	return (
 		<FieldManager fieldState={fieldState}> {/** FieldManager just shares fieldState **/}
-			<ValidatedForm>
-				<Fields />
+			<ValidatedForm onValidSubmit={handleSubmit}>
+				<fieldset className="border p-5">
+					<legend>Invalid Feedback</legend>
+					<div className="flex flex-col gap-5">
+						<Field />
+						<div className="flex flex-row gap-4">
+							<button type="reset" className="btn" onClick={() => reset()}>Reset</button>
+							<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>Submit</button>
+						</div>
+					</div>
+				</fieldset>
 			</ValidatedForm>
 		</FieldManager>
 	)
