@@ -5,6 +5,7 @@ import { FetchPage } from './FetchPage'
 import { InputDemo } from './samples/InputDemo'
 import { InputCheckDemo } from './samples/InputCheckDemo'
 import { RawExamples } from './samples/RawExamples'
+import { InvalidFeedbackDemo } from './samples/InvalidFeedback'
 
 export const Routes = () => {
 	return (
@@ -13,7 +14,8 @@ export const Routes = () => {
 				<Route path="" element={<FetchPage page="index" />} />
 				<Route path="examples" element={<FetchPage page="examples" demo={<RawExamples />} />} />
 				<Route path="input" element={<FetchPage page="input" demo={<InputDemo />} />} />
-				w<Route path="input-check-radio" element={<FetchPage page="input-check-radio" demo={<InputCheckDemo />} />} />
+				<Route path="invalid-feedback" element={<FetchPage page="invalid-feedback" demo={<InvalidFeedbackDemo />} />} />
+				<Route path="input-check-radio" element={<FetchPage page="input-check-radio" demo={<InputCheckDemo />} />} />
 				<Route path="select" element={<FetchPage page="select" demo={<InputDemo />} />} />
 				<Route path="textarea" element={<FetchPage page="textarea" demo={<InputDemo />} />} />
 				<Route path=":page" element={<FetchPage />} />
