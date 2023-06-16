@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'demo/**'
+      - '.github./workflows/deploy-demo.yaml'
 
 jobs:
   deploy:
@@ -13,6 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --build-arg PUBLIC_URL="/" --build-arg GITHUB_SHA=$GITHUB_SHA"
+      - run: flyctl deploy --build-arg PUBLIC_URL="/" --build-arg GITHUB_SHA="$GITHUB_SHA"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
