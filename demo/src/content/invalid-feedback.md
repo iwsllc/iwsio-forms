@@ -28,12 +28,12 @@ export const Field = () => {
 export const InvalidFeedbackDemo = () => {
 	const [success, setSuccess] = useState(false)
 	const fieldState = useFieldState({ field: '' })
-	const { setField } = fieldState
+	const { reset, fieldErrors } = fieldState /** You can also access fieldErrors here **/
 	const handleSubmit = () => {
 		setSuccess(true)
 	}
-	const reset = () => {
-		setField('field', '')
+	const resetForm = () => {
+		reset()
 		setSuccess(false)
 	}
 	return (
@@ -44,7 +44,7 @@ export const InvalidFeedbackDemo = () => {
 					<div className="flex flex-col gap-5">
 						<Field />
 						<div className="flex flex-row gap-4">
-							<button type="reset" className="btn" onClick={() => reset()}>Reset</button>
+							<button type="reset" className="btn" onClick={() => resetForm()}>Reset</button>
 							<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>Submit</button>
 						</div>
 					</div>
