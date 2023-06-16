@@ -1,7 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 import defaults from 'lodash.defaults'
 import omitBy from 'lodash.omitby'
-import isNull from 'lodash.isnull'
 import { UseFieldStateResult } from './UseFieldStateResult'
 
 /**
@@ -10,9 +9,9 @@ import { UseFieldStateResult } from './UseFieldStateResult'
  * @returns Form helpers
  */
 export function useFieldState(initValues: Record<string, any>, defaultValues?: Record<string, string>): UseFieldStateResult {
-	const initFieldValues = defaultValues != null ? defaults(omitBy(initValues, isNull), defaultValues) : initValues
+	const defaultFieldValues = defaultValues != null ? defaults(omitBy(initValues, (v) => v == null || v === ''), defaultValues) : initValues
 
-	const [fields, setFields] = useState<Record<string, string>>(initFieldValues)
+	const [fields, setFields] = useState<Record<string, string>>(initValues)
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string | undefined>>({})
 
 	const setField = (key: string, value: string) => {
@@ -24,7 +23,8 @@ export function useFieldState(initValues: Record<string, any>, defaultValues?: R
 	}
 
 	function reset() {
-		setFields(initFieldValues)
+		setFieldErrors({})
+		setFields(defaultFieldValues)
 	}
 
 	const onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => Record<string, any> = (e) => {
@@ -52,6 +52,7 @@ export function useFieldState(initValues: Record<string, any>, defaultValues?: R
 		setField,
 		fieldErrors,
 		setFieldError,
+		setFieldErrors,
 		onChange
 	}
 }
