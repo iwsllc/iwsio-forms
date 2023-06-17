@@ -20,7 +20,7 @@ export const SimpleForm = () => {
 
 return (
 		<FieldManager fieldState={fieldState}>
-			<ValidatedForm onSubmit={handleSubmit}>
+			<ValidatedForm onValidSubmit={handleSubmit}>
 				<InputField type="text" name="field" required pattern="^\w{3,5}$"/>
 			</ValidatedForm>
 		</FieldManager>
