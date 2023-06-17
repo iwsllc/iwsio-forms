@@ -21,12 +21,12 @@ Complimenting this, I've included a simple form component to simplify styling an
 
 ```jsx
 const Sample = () => {
-	const handleSubmit = () => {
+	const handleValidSubmit = () => {
 		// Form is valid; fields are safe to consume here.
 	}
 
 	return (
-		<ValidatedForm onSubmit={handleSubmit}>
+		<ValidatedForm onValidSubmit={handleValidSubmit}>
 			<Input type="text" name="field1" required pattern="^\w+$" />
 		</ValidatedForm>
 	)

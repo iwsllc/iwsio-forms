@@ -8,7 +8,7 @@ export type ValidatedFormProps = {
 	nativeValidation?: boolean
 } & FormHTMLAttributes<HTMLFormElement> & ChildrenProp
 
-export const ValidatedForm = forwardRef<HTMLFormElement, ValidatedFormProps>(({ children, onValidSubmit, className, reportValidity, nativeValidation, onReset, ...props }, ref) => {
+export const ValidatedForm = forwardRef<HTMLFormElement, ValidatedFormProps>(({ children, onValidSubmit, onSubmit, className, reportValidity, nativeValidation, onReset, ...props }, ref) => {
 	const refForm = useForwardRef<HTMLFormElement>(ref)
 	const [validatedClassName, setValidatedClassName] = useState('needs-validation')
 	// TODO: setup context API to track THIS form's validation state. This allows consumers elsewhere to report it.
@@ -18,12 +18,13 @@ export const ValidatedForm = forwardRef<HTMLFormElement, ValidatedFormProps>(({ 
 	 */
 	const consolidatedClassName = useMemo(() => `${validatedClassName}${className != null ? ' ' + className : ''}`, [className, validatedClassName])
 
-	const onSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+	const onLocalSubmit: FormEventHandler<HTMLFormElement> = (event) => {
 		event.preventDefault()
 		const form = refForm.current
 		setValidatedClassName(() => 'was-validated')
+		if (onSubmit != null) onSubmit(event)
 		if (form.checkValidity()) {
-			if (onValidSubmit) onValidSubmit()
+			if (onValidSubmit != null) onValidSubmit()
 		}
 		if (reportValidity) form.reportValidity()
 	}
@@ -34,7 +35,7 @@ export const ValidatedForm = forwardRef<HTMLFormElement, ValidatedFormProps>(({ 
 	}
 
 	return (
-		<form ref={refForm} onSubmit={onSubmit} onReset={handleReset} className={consolidatedClassName} noValidate={!nativeValidation} {...props}>
+		<form ref={refForm} onSubmit={onLocalSubmit} onReset={handleReset} className={consolidatedClassName} noValidate={!nativeValidation} {...props}>
 			{children}
 		</form>
 	)
