@@ -1,14 +1,14 @@
 import React from 'react'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ValidatedForm as Component } from './ValidatedForm'
+import { ValidatedForm } from './ValidatedForm'
 
 describe('ValidatedForm', () => {
 	it('should call onSubmit always and onValidSubmit when valid; should set proper css classes', async() => {
 		const spyOnValidSubmit = vi.fn()
 		const spyOnSubmit = vi.fn()
 
-		render(<Component data-testid="form" onValidSubmit={spyOnValidSubmit} onSubmit={spyOnSubmit}><input data-testid="field" type="text" name="field" required /><button type="reset" data-testid="reset">reset</button><button data-testid="submit" type="submit">submit</button></Component>)
+		render(<ValidatedForm data-testid="form" onValidSubmit={spyOnValidSubmit} onSubmit={spyOnSubmit}><input data-testid="field" type="text" name="field" required /><button type="reset" data-testid="reset">reset</button><button data-testid="submit" type="submit">submit</button></ValidatedForm>)
 
 		const field = screen.getByTestId('field')
 		const form = screen.getByTestId('form')

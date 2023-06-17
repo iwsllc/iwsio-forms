@@ -15,12 +15,12 @@ Complimenting this, I've included a simple form component to simplify styling an
 
 ```javascript
 const Sample = () => {
-	const handleSubmit = () => {
+	const handleValidSubmit = () => {
 		// Form is valid; fields are safe to consume here.
 	}
 
 	return (
-		<ValidatedForm onSubmit={handleSubmit}>
+		<ValidatedForm onValidSubmit={handleValidSubmit}>
 			<Input type="text" name="field1" required pattern="^\w+$" />
 		</ValidatedForm>
 	)
@@ -85,7 +85,7 @@ const Sample = () => {
 
 	return (
 		<FieldManager fieldState={fieldState}>
-			<ValidatedForm>
+			<ValidatedForm ...>
 				<InputField type="text" name="field1" required pattern="^\w+$" />
 				<InputField type="number" name="field2" required min={0} max={10} step={1} />
 				<InputField type="phone" name="field3" required />
