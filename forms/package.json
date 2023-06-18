@@ -1,6 +1,6 @@
 {
   "name": "@iwsio/forms",
-  "version": "0.2.6",
+  "version": "0.2.7-alpha.4",
   "description": "Simple library with useful React forms components and browser validation.",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
@@ -15,7 +15,9 @@
     "test": "VITEST_SEGFAULT_RETRY=3 vitest --run --passWithNoTests",
     "prebuild": "tsc --build tsconfig.build.json --clean && rimraf dist",
     "build": "tsc --build tsconfig.build.json",
-    "watch": "npm run build -- --watch"
+    "predev": "tsc --build tsconfig.json --clean && rimraf dist",
+    "dev": "tsc --build tsconfig.json",
+    "watch": "npm run dev -- --watch"
   },
   "repository": {
     "type": "git",
@@ -62,8 +64,6 @@
     "vitest": "^0.31.0"
   },
   "peerDependencies": {
-    "lodash.defaults": "^4",
-    "lodash.omitby": "^4",
     "react": "^18"
   }
 }

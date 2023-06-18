@@ -1,7 +1,6 @@
 import { ChangeEvent, useState } from 'react'
-import defaults from 'lodash.defaults'
-import omitBy from 'lodash.omitby'
 import { UseFieldStateResult } from './UseFieldStateResult'
+import { defaults, omitBy } from './utils'
 
 /**
  * Manages field state via change handler, values and error state.
