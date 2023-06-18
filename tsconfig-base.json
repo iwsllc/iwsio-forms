@@ -8,7 +8,7 @@
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"incremental": true,
-		"inlineSourceMap": true,
+		"inlineSourceMap": false,
 		"jsx": "react-jsx",
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"module": "CommonJS",
@@ -16,6 +16,7 @@
 		"resolveJsonModule": true,
 		"skipDefaultLibCheck": true,
 		"skipLibCheck": true,
+		"sourceMap": true,
 		"target": "ES5",
 		"types": ["vitest/globals"]
 	}
