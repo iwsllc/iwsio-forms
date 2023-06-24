@@ -3,7 +3,7 @@ import { useForwardRef } from './useForwardRef'
 import { ChildrenProp } from './types'
 
 export type ValidatedFormProps = {
-	onValidSubmit: () => void
+	onValidSubmit?: () => void
 	reportValidity?: boolean,
 	nativeValidation?: boolean
 } & FormHTMLAttributes<HTMLFormElement> & ChildrenProp
