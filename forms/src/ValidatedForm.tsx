@@ -1,4 +1,4 @@
-import React, { FormEventHandler, FormHTMLAttributes, forwardRef, useMemo, useState } from 'react'
+import { FormEventHandler, FormHTMLAttributes, forwardRef, useMemo, useState } from 'react'
 import { useForwardRef } from './useForwardRef'
 import { ChildrenProp } from './types'
 

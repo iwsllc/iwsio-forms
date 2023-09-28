@@ -1,5 +1,5 @@
 import { FieldManager, InputField, ValidatedForm, useFieldManager, useFieldState } from '@iwsio/forms'
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 export const InvalidFeedbackLabel = ({ children }) => <label className="peer-invalid:visible font-light">{children}</label>
 

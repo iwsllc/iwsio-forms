@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, ChangeEventHandler, FC, TextareaHTMLAttributes } from 'react'
+import { forwardRef, useEffect, ChangeEventHandler, TextareaHTMLAttributes } from 'react'
 import { useForwardRef } from './useForwardRef'
 import { ValidationProps } from './types'
 import { useFieldManager } from './FieldManager'

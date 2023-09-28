@@ -6,9 +6,9 @@ Before, we passed a prop `validationMessageComponent={<InvalidFeedbackLabel />}`
 
 To do this now, you would follow this pattern with `useFieldManager()` hook to get the current `fieldErrors` state. Then place it wherever you want.
 
-<div class="not-prose border-2">
+<div class="not-prose">
 
-```javascript
+```jsx
 const InvalidFeedbackLabel = ({ children }) => <label className="peer-invalid:visible font-light">{children}</label>
 
 export const Field = () => {

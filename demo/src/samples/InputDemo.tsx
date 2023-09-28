@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Input } from '@iwsio/forms'
 
 export const InputDemo = () => {

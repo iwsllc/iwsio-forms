@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import { UseFieldStateResult } from './UseFieldStateResult'
-import { defaults, omitBy } from './utils'
+import { omitBy } from './utils'
+import { defaults } from './defaults'
 
 /**
  * Manages field state via change handler, values and error state.

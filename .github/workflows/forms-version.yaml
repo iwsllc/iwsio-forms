@@ -1,11 +1,10 @@
-name: Bump all versions
+name: Version @iwsio/forms
 
 on:
   workflow_call:
 
 jobs:
   set-version:
-    # needs: test-runtime
     name: Bump package versions
     runs-on: ubuntu-latest
     steps:
@@ -13,15 +12,15 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
       - run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git fetch
           git pull origin main
-          npm version patch -ws --include-workspace-root
-          git add .
-          git commit -m "CI - package versions"
-          npm version from-git --allow-same-version
+          npm version patch -ws --include-workspace-root && git add .
+          VER=`node ./npm-version-helper.cjs forms`
+          git commit -m "@iwsio/forms version bump to $VER"
+          git tag -am "@iwsio/forms $VER publish." "$VER"
           git push
           git push --tags

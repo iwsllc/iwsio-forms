@@ -4,9 +4,9 @@ These components can be used with regular `<form>` or with `<ValidatedForm>`.
 
 Like all controlled inputs, you need to connect a value and a change handler to the input. Additionally, you can set a `fieldError` property and connecting an `onFieldError` handler. Not only will the input report back validation errors as they occur, you can set your own `fieldError` in state to propagate a `setCustomValidationMessage` on the input for custom errors. 
 
-<div class="not-prose border-2">
+<div class="not-prose">
 
-```javascript
+```jsx
 const [value, setValue] = useState('')
 const [error, setError] = useState<string | undefined>()
 

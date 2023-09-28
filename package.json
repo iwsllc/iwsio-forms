@@ -1,10 +1,10 @@
 {
   "name": "@iwsio/forms-root",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "description": "Simple library with useful React forms components and browser validation.",
   "files": [],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "repository": {
     "type": "git",
@@ -26,9 +26,11 @@
   "scripts": {
     "test": "npm run test -ws",
     "dev": "npm-run-all -p dev:*",
-    "build": "npm run build -w forms && npm run build -w demo",
+    "prebuild": "tsc --build --clean",
+    "build": "tsc --build",
     "dev:demo": "npm start -w demo",
-    "dev:forms": "npm run watch -w forms"
+    "predev:ts": "tsc --build --clean",
+    "dev:ts": "tsc --build --watch --preserveWatchOutput"
   },
   "homepage": "https://github.com/iwsllc/iws-forms#readme",
   "workspaces": [

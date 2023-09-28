@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TextArea, TextAreaField } from './TextArea'
@@ -52,7 +52,7 @@ export const FullyControlledFieldWrapper = () => {
 }
 
 describe('TextArea', function() {
-	it('should work as an uncontrolled textarea', async() => {
+	it('should work as an uncontrolled textarea', async () => {
 		render(<TextArea name="field" required data-testid="field" />)
 
 		expect(screen.getByTestId('field')).to.be.ok
@@ -60,7 +60,7 @@ describe('TextArea', function() {
 		const textarea = screen.getByTestId('field') as HTMLTextAreaElement
 		expect(textarea.checkValidity()).to.be.false
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.clear(textarea)
 			await userEvent.type(textarea, 'abc')
 		})
@@ -69,7 +69,7 @@ describe('TextArea', function() {
 		expect(textarea.checkValidity()).to.be.true
 	})
 
-	it('should work as an controlled input (without controlled fieldError)', async() => {
+	it('should work as an controlled input (without controlled fieldError)', async () => {
 		render(<ControlledWrapper />)
 
 		expect(screen.getByTestId('field')).to.be.ok
@@ -77,7 +77,7 @@ describe('TextArea', function() {
 
 		expect(textarea.checkValidity()).to.be.false
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.clear(textarea)
 			await userEvent.type(textarea, 'abc')
 		})
@@ -86,7 +86,7 @@ describe('TextArea', function() {
 		expect(textarea.checkValidity()).to.be.true
 	})
 
-	it('should work as an controlled input (with controlled fieldError)', async() => {
+	it('should work as an controlled input (with controlled fieldError)', async () => {
 		render(<FullyControlledWrapper />)
 
 		expect(screen.getByTestId('field')).to.be.ok
@@ -95,7 +95,7 @@ describe('TextArea', function() {
 		expect(textarea.checkValidity()).to.be.false
 		expect(textarea.validity.valueMissing).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.clear(textarea)
 			await userEvent.type(textarea, 'ab')
 		})
@@ -103,7 +103,7 @@ describe('TextArea', function() {
 		expect(textarea.value).to.eq('ab')
 		expect(textarea.checkValidity()).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.type(textarea, 'c')
 		})
 
@@ -115,7 +115,7 @@ describe('TextArea', function() {
 })
 
 describe('InputField', () => {
-	it('should throw error without field manager context provider', async() => {
+	it('should throw error without field manager context provider', async () => {
 		let error
 		try {
 			render(<TextAreaField name="field" required data-testid="field" />)
@@ -125,7 +125,7 @@ describe('InputField', () => {
 
 		expect(error.message).toEqual('Must be used within a FieldManager')
 	})
-	it('should work as an uncontrolled input', async() => {
+	it('should work as an uncontrolled input', async () => {
 		render(<UncontrolledFieldWrapper />)
 
 		expect(screen.getByTestId('field2')).to.be.ok
@@ -133,7 +133,7 @@ describe('InputField', () => {
 		const textarea = screen.getByTestId('field2') as HTMLInputElement
 		expect(textarea.checkValidity()).to.be.false
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.clear(textarea)
 			await userEvent.type(textarea, 'abc')
 		})
@@ -142,7 +142,7 @@ describe('InputField', () => {
 		expect(textarea.checkValidity()).to.be.true
 	})
 
-	it('should work as an controlled input and handle custom errors', async() => {
+	it('should work as an controlled input and handle custom errors', async () => {
 		render(<FullyControlledFieldWrapper />)
 
 		expect(screen.getByTestId('field')).to.be.ok
@@ -152,7 +152,7 @@ describe('InputField', () => {
 		expect(textarea.checkValidity()).to.be.false
 		expect(textarea.validity.valueMissing).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.clear(textarea)
 			await userEvent.type(textarea, 'ab')
 		})
@@ -161,7 +161,7 @@ describe('InputField', () => {
 		expect(textarea.value).to.eq('ab')
 		expect(textarea.checkValidity()).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.type(textarea, 'c')
 		})
 
@@ -171,7 +171,7 @@ describe('InputField', () => {
 		expect(textarea.validity.customError).to.be.true
 		expect(textarea.validationMessage).to.eq("Cannot enter 'abc'.")
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.type(textarea, 'c')
 		})
 

@@ -1,3 +1,3 @@
-import React from 'react'
+import { createContext } from 'react'
 
-export const FieldManagerContext = React.createContext(undefined)
+export const FieldManagerContext = createContext(undefined)

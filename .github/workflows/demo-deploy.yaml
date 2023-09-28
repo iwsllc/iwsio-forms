@@ -1,4 +1,4 @@
-name: Deploy Demo
+name: Deploy @iwsio/forms-demo
 
 on:
   workflow_call:

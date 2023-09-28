@@ -1,11 +1,11 @@
-import React, { FC, FormEventHandler, ReactNode, useState } from 'react'
+import { FC, FormEventHandler, ReactNode, useState } from 'react'
 import { ChildrenProp, FieldManager, ValidatedForm, useFieldManager, useFieldState } from '@iwsio/forms'
 
 // NOTE: use context API to transient setup access to onChange, name, value, checked, etc.
 
 export const Field: FC<ChildrenProp & {name: string, label: string}> = ({ children, name, label }) => {
-	const { errors } = useFieldManager()
-	const error = errors.field
+	const { fieldErrors } = useFieldManager()
+	const error = fieldErrors.field
 	const isInvalid = error != null && error.length > 0
 
 	return (
@@ -32,7 +32,7 @@ export const StyledSampleField: FC<{children?: ReactNode, title?: string, label?
 	}
 
 	return (
-		<FieldManager form={form}>
+		<FieldManager fieldState={form}>
 			<ValidatedForm onValidSubmit={handleSubmit} className="flex flex-col" onReset={handleReset}>
 				<fieldset className="border-2 p-5">
 					<legend>{title}</legend>

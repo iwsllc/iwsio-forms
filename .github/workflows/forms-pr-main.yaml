@@ -1,11 +1,12 @@
-name: PR to Main
+name: PR to Main - @iwsio/forms
 
 on:
   pull_request:
     branches: [ main ]
-
+    paths:
+      - 'forms/**'
 jobs:
   tests:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: ./.github/workflows/test.yaml
+    uses: ./.github/workflows/forms-test.yaml
     secrets: inherit

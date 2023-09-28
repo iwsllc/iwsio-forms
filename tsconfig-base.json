@@ -12,12 +12,12 @@
 		"jsx": "react-jsx",
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"module": "CommonJS",
-		"moduleResolution": "node16",
+		"moduleResolution": "Node",
 		"resolveJsonModule": true,
 		"skipDefaultLibCheck": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
-		"target": "ES5",
+		"target": "ES2015",
 		"types": ["vitest/globals"]
 	}
 }
