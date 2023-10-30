@@ -1,4 +1,3 @@
-import React from 'react'
 import { RawSampleField } from './RawSampleField'
 import { InputField, SelectField, TextAreaField } from '@iwsio/forms'
 

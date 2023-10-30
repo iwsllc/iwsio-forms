@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Input, InputField } from './Input'
@@ -56,7 +56,7 @@ export const FullyControlledFieldWrapper = () => {
 }
 
 describe('Input', function() {
-	it('should work as an uncontrolled input', async() => {
+	it('should work as an uncontrolled input', async () => {
 		render(<Input name="field" required data-testid="field" />)
 
 		expect(screen.getByTestId('field')).to.be.ok
@@ -64,7 +64,7 @@ describe('Input', function() {
 		const input = screen.getByTestId('field') as HTMLInputElement
 		expect(input.checkValidity()).to.be.false
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.clear(input)
 			await userEvent.type(input, 'abc')
 		})
@@ -73,7 +73,7 @@ describe('Input', function() {
 		expect(input.checkValidity()).to.be.true
 	})
 
-	it('should work as an controlled input (without controlled fieldError)', async() => {
+	it('should work as an controlled input (without controlled fieldError)', async () => {
 		render(<ControlledWrapper />)
 
 		expect(screen.getByTestId('field')).to.be.ok
@@ -81,7 +81,7 @@ describe('Input', function() {
 
 		expect(input.checkValidity()).to.be.false
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.clear(input)
 			await userEvent.type(input, 'abc')
 		})
@@ -90,7 +90,7 @@ describe('Input', function() {
 		expect(input.checkValidity()).to.be.true
 	})
 
-	it('should work as an controlled input (with controlled fieldError)', async() => {
+	it('should work as an controlled input (with controlled fieldError)', async () => {
 		render(<FullyControlledWrapper />)
 
 		expect(screen.getByTestId('field')).to.be.ok
@@ -100,7 +100,7 @@ describe('Input', function() {
 		expect(input.checkValidity()).to.be.false
 		expect(input.validity.valueMissing).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.clear(input)
 			await userEvent.type(input, 'ab')
 		})
@@ -109,7 +109,7 @@ describe('Input', function() {
 		expect(input.value).to.eq('ab')
 		expect(input.checkValidity()).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.type(input, 'c')
 		})
 
@@ -119,7 +119,7 @@ describe('Input', function() {
 		expect(input.validity.customError).to.be.true
 		expect(input.validationMessage).to.eq("Cannot enter 'abc'.")
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.type(input, 'c')
 		})
 
@@ -127,7 +127,7 @@ describe('Input', function() {
 		expect(input.checkValidity()).to.be.true
 	})
 
-	it('should work as an controlled checkbox input', async() => {
+	it('should work as an controlled checkbox input', async () => {
 		const FullyControlledCheckboxTest = () => {
 			const { handleChange: onChange, fields, fieldErrors, setFieldError } = useFieldState({ field: '' })
 			return <Input name="field" value="123" checked={fields.field === '123'} type="checkbox" onChange={onChange} required data-testid="field" fieldError={fieldErrors.field} onFieldError={setFieldError} />
@@ -142,7 +142,7 @@ describe('Input', function() {
 		expect(input.checkValidity()).to.be.false
 		expect(input.validity.valueMissing).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.click(input)
 		})
 
@@ -151,7 +151,7 @@ describe('Input', function() {
 		expect(input.checkValidity()).to.be.true
 	})
 
-	it('should work as an controlled radio input', async() => {
+	it('should work as an controlled radio input', async () => {
 		const FullyControlledRadioTest = () => {
 			const { handleChange: onChange, fields, fieldErrors, setFieldError } = useFieldState({ field: '' })
 			return (
@@ -175,7 +175,7 @@ describe('Input', function() {
 		expect(input.checkValidity()).to.be.false
 		expect(input.validity.valueMissing).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.click(input)
 		})
 
@@ -186,7 +186,7 @@ describe('Input', function() {
 })
 
 describe('InputField', () => {
-	it('should throw error without field manager context provider', async() => {
+	it('should throw error without field manager context provider', async () => {
 		let error
 		try {
 			render(<InputField name="field" required data-testid="field" />)
@@ -196,7 +196,7 @@ describe('InputField', () => {
 
 		expect(error.message).toEqual('Must be used within a FieldManager')
 	})
-	it('should work as an uncontrolled input', async() => {
+	it('should work as an uncontrolled input', async () => {
 		render(<UncontrolledFieldWrapper />)
 
 		expect(screen.getByTestId('field2')).to.be.ok
@@ -204,7 +204,7 @@ describe('InputField', () => {
 		const input = screen.getByTestId('field2') as HTMLInputElement
 		expect(input.checkValidity()).to.be.false
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.clear(input)
 			await userEvent.type(input, 'abc')
 		})
@@ -213,7 +213,7 @@ describe('InputField', () => {
 		expect(input.checkValidity()).to.be.true
 	})
 
-	it('should work as an controlled input and handle custom errors', async() => {
+	it('should work as an controlled input and handle custom errors', async () => {
 		render(<FullyControlledFieldWrapper />)
 
 		expect(screen.getByTestId('field')).to.be.ok
@@ -223,7 +223,7 @@ describe('InputField', () => {
 		expect(input.checkValidity()).to.be.false
 		expect(input.validity.valueMissing).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.clear(input)
 			await userEvent.type(input, 'ab')
 		})
@@ -232,7 +232,7 @@ describe('InputField', () => {
 		expect(input.value).to.eq('ab')
 		expect(input.checkValidity()).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.type(input, 'c')
 		})
 
@@ -242,14 +242,14 @@ describe('InputField', () => {
 		expect(input.validity.customError).to.be.true
 		expect(input.validationMessage).to.eq("Cannot enter 'abc'.")
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.type(input, 'c')
 		})
 
 		expect(input.value).to.eq('abcc')
 		expect(input.checkValidity()).to.be.true
 	})
-	it('should work as an controlled checkbox input', async() => {
+	it('should work as an controlled checkbox input', async () => {
 		const FullyControlledCheckboxTest = () => {
 			const fieldState = useFieldState({ field: '' })
 			return (
@@ -268,7 +268,7 @@ describe('InputField', () => {
 		expect(input.checkValidity()).to.be.false
 		expect(input.validity.valueMissing).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.click(input)
 		})
 
@@ -277,7 +277,7 @@ describe('InputField', () => {
 		expect(input.checkValidity()).to.be.true
 	})
 
-	it('should work as an controlled radio input', async() => {
+	it('should work as an controlled radio input', async () => {
 		const FullyControlledRadioTest = () => {
 			const fieldState = useFieldState({ field: '' })
 			return (
@@ -301,7 +301,7 @@ describe('InputField', () => {
 		expect(input.checkValidity()).to.be.false
 		expect(input.validity.valueMissing).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.click(input)
 		})
 

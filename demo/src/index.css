@@ -1,12 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* .needs-validation .invalid-feedback, :valid ~ .invalid-feedback, :disabled ~ .invalid-feedback {
-  display: none;
-} */
+@tailwind typography;
 
 * {
   outline-width: 0px;
 }
 
+@layer component {
+  pre {
+    white-space: unset;
+    white-space-collapse: unset;
+    max-width: calc(100vw - 5rem);
+  }
+  pre > code {
+    white-space: pre;
+    overflow-x: scroll;
+    display: block;
+  }
+
+  @media (min-width: 1024px) {
+    pre {
+      max-width: calc(100vw - 20rem);
+    }
+  }
+}

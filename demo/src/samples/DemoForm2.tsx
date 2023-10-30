@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { StyledSampleField } from './StyledSampleField'
 import { InputField, SelectField, TextAreaField } from '@iwsio/forms'
 

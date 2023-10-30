@@ -11,9 +11,9 @@ Complimenting this, I've included a simple form component to simplify styling an
 `onSubmit` invokes when form submit happens with all valid inputs. It's the same as using a regular `<form/>` `onSubmit` but with a built-in `form.checkValidity()` call to ensure field inputs are valid.
 
 
-<div class="not-prose border-2">
+<div class="not-prose">
 
-```javascript
+```jsx
 const Sample = () => {
 	const handleValidSubmit = () => {
 		// Form is valid; fields are safe to consume here.
@@ -33,24 +33,24 @@ const Sample = () => {
 
 #### Before submit
 
-<div class="not-prose border-2">
+<div class="not-prose">
 
-```xml
-		<form class="needs-validation">
-			<input type="text" name="field1" required pattern="^\w+$" value="" />
-		</form>
+```jsx
+<form class="needs-validation">
+	<input type="text" name="field1" required pattern="^\w+$" value="" />
+</form>
 ```
 
 </div>
 
 #### After submit
 
-<div class="not-prose border-2">
+<div class="not-prose">
 
-```xml
-		<form class="was-validated">
-			<input type="text" name="field1" required pattern="^\w+$" value="" />
-		</form>
+```jsx
+<form class="was-validated">
+	<input type="text" name="field1" required pattern="^\w+$" value="" />
+</form>
 ```
 
 </div>
@@ -58,9 +58,9 @@ const Sample = () => {
 ## `useFieldState`
 Next there is a [`useFieldState`](/use-field-state) hook, which simplifies state and onChange management for your form. This can be used independent of all the other components. The idea is to simply use a `Record<string,string>` type of state where the keys are the field names and their values, the value.
 
-<div class="not-prose border-2">
+<div class="not-prose">
 
-```javascript
+```jsx
 const Sample = () => {
 	const { fields, handleChange } = useFieldState({field1: ''})
 
@@ -77,9 +77,9 @@ const Sample = () => {
 ## `<FieldManager>`
 Finally, it's brought all together with [`FieldManager`](/field-manager), which elevates the field state to a context API provider and automatically wirese up your controlled inputs. Rather than using the default `Input`, `Select` and `TextArea` components, you'll use extensions of those: `InputField`, `SelectField`, and `TextAreaField` respectively to further simplify your code. Here is a quick example:
 
-<div class="not-prose border-2">
+<div class="not-prose">
 
-```javascript
+```jsx
 const Sample = () => {
 	const fieldState = useFieldState({field1: '', field2: '', field3: ''})
 

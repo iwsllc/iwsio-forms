@@ -1,13 +1,16 @@
 # Install
- - `npm install @iwsio/forms`
- - `yarn install @iwsio/forms`
- - `pnpm install @iwsio/forms`
+
+```bash
+npm install @iwsio/forms
+yarn install @iwsio/forms
+pnpm install @iwsio/forms
+```
 
 ## Setup
 
-<div class="not-prose border-2">
+<div class="not-prose">
 
-```javascript
+```jsx
 import { ValidatedForm, FieldManager, InputField, useFieldState } from '@iwsio/forms'
 
 export const SimpleForm = () => {

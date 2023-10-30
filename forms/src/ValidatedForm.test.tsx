@@ -1,10 +1,9 @@
-import React from 'react'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ValidatedForm } from './ValidatedForm'
 
 describe('ValidatedForm', () => {
-	it('should call onSubmit always and onValidSubmit when valid; should set proper css classes', async() => {
+	it('should call onSubmit always and onValidSubmit when valid; should set proper css classes', async () => {
 		const spyOnValidSubmit = vi.fn()
 		const spyOnSubmit = vi.fn()
 
@@ -20,7 +19,7 @@ describe('ValidatedForm', () => {
 		expect(form.className).not.to.match(/was-validated/i)
 
 		// submit an invalid form
-		await act(async() => {
+		await act(async () => {
 			await userEvent.clear(field)
 			await userEvent.click(submit)
 		})
@@ -37,7 +36,7 @@ describe('ValidatedForm', () => {
 		spyOnValidSubmit.mockClear()
 
 		// submit valid form
-		await act(async() => {
+		await act(async () => {
 			await userEvent.clear(field)
 			await userEvent.type(field, 'abc')
 			await userEvent.click(submit)
@@ -52,7 +51,7 @@ describe('ValidatedForm', () => {
 		})
 
 		// reset the form
-		await act(async() => {
+		await act(async () => {
 			await userEvent.click(reset)
 		})
 

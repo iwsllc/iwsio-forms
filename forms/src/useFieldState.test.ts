@@ -4,7 +4,7 @@ import defaults from 'lodash.defaults'
 import omitBy from 'lodash.omitby'
 
 describe('useFieldState', () => {
-	test('When initializing, getting, and setting fields', async() => {
+	test('When initializing, getting, and setting fields', async () => {
 		const { result } = renderHook(() => useFieldState({ firstName: '', lastName: '' }, { firstName: 'fred', lastName: 'flintstone' }))
 
 		const { fields, fieldErrors, handleChange } = result.current

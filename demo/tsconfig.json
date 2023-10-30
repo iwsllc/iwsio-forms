@@ -2,9 +2,10 @@
   "extends": "../tsconfig-base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "noEmit": true
   },
-  "include": ["src/**/*", "src/samples/.tsx"],
+  "include": ["src/**/*"],
   "references": [
     { "path": "../forms/tsconfig.build.json" }
   ]

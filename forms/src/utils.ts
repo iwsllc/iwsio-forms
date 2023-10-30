@@ -16,19 +16,3 @@ export const omitBy = (values: Record<string, any> | any[], omitWhen: (v: any) =
 	return result
 }
 
-/**
- * Applies values from sources to target. First in, wins; subsequent sources ignored.
- * @param target Target instance to apply defaults; will initialize to empty object if undefined.
- * @param sources Source objects with default values applied first [left] to last [right].
- * @returns target
- */
-export const defaults = (target: Record<string, any> = {}, ...sources: Record<string, any>[]) => {
-	for (const source of sources) {
-		for (const key in source) {
-			if (typeof target[key] === 'undefined' && typeof source[key] !== 'undefined') {
-				target[key] = source[key]
-			}
-		}
-	}
-	return target
-}

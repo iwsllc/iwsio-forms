@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Select, SelectField } from './Select'
@@ -74,7 +74,7 @@ export const FullyControlledFieldWrapper = () => {
 }
 
 describe('Select', function() {
-	it('should work as an uncontrolled input', async() => {
+	it('should work as an uncontrolled input', async () => {
 		render(
 			<Select name="field" required data-testid="field">
 				<option />
@@ -88,7 +88,7 @@ describe('Select', function() {
 		const select = screen.getByTestId('field') as HTMLSelectElement
 		expect(select.checkValidity()).to.be.false
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.selectOptions(select, '1')
 		})
 
@@ -96,7 +96,7 @@ describe('Select', function() {
 		expect(select.checkValidity()).to.be.true
 	})
 
-	it('should work as an controlled input (without controlled fieldError)', async() => {
+	it('should work as an controlled input (without controlled fieldError)', async () => {
 		render(<Controlled />)
 
 		expect(screen.getByTestId('field')).to.be.ok
@@ -104,7 +104,7 @@ describe('Select', function() {
 		const select = screen.getByTestId('field') as HTMLSelectElement
 		expect(select.checkValidity()).to.be.false
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.selectOptions(select, '1')
 		})
 
@@ -112,7 +112,7 @@ describe('Select', function() {
 		expect(select.checkValidity()).to.be.true
 	})
 
-	it('should work as an controlled input (with controlled fieldError)', async() => {
+	it('should work as an controlled input (with controlled fieldError)', async () => {
 		render(<FullyControlled />)
 
 		expect(screen.getByTestId('field')).to.be.ok
@@ -121,14 +121,14 @@ describe('Select', function() {
 		expect(select.checkValidity()).to.be.false
 		expect(select.validity.valueMissing).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.selectOptions(select, '2')
 		})
 
 		expect(select.value).to.eq('2')
 		expect(select.checkValidity()).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.selectOptions(select, '1')
 		})
 
@@ -140,7 +140,7 @@ describe('Select', function() {
 })
 
 describe('SelectField', () => {
-	it('should throw error without field manager context provider', async() => {
+	it('should throw error without field manager context provider', async () => {
 		let error
 		try {
 			render(
@@ -155,7 +155,7 @@ describe('SelectField', () => {
 
 		expect(error.message).toEqual('Must be used within a FieldManager')
 	})
-	it('should work as an uncontrolled input', async() => {
+	it('should work as an uncontrolled input', async () => {
 		render(<UncontrolledFieldWrapper />)
 
 		expect(screen.getByTestId('field2')).to.be.ok
@@ -163,7 +163,7 @@ describe('SelectField', () => {
 		const select = screen.getByTestId('field2') as HTMLSelectElement
 		expect(select.checkValidity()).to.be.false
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.selectOptions(select, '1')
 		})
 
@@ -171,7 +171,7 @@ describe('SelectField', () => {
 		expect(select.checkValidity()).to.be.true
 	})
 
-	it('should work as an controlled input and handle custom errors', async() => {
+	it('should work as an controlled input and handle custom errors', async () => {
 		render(<FullyControlledFieldWrapper />)
 
 		expect(screen.getByTestId('field')).to.be.ok
@@ -181,7 +181,7 @@ describe('SelectField', () => {
 		expect(select.checkValidity()).to.be.false
 		expect(select.validity.valueMissing).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.selectOptions(select, '1')
 		})
 
@@ -189,7 +189,7 @@ describe('SelectField', () => {
 		expect(select.value).to.eq('1')
 		expect(select.checkValidity()).to.be.true
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.selectOptions(select, '2')
 		})
 
@@ -199,7 +199,7 @@ describe('SelectField', () => {
 		expect(select.validity.customError).to.be.true
 		expect(select.validationMessage).to.eq("Cannot select '2'.")
 
-		await act(async() => {
+		await act(async () => {
 			await userEvent.selectOptions(select, '1')
 		})
 

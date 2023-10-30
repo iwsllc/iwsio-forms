@@ -1,9 +1,0 @@
-name: Manual Deploy Demo
-
-on:
-  workflow_dispatch:
-
-jobs:
-  deploy_demo:
-    uses: ./.github/workflows/deploy-demo.yaml
-    secrets: inherit

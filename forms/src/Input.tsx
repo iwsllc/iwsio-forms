@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, InputHTMLAttributes, ChangeEventHandler } from 'react'
+import { forwardRef, useEffect, InputHTMLAttributes, ChangeEventHandler } from 'react'
 import { useForwardRef } from './useForwardRef'
 import { ValidationProps } from './types'
 import { useFieldManager } from './FieldManager'

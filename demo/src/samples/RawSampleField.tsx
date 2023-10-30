@@ -1,4 +1,4 @@
-import React, { FC, FormEventHandler, ReactNode, useState } from 'react'
+import { FC, FormEventHandler, ReactNode, useState } from 'react'
 import { FieldManager, ValidatedForm, useFieldState } from '@iwsio/forms'
 
 // NOTE: use context API to transient setup access to onChange, name, value, checked, etc.
@@ -31,7 +31,7 @@ export const RawSampleField: FC<{children?: ReactNode, title?: string, label?: s
 
 					<div className="flex flex-row justify-end gap-3">
 						<button className="btn" type="reset">Reset</button>
-						<button className={`btn ${success ? 'btn-success' : ''}`} type="submit">{success && 'Success!!'}{!success && 'Submit'}</button>
+						<button className={`btn ${success ? 'btn-success' : ''}`} type="submit" onClick={() => setSuccess(false)}>{success && 'Success!!'}{!success && 'Submit'}</button>
 					</div>
 				</fieldset>
 			</ValidatedForm>

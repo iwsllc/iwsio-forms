@@ -1,12 +1,8 @@
-import React, { FC, ReactNode, useRef, useEffect, useMemo, useState } from 'react'
+import { FC, ReactNode, useRef, useEffect, useMemo, useState } from 'react'
 import { Busy } from './common/Busy'
 import { useLocation, useParams } from 'react-router-dom'
-import hljs from 'highlight.js/lib/core'
-import javascript from 'highlight.js/lib/languages/javascript'
-import xml from 'highlight.js/lib/languages/xml'
+import Prism from 'prismjs'
 
-hljs.registerLanguage('javascript', javascript)
-hljs.registerLanguage('xml', xml)
 type PageData = { html?: string, name: string, loaded: Date}
 
 export const FetchPage: FC<{demo?: ReactNode, page?: string}> = ({ demo, page }) => {
@@ -24,7 +20,7 @@ export const FetchPage: FC<{demo?: ReactNode, page?: string}> = ({ demo, page })
 		return paramsPage
 	}, [page, paramsPage])
 
-	const fetchContent = async(name: string) => {
+	const fetchContent = async (name: string) => {
 		if (!name?.trim().length) return // skip load
 		let cached = pages.find(p => p.name === name)
 		if (cached == null) {
@@ -47,7 +43,7 @@ export const FetchPage: FC<{demo?: ReactNode, page?: string}> = ({ demo, page })
 	useEffect(() => {
 		if (!html?.length) return
 		refContent.current?.querySelectorAll('pre code').forEach((dom) => {
-			hljs.highlightElement(dom)
+			Prism.highlightElement(dom)
 		})
 	}, [html])
 

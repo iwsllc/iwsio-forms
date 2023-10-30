@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const Busy = () => {
 	const [show, setShow] = useState(false)

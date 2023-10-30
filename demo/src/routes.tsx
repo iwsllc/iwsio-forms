@@ -1,4 +1,3 @@
-import React from 'react'
 import { Route, Routes as ReactRoutes } from 'react-router-dom'
 import { Layout } from './Layout'
 import { FetchPage } from './FetchPage'

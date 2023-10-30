@@ -1,11 +1,16 @@
-import React from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { Nav } from './common/Nav'
+import { useEffect } from 'react'
 
 export function Layout() {
+	const location = useLocation()
+	useEffect(() => {
+		const input = document.querySelector('.drawer-toggle') as HTMLInputElement
+		input.checked = false
+	}, [location])
 	return (
 		<>
-			<div className="drawer drawer-mobile">
+			<div className="drawer drawer-mobile lg:drawer-open">
 				<input id="my-drawer" type="checkbox" className="drawer-toggle" />
 				<div className="drawer-content flex flex-col">
 					{/* <!-- Page content here --> */}
@@ -27,7 +32,7 @@ export function Layout() {
 				</div>
 				<div className="drawer-side">
 					<label htmlFor="my-drawer" className="drawer-overlay" />
-					<aside className="bg-base-300 w-60">
+					<aside className="bg-base-300 w-[15rem] min-h-screen">
 						<p className="p-2 flex flex-row items-center gap-4 hidden lg:flex">
 							<Link to="/" className="text-lg font-bold font-mono btn btn-ghost text-neutral">@iwsio/forms</Link>
 							<span className="text-sm text-mono text-neutral">{process.env.VERSION}</span>

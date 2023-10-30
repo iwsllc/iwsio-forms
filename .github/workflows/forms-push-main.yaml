@@ -1,25 +1,23 @@
-name: Push to Main with @iwsio/forms changes
+name: "@iwsio/forms: PUSH to main"
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'forms/**'
+
 jobs:
   tests:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: ./.github/workflows/test.yaml
+    uses: ./.github/workflows/forms-test.yaml
     secrets: inherit
   version:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
     needs: tests
-    uses: ./.github/workflows/version.yaml
-    secrets: inherit
-  deploy_demo:
-    if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    needs: version
-    uses: ./.github/workflows/deploy-demo.yaml
+    uses: ./.github/workflows/forms-version.yaml
     secrets: inherit
   publish:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
     needs: version
-    uses: ./.github/workflows/publish.yaml
+    uses: ./.github/workflows/forms-publish.yaml
     secrets: inherit
