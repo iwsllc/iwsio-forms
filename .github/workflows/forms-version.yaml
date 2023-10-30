@@ -21,6 +21,6 @@ jobs:
           npm version patch -ws --include-workspace-root && git add .
           VER=`node ./npm-version-helper.cjs forms`
           git commit -m "@iwsio/forms version bump to $VER"
-          git tag -am "@iwsio/forms $VER publish." "$VER"
+          git tag -am "@iwsio/forms $VER publish." "v$VER"
           git push
           git push --tags
