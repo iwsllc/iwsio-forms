@@ -26,8 +26,10 @@
   "scripts": {
     "test": "npm run test -ws",
     "dev": "npm-run-all -p dev:*",
-    "prebuild": "tsc --build --clean",
-    "build": "tsc --build",
+    "prebuild:ts": "tsc --build --clean",
+    "build": "npm-run-all -s build:ts build:demo",
+    "build:ts": "tsc --build",
+    "build:demo": "npm run build -w demo",
     "dev:demo": "npm start -w demo",
     "predev:ts": "tsc --build --clean",
     "dev:ts": "tsc --build --watch --preserveWatchOutput"
