@@ -1,6 +1,6 @@
 {
   "name": "@iwsio/forms",
-  "version": "0.3.0-alpha.2",
+  "version": "0.3.0",
   "description": "Simple library with useful React forms components and browser validation.",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
@@ -29,7 +29,7 @@
     "component",
     "customValidity"
   ],
-  "author": "Nathan Bridgewater", 
+  "author": "Nathan Bridgewater",
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/iwsllc/iws-forms/issues"
