@@ -1,6 +1,6 @@
 # @iwsio/forms
 
-[![Tests CI](https://github.com/IWSLLC/iwsio-forms/actions/workflows/test.yaml/badge.svg)](https://github.com/IWSLLC/iwsio-forms/actions/workflows/test.yaml)
+[![@iwsio/forms: PUSH to main](https://github.com/iwsllc/iwsio-forms/actions/workflows/forms-push-main.yaml/badge.svg)](https://github.com/iwsllc/iwsio-forms/actions/workflows/forms-push-main.yaml)
 
 ## For more info and working examples, checkout [the demo site](https://forms.iws.io).
 
@@ -8,9 +8,11 @@ I found myself recreating similar code in every project I worked on that perform
 
 ## Install
 
-- `npm install @iwsio/forms`
-- `yarn install @iwsio/forms`
-- `pnpm install @iwsio/forms`
+```bash
+npm install @iwsio/forms
+yarn install @iwsio/forms
+pnpm install @iwsio/forms
+```
 
 ## Controlled inputs: `<Input />`, `<Select />`, and `<TextArea />`
 

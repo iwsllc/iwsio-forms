@@ -1,5 +1,8 @@
 # @iwsio/forms
+[![@iwsio/forms: PUSH to main](https://github.com/iwsllc/iwsio-forms/actions/workflows/forms-push-main.yaml/badge.svg)](https://github.com/iwsllc/iwsio-forms/actions/workflows/forms-push-main.yaml)
 
-[![Tests CI](https://github.com/IWSLLC/iwsio-forms/actions/workflows/test.yaml/badge.svg)](https://github.com/IWSLLC/iwsio-forms/actions/workflows/test.yaml)
+## Demo Deployment
+[![@iwsio/forms-demo: PUSH to main](https://github.com/iwsllc/iwsio-forms/actions/workflows/demo-push-main.yaml/badge.svg)](https://github.com/iwsllc/iwsio-forms/actions/workflows/demo-push-main.yaml)
 
-## [See documentation](./forms/README.md)
+ - [Documentation](https://forms.iws.io)
+ - [@iwsio/forms on npmjs](https://www.npmjs.com/package/@iwsio/forms)
