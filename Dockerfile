@@ -11,9 +11,7 @@ ARG PUBLIC_URL
 RUN apk add --no-cache --virtual .build-deps git make python3 g++
 WORKDIR /home/node/app
 USER node:node
-COPY --chown=node:node ./package.json ./
-COPY --chown=node:node ./package-lock.json ./
-COPY --chown=node:node ./demo/package.json ./demo/
+COPY --chown=node:node ./ ./
 RUN npm ci --omit=dev -w demo
 
 # builds production client-side
@@ -21,10 +19,6 @@ FROM builder-server AS builder-dev
 ARG GITHUB_SHA
 ARG PUBLIC_URL
 WORKDIR /home/node/app
-COPY --chown=node:node ./.eslint* ./
-COPY --chown=node:node ./tsconfig* ./
-COPY --chown=node:node ./demo ./demo
-COPY --chown=node:node ./forms ./forms
 USER node:node
 RUN npm i --loglevel warn
 ENV PUBLIC_URL=$PUBLIC_URL

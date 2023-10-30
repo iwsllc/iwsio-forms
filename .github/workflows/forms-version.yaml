@@ -18,7 +18,7 @@ jobs:
           git config user.email github-actions@github.com
           git fetch
           git pull origin main
-          npm version patch -ws --include-workspace-root && git add .
+          npm version patch -ws --include-workspace-root --no-git-tag-version && git add .
           VER=`node ./npm-version-helper.cjs forms`
           git commit -m "@iwsio/forms version bump to $VER"
           git tag -am "@iwsio/forms $VER publish." "v$VER"
