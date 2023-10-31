@@ -5,7 +5,7 @@ module.exports = {
 		['@babel/typescript', { isTSX: true, allExtensions: true }]
 	],
 	plugins: [['prismjs', {
-		languages: ['javascript', 'css', 'markup', 'typescript', 'jsx', 'tsx', 'bash', 'csv', 'docker', 'yaml'],
+		languages: ['javascript', 'jsx', 'tsx', 'bash'],
 		plugins: ['line-numbers'],
 		theme: 'okaidia',
 		css: true
