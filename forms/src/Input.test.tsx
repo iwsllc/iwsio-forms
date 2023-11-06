@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Input, InputField } from './Input'
-import { FieldManager, useFieldState } from '.'
+import { useFieldManager, useFieldState } from '.'
+import { UncontrolledFieldWrapper } from './__tests__/UncontrolledFieldWrapper'
+import { FullyControlledFieldWrapper } from './__tests__/FullyControlledFieldWrapper'
 
 export const ControlledWrapper = () => {
 	const [value, setValue] = useState('')
@@ -27,31 +29,6 @@ export const FullyControlledWrapper = () => {
 			<Input name="field" value={value} onChange={handleChange} required data-testid="field" fieldError={error} onFieldError={handleFieldError} />
 			<span data-testid="error">{error}</span>
 		</>
-	)
-}
-
-export const ControlledFieldWrapper = () => {
-	const fieldState = useFieldState({ field: '' })
-	return <FieldManager fieldState={fieldState}><InputField name="field" required data-testid="field" /></FieldManager>
-}
-
-export const UncontrolledFieldWrapper = () => {
-	const fieldState = useFieldState({ field: '' })
-	// intentionally setting field name to a non-managed field; field2
-	return <FieldManager fieldState={fieldState}><InputField name="field2" required data-testid="field2" /></FieldManager>
-}
-
-export const FullyControlledFieldWrapper = () => {
-	const fieldState = useFieldState({ field: '' })
-	const { handleChange: fieldStateOnChange, setFieldError: setError } = fieldState
-	const handleChange = (e) => {
-		fieldStateOnChange(e)
-		if (e.target.value === 'abc') setError(e.target.name, "Cannot enter 'abc'.")
-	}
-	return (
-		<FieldManager fieldState={fieldState}>
-			<InputField name="field" onChange={handleChange} required data-testid="field" />
-		</FieldManager>
 	)
 }
 
@@ -197,7 +174,7 @@ describe('InputField', () => {
 		expect(error.message).toEqual('Must be used within a FieldManager')
 	})
 	it('should work as an uncontrolled input', async () => {
-		render(<UncontrolledFieldWrapper />)
+		render(<InputField name="field2" required data-testid="field2" />, { wrapper: UncontrolledFieldWrapper })
 
 		expect(screen.getByTestId('field2')).to.be.ok
 
@@ -214,7 +191,15 @@ describe('InputField', () => {
 	})
 
 	it('should work as an controlled input and handle custom errors', async () => {
-		render(<FullyControlledFieldWrapper />)
+		const CustomErrorField = () => {
+			const { setFieldError } = useFieldManager()
+			const handleChange = (e) => {
+				if (e.target.value === 'abc') setFieldError(e.target.name, "Cannot enter 'abc'.")
+			}
+			return <InputField name="field" onChange={handleChange} required data-testid="field" />
+		}
+
+		render(<CustomErrorField />, { wrapper: FullyControlledFieldWrapper })
 
 		expect(screen.getByTestId('field')).to.be.ok
 		const input = screen.getByTestId('field') as HTMLInputElement
@@ -250,16 +235,7 @@ describe('InputField', () => {
 		expect(input.checkValidity()).to.be.true
 	})
 	it('should work as an controlled checkbox input', async () => {
-		const FullyControlledCheckboxTest = () => {
-			const fieldState = useFieldState({ field: '' })
-			return (
-				<FieldManager fieldState={fieldState}>
-					<InputField name="field" type="checkbox" value="123" required data-testid="field" />
-				</FieldManager>
-			)
-		}
-
-		render(<FullyControlledCheckboxTest />)
+		render(<InputField name="field" type="checkbox" value="123" required data-testid="field" />, { wrapper: FullyControlledFieldWrapper })
 
 		expect(screen.getByTestId('field')).to.be.ok
 		const input = screen.getByTestId('field') as HTMLInputElement
@@ -278,18 +254,12 @@ describe('InputField', () => {
 	})
 
 	it('should work as an controlled radio input', async () => {
-		const FullyControlledRadioTest = () => {
-			const fieldState = useFieldState({ field: '' })
-			return (
-				<FieldManager fieldState={fieldState}>
-					<Input name="field" value="1" type="radio" required data-testid="field1" />
-					<Input name="field" value="2" type="radio" required data-testid="field2" />
-					<Input name="field" value="3" type="radio" required data-testid="field3" />
-				</FieldManager>
-			)
-		}
-
-		render(<FullyControlledRadioTest />)
+		render(
+			<>
+				<Input name="field" value="1" type="radio" required data-testid="field1" />
+				<Input name="field" value="2" type="radio" required data-testid="field2" />
+				<Input name="field" value="3" type="radio" required data-testid="field3" />
+			</>, { wrapper: FullyControlledFieldWrapper })
 
 		expect(screen.getByTestId('field1')).to.be.ok
 		expect(screen.getByTestId('field2')).to.be.ok

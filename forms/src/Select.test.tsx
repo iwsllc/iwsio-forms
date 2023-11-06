@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Select, SelectField } from './Select'
-import { useFieldState } from './useFieldState'
-import { FieldManager } from './FieldManager'
+import { useFieldManager } from './FieldManager'
+import { UncontrolledFieldWrapper } from './__tests__/UncontrolledFieldWrapper'
+import { FullyControlledFieldWrapper } from './__tests__/FullyControlledFieldWrapper'
 
 export const Controlled = () => {
 	const [value, setValue] = useState('')
@@ -38,38 +39,6 @@ export const FullyControlled = () => {
 			</Select>
 			<span data-testid="error">{error}</span>
 		</>
-	)
-}
-
-export const UncontrolledFieldWrapper = () => {
-	const fieldState = useFieldState({ field: '' })
-	// intentionally setting field name to a non-managed field; field2
-	return (
-		<FieldManager fieldState={fieldState}>
-			<SelectField name="field2" required data-testid="field2">
-				<option />
-				<option>1</option>
-				<option>2</option>
-			</SelectField>
-		</FieldManager>
-	)
-}
-
-export const FullyControlledFieldWrapper = () => {
-	const fieldState = useFieldState({ field: '' })
-	const { handleChange: fieldStateOnChange, setFieldError: setError } = fieldState
-	const handleChange = (e) => {
-		fieldStateOnChange(e)
-		if (e.target.value === '2') setError(e.target.name, "Cannot select '2'.")
-	}
-	return (
-		<FieldManager fieldState={fieldState}>
-			<SelectField name="field" onChange={handleChange} required data-testid="field" defaultValue="">
-				<option />
-				<option>1</option>
-				<option>2</option>
-			</SelectField>
-		</FieldManager>
 	)
 }
 
@@ -156,7 +125,13 @@ describe('SelectField', () => {
 		expect(error.message).toEqual('Must be used within a FieldManager')
 	})
 	it('should work as an uncontrolled input', async () => {
-		render(<UncontrolledFieldWrapper />)
+		render(
+			<SelectField name="field2" required data-testid="field2">
+				<option />
+				<option>1</option>
+				<option>2</option>
+			</SelectField>
+			, { wrapper: UncontrolledFieldWrapper })
 
 		expect(screen.getByTestId('field2')).to.be.ok
 
@@ -172,7 +147,21 @@ describe('SelectField', () => {
 	})
 
 	it('should work as an controlled input and handle custom errors', async () => {
-		render(<FullyControlledFieldWrapper />)
+		const CustomErrorSelect = () => {
+			const { setFieldError } = useFieldManager()
+			const handleChange = (e) => {
+				if (e.target.value === '2') setFieldError(e.target.name, "Cannot select '2'.")
+			}
+			return (
+				<SelectField name="field" onChange={handleChange} required data-testid="field" defaultValue="">
+					<option />
+					<option>1</option>
+					<option>2</option>
+				</SelectField>
+
+			)
+		}
+		render(<CustomErrorSelect />, { wrapper: FullyControlledFieldWrapper })
 
 		expect(screen.getByTestId('field')).to.be.ok
 		const select = screen.getByTestId('field') as HTMLSelectElement

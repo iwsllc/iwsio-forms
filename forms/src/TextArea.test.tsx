@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TextArea, TextAreaField } from './TextArea'
-import { useFieldState } from './useFieldState'
-import { FieldManager } from './FieldManager'
+import { useFieldManager } from './FieldManager'
+import { FullyControlledFieldWrapper } from './__tests__/FullyControlledFieldWrapper'
+import { UncontrolledFieldWrapper } from './__tests__/UncontrolledFieldWrapper'
 
 export const ControlledWrapper = () => {
 	const [value, setValue] = useState('')
@@ -28,26 +29,6 @@ export const FullyControlledWrapper = () => {
 			<TextArea name="field" value={value} onChange={handleChange} required data-testid="field" fieldError={error} onFieldError={handleFieldError} />
 			<span data-testid="error">{error}</span>
 		</>
-	)
-}
-
-export const UncontrolledFieldWrapper = () => {
-	const fieldState = useFieldState({ field: '' })
-	// intentionally setting field name to a non-managed field; field2
-	return <FieldManager fieldState={fieldState}><TextAreaField name="field2" required data-testid="field2" /></FieldManager>
-}
-
-export const FullyControlledFieldWrapper = () => {
-	const fieldState = useFieldState({ field: '' })
-	const { handleChange: fieldStateOnChange, setFieldError: setError } = fieldState
-	const handleChange = (e) => {
-		fieldStateOnChange(e)
-		if (e.target.value === 'abc') setError(e.target.name, "Cannot enter 'abc'.")
-	}
-	return (
-		<FieldManager fieldState={fieldState}>
-			<TextAreaField name="field" onChange={handleChange} required data-testid="field" />
-		</FieldManager>
 	)
 }
 
@@ -114,7 +95,7 @@ describe('TextArea', function() {
 	})
 })
 
-describe('InputField', () => {
+describe('TextAreaField', () => {
 	it('should throw error without field manager context provider', async () => {
 		let error
 		try {
@@ -126,7 +107,7 @@ describe('InputField', () => {
 		expect(error.message).toEqual('Must be used within a FieldManager')
 	})
 	it('should work as an uncontrolled input', async () => {
-		render(<UncontrolledFieldWrapper />)
+		render(<TextAreaField name="field2" required data-testid="field2" />, { wrapper: UncontrolledFieldWrapper })
 
 		expect(screen.getByTestId('field2')).to.be.ok
 
@@ -143,7 +124,15 @@ describe('InputField', () => {
 	})
 
 	it('should work as an controlled input and handle custom errors', async () => {
-		render(<FullyControlledFieldWrapper />)
+		const CustomErrorField = () => {
+			const { setFieldError } = useFieldManager()
+			const handleChange = (e) => {
+				if (e.target.value === 'abc') setFieldError(e.target.name, "Cannot enter 'abc'.")
+			}
+			return <TextAreaField name="field" onChange={handleChange} required data-testid="field" />
+		}
+
+		render(<CustomErrorField />, { wrapper: FullyControlledFieldWrapper })
 
 		expect(screen.getByTestId('field')).to.be.ok
 		const textarea = screen.getByTestId('field') as HTMLInputElement

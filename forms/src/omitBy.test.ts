@@ -1,4 +1,4 @@
-import { omitBy } from './utils'
+import { omitBy } from './omitBy'
 
 describe('omitby', () => {
 	it('should omit matching args', async () => {
@@ -10,4 +10,3 @@ describe('omitby', () => {
 		expect(result).to.deep.equal([1, 3])
 	})
 })
-

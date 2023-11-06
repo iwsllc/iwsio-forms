@@ -1,9 +1,9 @@
 import { FC, FormEventHandler, ReactNode, useState } from 'react'
-import { ChildrenProp, FieldManager, ValidatedForm, useFieldManager, useFieldState } from '@iwsio/forms'
+import { ChildrenProp, FieldManager, ValidatedForm, useFieldManager } from '@iwsio/forms'
 
 // NOTE: use context API to transient setup access to onChange, name, value, checked, etc.
 
-export const Field: FC<ChildrenProp & {name: string, label: string}> = ({ children, name, label }) => {
+export const Field: FC<ChildrenProp & {name: string, label: string}> = ({ children, label }) => {
 	const { fieldErrors } = useFieldManager()
 	const error = fieldErrors.field
 	const isInvalid = error != null && error.length > 0
@@ -19,20 +19,17 @@ export const Field: FC<ChildrenProp & {name: string, label: string}> = ({ childr
 
 export const StyledSampleField: FC<{children?: ReactNode, title?: string, label?: string, help?: ReactNode}> = ({ children, title, label, help }) => {
 	const [success, setSuccess] = useState(false)
-	const form = useFieldState({ field: '' })
-	const { reset } = form
 
 	const handleSubmit = () => {
 		setSuccess(true)
 	}
 
-	const handleReset: FormEventHandler<HTMLFormElement> = (e) => {
+	const handleReset: FormEventHandler<HTMLFormElement> = (_e) => {
 		setSuccess(false)
-		if (reset != null) reset()
 	}
 
 	return (
-		<FieldManager fieldState={form}>
+		<FieldManager fields={{ field: '' }}>
 			<ValidatedForm onValidSubmit={handleSubmit} className="flex flex-col" onReset={handleReset}>
 				<fieldset className="border-2 p-5">
 					<legend>{title}</legend>
@@ -49,5 +46,3 @@ export const StyledSampleField: FC<{children?: ReactNode, title?: string, label?
 		</FieldManager>
 	)
 }
-
-// export default DemoForm1

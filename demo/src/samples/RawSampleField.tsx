@@ -1,12 +1,10 @@
 import { FC, FormEventHandler, ReactNode, useState } from 'react'
-import { FieldManager, ValidatedForm, useFieldState } from '@iwsio/forms'
+import { FieldManager, ValidatedForm } from '@iwsio/forms'
 
 // NOTE: use context API to transient setup access to onChange, name, value, checked, etc.
 
 export const RawSampleField: FC<{children?: ReactNode, title?: string, label?: string, help?: ReactNode}> = ({ children, title, label, help }) => {
 	const [success, setSuccess] = useState(false)
-	const fieldState = useFieldState({ field: '', field2: '', field3: '' })
-	const { reset } = fieldState
 
 	const handleSubmit = () => {
 		setSuccess(true)
@@ -14,11 +12,10 @@ export const RawSampleField: FC<{children?: ReactNode, title?: string, label?: s
 
 	const handleReset: FormEventHandler<HTMLFormElement> = () => {
 		setSuccess(false)
-		if (reset != null) reset()
 	}
 
 	return (
-		<FieldManager fieldState={fieldState}>
+		<FieldManager fields={{ field: '', field2: '', field3: '' }}>
 			<ValidatedForm onValidSubmit={handleSubmit} className="flex flex-col" nativeValidation onReset={handleReset}>
 				<fieldset className="border-2 p-5">
 					<legend>{title}</legend>
