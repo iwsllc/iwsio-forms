@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TextArea, TextAreaField } from './TextArea'
-import { useFieldManager } from './FieldManager'
+import { useFieldManager } from './useFieldManager'
 import { FullyControlledFieldWrapper } from './__tests__/FullyControlledFieldWrapper'
 import { UncontrolledFieldWrapper } from './__tests__/UncontrolledFieldWrapper'
 

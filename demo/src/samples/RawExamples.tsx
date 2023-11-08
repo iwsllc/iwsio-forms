@@ -7,7 +7,6 @@ export function RawExamples() {
 			<h3>Showing field types <code>&lt;input&nbsp;/&gt;</code>, <code>&lt;select&nbsp;/&gt;</code>, and <code>&lt;textarea&nbsp;/&gt;</code></h3>
 			<hr className="my-5" />
 
-			{/* <FormManager form={form}> */}
 			<RawSampleField
 				title="Text and patterns"
 				label="Required, word chars:"

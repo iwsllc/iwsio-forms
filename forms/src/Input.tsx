@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, InputHTMLAttributes, ChangeEventHandler } from 'react'
 import { useForwardRef } from './useForwardRef'
 import { ValidationProps } from './types'
-import { useFieldManager } from './FieldManager'
+import { useFieldManager } from './useFieldManager'
 
 export type InputProps = ValidationProps & InputHTMLAttributes<HTMLInputElement>
 

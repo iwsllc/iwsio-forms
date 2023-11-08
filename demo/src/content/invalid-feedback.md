@@ -1,10 +1,8 @@
 # Invalid Feedback
 
-One major change with the older version `0.1.0` is the removal of the feedback JSX Element prop. Now, with `<FieldManager>` and the value is shares via context API, we can make error and value status available to all its children. 
+Using `<FieldManager>`, the value and error state is shared via context API. We can now more easily render error and value status.
 
-Before, we passed a prop `validationMessageComponent={<InvalidFeedbackLabel />}` to give the component something to render when invalid. I found this doesn't always work well, especially when dealing with radio buttons (groups of inputs with shared error state), or other styling scenarios where we may want a different DOM location for the feedback.
-
-To do this now, you would follow this pattern with `useFieldManager()` hook to get the current `fieldErrors` state. Then place it wherever you want.
+To do this, you would use `useFieldManager()` to get the current `fieldErrors` state. Then render wherever you want.
 
 <div class="not-prose">
 
@@ -32,21 +30,24 @@ export const ResetButton = () => {
 export const InvalidFeedbackDemo = () => {
 	const [success, setSuccess] = useState(false)
 	const handleSubmit = () => {
-		setSuccess(true)
-	}
-	const resetForm = () => {
 		setSuccess(false)
 	}
+	const handleValidSubmit = (_fields: any) => {
+		setSuccess(true)
+	}
 	return (
-		<FieldManager fields={{ field: '' }}>
-			<ValidatedForm onValidSubmit={handleSubmit} onReset={resetForm}>
-				<fieldset>
-					<legend>Invalid Feedback</legend>
+		<FieldManager fields={{ field: '' }} onValidSubmit={handleValidSubmit} onSubmit={handleSubmit}>
+			<fieldset className="border p-5">
+				<legend>Invalid Feedback</legend>
+				<div className="flex flex-col gap-5">
 					<Field />
-					<ResetButton />
-					<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>Submit</button>
-				</fieldset>
-			</ValidatedForm>
+					<div className="flex flex-row gap-4">
+						<ResetButton />
+						<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>Submit</button>
+					</div>
+					<p><em>Submit with empty for error</em></p>
+				</div>
+			</fieldset>
 		</FieldManager>
 	)
 }

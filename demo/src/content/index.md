@@ -1,95 +1,128 @@
 # Why @iwsio/forms?
 
-I found myself recreating similar code in every project that performed the simple task of local state management for controlled inputs and client validation. So I abstracted this out into a library for re-use.
+[![@iwsio/forms: PUSH to main](https://github.com/iwsllc/iwsio-forms/actions/workflows/forms-push-main.yaml/badge.svg)](https://github.com/iwsllc/iwsio-forms/actions/workflows/forms-push-main.yaml)
 
-## Controlled inputs: `<Input />`, `<Select />`, and `<TextArea />` 
-These controlled inputs allow you to track error state with a controlled value. They are identical to (and pass along) all the props from their counterparts `input`, `select` and `textarea`. These means you can use regular HTML 5 browser validation AND you can set custom errors easily with React state and let browser validation do the work of reporting or checking for invalid fields. These components include: `Input`, `Select`, and `TextArea` and work exactly how native elements work, the key difference being: you can include a `fieldError` and `onFieldError` props to manage error state. 
+I found myself recreating similar code in every project that performed the simple task of managing local state management for controlled inputs and client validation. So I ripped it out to its own library for re-use.
+
+## Install
+
+```bash
+npm install @iwsio/forms
+yarn install @iwsio/forms
+pnpm install @iwsio/forms
+```
+
+## Controlled inputs: `<Input />`, `<Select />`, and `<TextArea />`
+
+These controlled inputs allow you to track error state with a controlled component value. They are identical to (and pass along) all the props from their counterparts `input`, `select` and `textarea`. These means you can use regular HTML 5 browser validation AND you can set custom errors easily with React state and let browser validation do the work of reporting or checking for invalid fields. These components include: `Input`, `Select`, and `TextArea` and work exactly how native elements work, the key difference being: you can include a `fieldError` and `onFieldError` props to manage error state.
 
 ## `<ValidatedForm>`
-Complimenting this, I've included a simple form component to simplify styling and success submit handling. It includes some CSS sugar `needs-validation` and `was-validated` for pre and post first submission. (This is kind of a throwback to [Bootstrap](https://getbootstrap.com/docs/5.3/forms/validation/#custom-styles)).
 
-`onSubmit` invokes when form submit happens with all valid inputs. It's the same as using a regular `<form/>` `onSubmit` but with a built-in `form.checkValidity()` call to ensure field inputs are valid.
+Complimenting the inputs, I've included a form component to simplify styling and validated submit handling. It includes some CSS sugar `needs-validation` and `was-validated` for pre and post first submission. (This is kind of a throwback to Bootstrap, but you can use it however you like). You also still have acess to the psuedo classes `:valid` `:invalid` as usual with these input components.
 
+`onValidSubmit` invokes when form submit happens with all valid inputs. It's the same as using a regular `<form/>` `onSubmit` but with a built-in `form.checkValidity()` call to ensure field inputs are valid. `className` provided here will style the underlying HTML form.
 
-<div class="not-prose">
+Also, it should be mentioned that `ValidatedForm` works with controlled and uncontrolled inputs. It simply serves as a utility for the browser validation happening under the covers. 
 
 ```jsx
 const Sample = () => {
-	const handleValidSubmit = () => {
-		// Form is valid; fields are safe to consume here.
-	}
+  const handleValidSubmit = () => {
+    // Form is valid; form inputs are safe to consume here.
+  };
 
-	return (
-		<ValidatedForm onValidSubmit={handleValidSubmit}>
-			<Input type="text" name="field1" required pattern="^\w+$" />
-		</ValidatedForm>
-	)
-}
+  return (
+    <ValidatedForm onValidSubmit={handleValidSubmit}>
+      <Input type="text" name="field1" required pattern="^\w+$" />
+    </ValidatedForm>
+  );
+};
 ```
-
-</div>
 
 ### Renders:
 
 #### Before submit
 
-<div class="not-prose">
-
-```jsx
+```html
 <form class="needs-validation">
-	<input type="text" name="field1" required pattern="^\w+$" value="" />
+  <input type="text" name="field1" required pattern="^\w+$" value="" />
 </form>
 ```
-
-</div>
 
 #### After submit
 
-<div class="not-prose">
-
-```jsx
+```html
 <form class="was-validated">
-	<input type="text" name="field1" required pattern="^\w+$" value="" />
+  <input type="text" name="field1" required pattern="^\w+$" value="" />
 </form>
 ```
 
-</div>
-
 ## `useFieldState`
-Next there is a [`useFieldState`](/use-field-state) hook, which simplifies state and onChange management for your form. This can be used independent of all the other components. The idea is to simply use a `Record<string,string>` type of state where the keys are the field names and their values, the value.
 
-<div class="not-prose">
+Next there is `useFieldState`, which manages all the field values and error states for a form. This can be used independent of all the other components. The idea is to simply use a `Record<string, string>` type of state where the keys are the field names and they hold the current text value of the inputs. `useFieldState` manages both `values` and `fieldErrors` and provides methods to hook into that and make custom updates.
+
+hook props | Definition
+--- | ---
+`fieldErrors` | current field errors; `Record<string,string>` where keys match input names.
+`setFieldErrors` | Sets ALL field errors. This is useful when you want to set more than one error at once. Like for example handling an HTTP 400 response with specific input errors. 
+`setFieldError` | Sets a single field error. Useful when needing to set errors outside of browser validation. 
+`handleChange` | `ChangeEventHandler<*>` used to control the input.
+`onChange` | alias to `handleChange`
+`reset` | resets the fields back to `defaultValues` or `initValues` and resets fieldError state. 
+`setField` | manually set a single field's value by name.
 
 ```jsx
 const Sample = () => {
-	const { fields, handleChange } = useFieldState({field1: ''})
+  const { fields, onChange, fieldErrors } = useFieldState({ field1: "" });
 
-	return (
-		<form>
-			<input type="text" name="field1" required pattern="^\w+$" onChange={handleChange} value={fields.field1} />
-		</form>
-	)
+  return (
+    <form>
+      <input
+        type="text"
+        name="field1"
+        required
+        pattern="^\w+$"
+        onChange={onChange}
+        value={fields.field1}
+      />
+      {fieldErrors.field1 && <span>{fieldErrors.field1}</span>}
+    </form>
+  );
+};
+```
+
+## `<FieldManager>`
+
+Finally, `FieldManager` brings it all together and automatically wires up field state and form validation. Rather than using the default `Input`, `Select` and `TextArea` components, you'll use extensions of those: `InputField`, `SelectField`, and `TextAreaField` respectively. The only prop (outside validation attributes) you need to provide is the `name` so `FieldManager` knows how to connect it to field state. 
+
+The props on `FieldManager` passthrough to the underlying `<form/>`. You can provide `className` and other HTML attributes commonly used on `<form/>`. For this to work however, you will need to provide at least an initial field state as `fields`. Use `onValidSubmit` to know when the form submit occurred with valid fields.
+
+Here is a quick example:
+
+```tsx
+const Sample = () => {
+  const handleValidSubmit = (fields: Record<string, any>) => {
+    // Do whatever you want with fields.
+  }
+  return (
+    <FieldManager fields={{ field1: "", field2: "", field3: "" }} onValidSubmit={handleValidSubmit} className="custom-form-css">
+      <InputField type="text" name="field1" required pattern="^\w+$" />
+      <InputField
+        type="number"
+        name="field2"
+        required
+        min={0}
+        max={10}
+        step={1}
+      />
+      <InputField type="phone" name="field3" required />
+      <button type="submit">Submit</button>
+    </FieldManager>
+  )
 }
 ```
 
-</div>
+## References:
 
-## `<FieldManager>`
-Finally, it's brought all together with [`FieldManager`](/field-manager), which elevates the field state to a context API provider and automatically wires up your controlled inputs. Rather than using the default `Input`, `Select` and `TextArea` components, you'll use extensions of those: `InputField`, `SelectField`, and `TextAreaField` respectively to further simplify your code. Here is a quick example:
+### MDN Forms validation
 
-<div class="not-prose">
-
-```jsx
-const Sample = () => (
-	<FieldManager fields={{field1: '', field2: '', field3: ''}}>
-		<ValidatedForm onValidSubmit={...}>
-			<InputField type="text" name="field1" required pattern="^\w+$" />
-			<InputField type="number" name="field2" required min={0} max={10} step={1} />
-			<InputField type="phone" name="field3" required />
-			<button type="submit">Submit</button>
-		</ValidatedForm>
-	</FieldManager>
-)
-```
-
-</div>
+[https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation](https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation)
