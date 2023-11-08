@@ -21,3 +21,8 @@ jobs:
     needs: version
     uses: ./.github/workflows/forms-publish.yaml
     secrets: inherit
+  deploy_demo:
+    if: ${{ !contains(github.event.head_commit.message, '#skip') }}
+    needs: version
+    uses: ./.github/workflows/demo-deploy.yaml
+    secrets: inherit

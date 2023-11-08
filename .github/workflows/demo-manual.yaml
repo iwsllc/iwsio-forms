@@ -1,0 +1,9 @@
+name: "@iwsio/forms-demo: Manual deploy"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy_demo:
+    uses: ./.github/workflows/demo-deploy.yaml
+    secrets: inherit
