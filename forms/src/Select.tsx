@@ -1,9 +1,9 @@
-import { forwardRef, useEffect, ChangeEventHandler, SelectHTMLAttributes } from 'react'
+import { forwardRef, useEffect, ChangeEventHandler, SelectHTMLAttributes, PropsWithChildren } from 'react'
 import { useForwardRef } from './useForwardRef'
-import { ChildrenProp, ValidationProps } from './types'
-import { useFieldManager } from './FieldManager'
+import { ValidationProps } from './types'
+import { useFieldManager } from './useFieldManager'
 
-export type SelectProps = ChildrenProp & ValidationProps & SelectHTMLAttributes<HTMLSelectElement>
+export type SelectProps = PropsWithChildren & ValidationProps & SelectHTMLAttributes<HTMLSelectElement>
 
 type Ref = HTMLSelectElement;
 

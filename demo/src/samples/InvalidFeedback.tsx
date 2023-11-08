@@ -1,4 +1,4 @@
-import { FieldManager, InputField, ValidatedForm, useFieldManager } from '@iwsio/forms'
+import { FieldManager, InputField, useFieldManager } from '@iwsio/forms'
 import { useMemo, useState } from 'react'
 
 export const InvalidFeedbackLabel = ({ children }) => <label className="peer-invalid:visible font-light">{children}</label>
@@ -25,24 +25,22 @@ export const InvalidFeedbackDemo = () => {
 	const handleSubmit = () => {
 		setSuccess(false)
 	}
-	const handleValidSubmit = () => {
+	const handleValidSubmit = (_fields: any) => {
 		setSuccess(true)
 	}
 	return (
-		<FieldManager fields={{ field: '' }}> {/** FieldManager just shares fieldState **/}
-			<ValidatedForm onValidSubmit={handleValidSubmit} onSubmit={handleSubmit}>
-				<fieldset className="border p-5">
-					<legend>Invalid Feedback</legend>
-					<div className="flex flex-col gap-5">
-						<Field />
-						<div className="flex flex-row gap-4">
-							<ResetButton />
-							<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>Submit</button>
-						</div>
-						<p><em>Submit with empty for error</em></p>
+		<FieldManager fields={{ field: '' }} onValidSubmit={handleValidSubmit} onSubmit={handleSubmit}>
+			<fieldset className="border p-5">
+				<legend>Invalid Feedback</legend>
+				<div className="flex flex-col gap-5">
+					<Field />
+					<div className="flex flex-row gap-4">
+						<ResetButton />
+						<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>Submit</button>
 					</div>
-				</fieldset>
-			</ValidatedForm>
+					<p><em>Submit with empty for error</em></p>
+				</div>
+			</fieldset>
 		</FieldManager>
 	)
 }

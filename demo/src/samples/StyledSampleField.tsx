@@ -1,9 +1,7 @@
-import { FC, FormEventHandler, ReactNode, useState } from 'react'
-import { ChildrenProp, FieldManager, ValidatedForm, useFieldManager } from '@iwsio/forms'
+import { FC, FormEventHandler, PropsWithChildren, ReactNode, useState } from 'react'
+import { FieldManager, useFieldManager } from '@iwsio/forms'
 
-// NOTE: use context API to transient setup access to onChange, name, value, checked, etc.
-
-export const Field: FC<ChildrenProp & {name: string, label: string}> = ({ children, label }) => {
+export const Field: FC<PropsWithChildren & {name: string, label: string}> = ({ children, label }) => {
 	const { fieldErrors } = useFieldManager()
 	const error = fieldErrors.field
 	const isInvalid = error != null && error.length > 0
@@ -20,8 +18,9 @@ export const Field: FC<ChildrenProp & {name: string, label: string}> = ({ childr
 export const StyledSampleField: FC<{children?: ReactNode, title?: string, label?: string, help?: ReactNode}> = ({ children, title, label, help }) => {
 	const [success, setSuccess] = useState(false)
 
-	const handleSubmit = () => {
+	const handleSubmit = (_fields: Record<string, any>) => {
 		setSuccess(true)
+		// do something with fields
 	}
 
 	const handleReset: FormEventHandler<HTMLFormElement> = (_e) => {
@@ -29,20 +28,18 @@ export const StyledSampleField: FC<{children?: ReactNode, title?: string, label?
 	}
 
 	return (
-		<FieldManager fields={{ field: '' }}>
-			<ValidatedForm onValidSubmit={handleSubmit} className="flex flex-col" onReset={handleReset}>
-				<fieldset className="border-2 p-5">
-					<legend>{title}</legend>
+		<FieldManager fields={{ field: '' }} onValidSubmit={handleSubmit} className="flex flex-col" onReset={handleReset}>
+			<fieldset className="border-2 p-5">
+				<legend>{title}</legend>
 
-					<Field name="field" label={label}>{children}</Field>
-					{help && <small className="flex flex-row justify-end">{help}</small>}
+				<Field name="field" label={label}>{children}</Field>
+				{help && <small className="flex flex-row justify-end">{help}</small>}
 
-					<div className="flex flex-row justify-end gap-3">
-						<button className="btn" type="reset">Reset</button>
-						<button className={`btn ${success ? 'btn-success' : ''}`} type="submit">{success && 'Success!!'}{!success && 'Submit'}</button>
-					</div>
-				</fieldset>
-			</ValidatedForm>
+				<div className="flex flex-row justify-end gap-3">
+					<button className="btn" type="reset">Reset</button>
+					<button className={`btn ${success ? 'btn-success' : ''}`} type="submit">{success && 'Success!!'}{!success && 'Submit'}</button>
+				</div>
+			</fieldset>
 		</FieldManager>
 	)
 }

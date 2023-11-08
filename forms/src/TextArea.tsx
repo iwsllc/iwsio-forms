@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, ChangeEventHandler, TextareaHTMLAttributes } from 'react'
 import { useForwardRef } from './useForwardRef'
 import { ValidationProps } from './types'
-import { useFieldManager } from './FieldManager'
+import { useFieldManager } from './useFieldManager'
 
 export type TextAreaProps = ValidationProps & TextareaHTMLAttributes<HTMLTextAreaElement>
 

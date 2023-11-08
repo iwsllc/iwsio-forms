@@ -1,12 +1,20 @@
-import { FormEventHandler, FormHTMLAttributes, forwardRef, useMemo, useState } from 'react'
+import { FormEventHandler, FormHTMLAttributes, PropsWithChildren, forwardRef, useMemo, useState } from 'react'
 import { useForwardRef } from './useForwardRef'
-import { ChildrenProp } from './types'
 
 export type ValidatedFormProps = {
+	/**
+	 * Invokes when submit event triggered and form has been validated and is valid.
+	 */
 	onValidSubmit?: () => void
+	/**
+	 * Trigger report validity on every submission? Default: false
+	 */
 	reportValidity?: boolean,
+	/**
+	 * Toggles `noValidate` on the `<form/>`. When false, `noValidate` is true.
+	 */
 	nativeValidation?: boolean
-} & FormHTMLAttributes<HTMLFormElement> & ChildrenProp
+} & FormHTMLAttributes<HTMLFormElement> & PropsWithChildren
 
 export const ValidatedForm = forwardRef<HTMLFormElement, ValidatedFormProps>(({ children, onValidSubmit, onSubmit, className, reportValidity, nativeValidation, onReset, ...props }, ref) => {
 	const refForm = useForwardRef<HTMLFormElement>(ref)

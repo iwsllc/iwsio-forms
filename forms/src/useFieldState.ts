@@ -1,18 +1,20 @@
-import { ChangeEvent, useState } from 'react'
-import { UseFieldStateResult } from './UseFieldStateResult'
+import { ChangeEvent, useCallback, useState } from 'react'
 import { omitBy } from './omitBy'
 import { defaults } from './defaults'
+import { UseFieldStateResult } from './types'
 
 /**
  * Manages field state via change handler, values and error state.
  * @param fields Default values for all fields; should include blank strings for fields without values.
  * @param defaultValues Default values to be set when invoking `reset()`
  */
-export function useFieldState(fields: Record<string, any>, defaultValues?: Record<string, string>): UseFieldStateResult {
+export function useFieldState(fields: Record<string, any>, defaultValues?: Record<string, string>, onValidSubmit?: (fields: Record<string, any>) => void): UseFieldStateResult {
 	const defaultFieldValues = defaultValues != null ? defaults(omitBy(fields, (v) => v == null || v === ''), defaultValues) : fields
 
 	const [fieldValues, setFieldValues] = useState<Record<string, string>>(fields)
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string | undefined>>({})
+
+	const localOnValidSubmit = useCallback(onValidSubmit, [])
 
 	const setField = (key: string, value: string) => {
 		setFieldValues((oldFields) => ({ ...oldFields, [key]: value }))
@@ -54,6 +56,7 @@ export function useFieldState(fields: Record<string, any>, defaultValues?: Recor
 		setFieldError,
 		setFieldErrors,
 		handleChange,
-		onChange: handleChange // alias
+		onChange: handleChange, // alias
+		onValidSubmit: localOnValidSubmit
 	}
 }
