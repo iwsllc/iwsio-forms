@@ -1,12 +1,11 @@
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { FieldManager, Input, useFieldState } from '.'
+import { FieldManager, Input } from '.'
 
 describe('FieldManager', () => {
 	test('When rendering field manager with fields; happy path', async () => {
 		const Test = () => {
-			const fieldState = useFieldState({ field: '' })
-			return <FieldManager fieldState={fieldState}><Input data-testid="field" name="field" /></FieldManager>
+			return <FieldManager fields={{ field: '' }}><Input data-testid="field" name="field" /></FieldManager>
 		}
 		render(<Test />)
 
@@ -22,8 +21,7 @@ describe('FieldManager', () => {
 
 	test('When rendering field manager with no fields', async () => {
 		const Test = () => {
-			const fieldState = useFieldState({ field: '' })
-			return <FieldManager fieldState={fieldState} />
+			return <FieldManager fields={{ field: '' }} />
 		}
 		const { container } = render(<Test />)
 
@@ -32,8 +30,7 @@ describe('FieldManager', () => {
 
 	test('When rendering field manager with mismatching field state', async () => {
 		const Test = () => {
-			const fieldState = useFieldState({ field: '' })
-			return <FieldManager fieldState={fieldState}><Input data-testid="field2" name="field2" /></FieldManager>
+			return <FieldManager fields={{ field: '' }}><Input data-testid="field2" name="field2" /></FieldManager>
 		}
 		render(<Test />)
 

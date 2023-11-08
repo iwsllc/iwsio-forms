@@ -75,25 +75,21 @@ const Sample = () => {
 </div>
 
 ## `<FieldManager>`
-Finally, it's brought all together with [`FieldManager`](/field-manager), which elevates the field state to a context API provider and automatically wirese up your controlled inputs. Rather than using the default `Input`, `Select` and `TextArea` components, you'll use extensions of those: `InputField`, `SelectField`, and `TextAreaField` respectively to further simplify your code. Here is a quick example:
+Finally, it's brought all together with [`FieldManager`](/field-manager), which elevates the field state to a context API provider and automatically wires up your controlled inputs. Rather than using the default `Input`, `Select` and `TextArea` components, you'll use extensions of those: `InputField`, `SelectField`, and `TextAreaField` respectively to further simplify your code. Here is a quick example:
 
 <div class="not-prose">
 
 ```jsx
-const Sample = () => {
-	const fieldState = useFieldState({field1: '', field2: '', field3: ''})
-
-	return (
-		<FieldManager fieldState={fieldState}>
-			<ValidatedForm ...>
-				<InputField type="text" name="field1" required pattern="^\w+$" />
-				<InputField type="number" name="field2" required min={0} max={10} step={1} />
-				<InputField type="phone" name="field3" required />
-				<button type="submit">Submit</button>
-			</ValidatedForm>
-		</FieldManager>
-	)
-}
+const Sample = () => (
+	<FieldManager fields={{field1: '', field2: '', field3: ''}}>
+		<ValidatedForm onValidSubmit={...}>
+			<InputField type="text" name="field1" required pattern="^\w+$" />
+			<InputField type="number" name="field2" required min={0} max={10} step={1} />
+			<InputField type="phone" name="field3" required />
+			<button type="submit">Submit</button>
+		</ValidatedForm>
+	</FieldManager>
+)
 ```
 
 </div>

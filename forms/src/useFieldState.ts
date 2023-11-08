@@ -1,21 +1,21 @@
 import { ChangeEvent, useState } from 'react'
 import { UseFieldStateResult } from './UseFieldStateResult'
-import { omitBy } from './utils'
+import { omitBy } from './omitBy'
 import { defaults } from './defaults'
 
 /**
  * Manages field state via change handler, values and error state.
- * @param initValues Default values for all fields; should include blank strings for fields without values.
+ * @param fields Default values for all fields; should include blank strings for fields without values.
  * @param defaultValues Default values to be set when invoking `reset()`
  */
-export function useFieldState(initValues: Record<string, any>, defaultValues?: Record<string, string>): UseFieldStateResult {
-	const defaultFieldValues = defaultValues != null ? defaults(omitBy(initValues, (v) => v == null || v === ''), defaultValues) : initValues
+export function useFieldState(fields: Record<string, any>, defaultValues?: Record<string, string>): UseFieldStateResult {
+	const defaultFieldValues = defaultValues != null ? defaults(omitBy(fields, (v) => v == null || v === ''), defaultValues) : fields
 
-	const [fields, setFields] = useState<Record<string, string>>(initValues)
+	const [fieldValues, setFieldValues] = useState<Record<string, string>>(fields)
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string | undefined>>({})
 
 	const setField = (key: string, value: string) => {
-		setFields((oldFields) => ({ ...oldFields, [key]: value }))
+		setFieldValues((oldFields) => ({ ...oldFields, [key]: value }))
 	}
 
 	const setFieldError = (key: string, message?: string) => {
@@ -24,10 +24,10 @@ export function useFieldState(initValues: Record<string, any>, defaultValues?: R
 
 	function reset() {
 		setFieldErrors({})
-		setFields(defaultFieldValues)
+		setFieldValues(defaultFieldValues)
 	}
 
-	const handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => Record<string, string> = (e) => {
+	const handleChange: (_e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => Record<string, string> = (e) => {
 		let value = e.target.value
 		const name = e.target.name
 		let updatedFields
@@ -36,7 +36,7 @@ export function useFieldState(initValues: Record<string, any>, defaultValues?: R
 			value = (e.target as HTMLInputElement).checked ? value : ''
 		}
 
-		setFields((old) => {
+		setFieldValues((old) => {
 			const newValues = { ...old } as Record<string, string>
 			newValues[name] = value
 			updatedFields = newValues
@@ -48,7 +48,7 @@ export function useFieldState(initValues: Record<string, any>, defaultValues?: R
 
 	return {
 		reset,
-		fields,
+		fields: fieldValues,
 		setField,
 		fieldErrors,
 		setFieldError,

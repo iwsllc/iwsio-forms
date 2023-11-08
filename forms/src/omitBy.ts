@@ -4,15 +4,15 @@
  * @param omitWhen Excludes values that return true
  * @returns Shallow copied object or array without values/keys ommitted.
  */
-export const omitBy = (values: Record<string, any> | any[], omitWhen: (v: any) => boolean): Record<string, any> | any[] => {
+export function omitBy<T = unknown>(values: T | T[], omitWhen?: (v: T) => boolean): T | T[] {
 	if (Array.isArray(values)) return values.filter((v) => !omitWhen(v))
 
-	const result = {}
+	if (typeof values !== 'object') return values
+	const result: Partial<T> = {}
 
 	const keys = Object.keys(values)
 	for (const key of keys) {
-		if (!omitWhen(values[key])) result[key] = values[key]
+		if (!omitWhen(values[key])) result[key as keyof T] = values[key]
 	}
-	return result
+	return result as T
 }
-

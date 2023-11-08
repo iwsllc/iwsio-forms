@@ -13,36 +13,37 @@ const InvalidFeedbackLabel = ({ children }) => <label className="peer-invalid:vi
 
 export const Field = () => {
 	const { fieldErrors } = useFieldManager()
-	const hasError = useMemo(() => fieldErrors?.field != null, [fieldErrors])
+	const hasError = useMemo(() => fieldErrors.field != null, [fieldErrors])
 
 	return (
 		<label className={`flex flex-row gap-4 items-center ${hasError ? 'text-error' : ''}`}>
 			Generic field:
-			<InputField name="field" required className={`input input-bordered ${hasError ? 'input-error' : ''}`} /> {/** value, checked, onChange, fieldError, etc are all automatically bound in InputField; regular <input/> requires bindings **/}
-			{/** Here, we're placing feedback dom adjacent to field **/}
-			{fieldErrors?.field && <InvalidFeedbackLabel>{fieldErrors.field}</InvalidFeedbackLabel>}
+			<InputField name="field" required className={`input input-bordered ${hasError ? 'input-error' : ''}`} /> 
+			{hasError && <InvalidFeedbackLabel>{fieldErrors.field}</InvalidFeedbackLabel>}
 		</label>
 	)
 }
 
+export const ResetButton = () => {
+	const { reset } = useFieldManager() // We need to use the field manager reset to reset validation state.
+	return <button type="reset" className="btn" onClick={() => reset()}>Reset</button>
+}
+
 export const InvalidFeedbackDemo = () => {
 	const [success, setSuccess] = useState(false)
-	const fieldState = useFieldState({ field: '' })
-	const { reset, fieldErrors } = fieldState /** You can also access fieldErrors here **/
 	const handleSubmit = () => {
 		setSuccess(true)
 	}
 	const resetForm = () => {
-		reset()
 		setSuccess(false)
 	}
 	return (
-		<FieldManager fieldState={fieldState}> {/** FieldManager just shares fieldState **/}
-			<ValidatedForm onValidSubmit={handleSubmit}>
+		<FieldManager fields={{ field: '' }}>
+			<ValidatedForm onValidSubmit={handleSubmit} onReset={resetForm}>
 				<fieldset>
 					<legend>Invalid Feedback</legend>
 					<Field />
-					<button type="reset" className="btn" onClick={() => resetForm()}>Reset</button>
+					<ResetButton />
 					<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>Submit</button>
 				</fieldset>
 			</ValidatedForm>
