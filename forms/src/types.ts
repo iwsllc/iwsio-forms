@@ -5,18 +5,26 @@ export type ValidationProps = {
 	onFieldError?: (key: string, message?: string) => void;
 };
 
+export type FieldValues = Record<string, string>
+
 export type UseFieldStateResult = {
 	/**
 	 * Reset a form's error and value states.
 	 */
 	reset: () => void;
-	fields: Record<string, string>;
+	/**
+	 * Current field values where keys match input names.
+	 */
+	fields: FieldValues;
 	/**
 	 * Set a field's value.
 	 * @param key Field name
 	 * @param value Value to set
 	 */
 	setField: (key: string, value: string) => void;
+	/**
+	 * Current field errors where kesy match input names.
+	 */
 	fieldErrors: Record<string, string>;
 	/**
 	 * Set a single field's error
@@ -43,5 +51,5 @@ export type UseFieldStateResult = {
 	 * Invokes when submit event triggered and form has been validated and is valid.
 	 * @param fields Current values stored in field state.
 	 */
-	onValidSubmit: (fields: Record<string, any>) => void
+	onValidSubmit: (fields: FieldValues) => void
 };

@@ -1,17 +1,18 @@
 import { ChangeEvent, useCallback, useState } from 'react'
 import { omitBy } from './omitBy'
 import { defaults } from './defaults'
-import { UseFieldStateResult } from './types'
+import { FieldValues, UseFieldStateResult } from './types'
 
 /**
  * Manages field state via change handler, values and error state.
- * @param fields Default values for all fields; should include blank strings for fields without values.
- * @param defaultValues Default values to be set when invoking `reset()`
+ * @param fields Initial values for all fields; should include blank strings for fields without values.
+ * @param defaultValues Default values to be set when invoking `reset()`, which falls back to `fields` if undefined.
+ * @param onValidSubmit Optional callback when form submit event triggered with valid form. Provides current field values as an argument.
  */
-export function useFieldState(fields: Record<string, any>, defaultValues?: Record<string, string>, onValidSubmit?: (fields: Record<string, any>) => void): UseFieldStateResult {
+export function useFieldState(fields: FieldValues, defaultValues?: FieldValues, onValidSubmit?: (fields: FieldValues) => void): UseFieldStateResult {
 	const defaultFieldValues = defaultValues != null ? defaults(omitBy(fields, (v) => v == null || v === ''), defaultValues) : fields
 
-	const [fieldValues, setFieldValues] = useState<Record<string, string>>(fields)
+	const [fieldValues, setFieldValues] = useState<FieldValues>(fields)
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string | undefined>>({})
 
 	const localOnValidSubmit = useCallback(onValidSubmit, [])

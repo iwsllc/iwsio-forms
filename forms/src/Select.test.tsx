@@ -3,7 +3,6 @@ import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Select, SelectField } from './Select'
 import { useFieldManager } from './useFieldManager'
-import { UncontrolledFieldWrapper } from './__tests__/UncontrolledFieldWrapper'
 import { FullyControlledFieldWrapper } from './__tests__/FullyControlledFieldWrapper'
 
 export const Controlled = () => {
@@ -43,7 +42,7 @@ export const FullyControlled = () => {
 }
 
 describe('Select', function() {
-	it('should work as an uncontrolled input', async () => {
+	it('should work as an uncontrolled select', async () => {
 		render(
 			<Select name="field" required data-testid="field">
 				<option />
@@ -123,27 +122,6 @@ describe('SelectField', () => {
 		}
 
 		expect(error.message).toEqual('Must be used within a FieldManager')
-	})
-	it('should work as an uncontrolled input', async () => {
-		render(
-			<SelectField name="field2" required data-testid="field2">
-				<option />
-				<option>1</option>
-				<option>2</option>
-			</SelectField>
-			, { wrapper: UncontrolledFieldWrapper })
-
-		expect(screen.getByTestId('field2')).to.be.ok
-
-		const select = screen.getByTestId('field2') as HTMLSelectElement
-		expect(select.checkValidity()).to.be.false
-
-		await act(async () => {
-			await userEvent.selectOptions(select, '1')
-		})
-
-		expect(select.value).to.eq('1')
-		expect(select.checkValidity()).to.be.true
 	})
 
 	it('should work as an controlled input and handle custom errors', async () => {

@@ -4,7 +4,7 @@
 
 [See documentation](https://forms.iws.io) for more examples and working demos.
 
-This package combines browser form validation with React so you can more easily manage errors and input values in forms. More specifically, it tracks input validation in state making it available to React AND allows you to set input errors in state that in turn trigger `customValidationMessage` on DOM inputs enabling more control over how you render form errors in your applications.
+This package combines browser form validation with React so you can more easily manage errors and input values in forms. More specifically, it tracks input validation in state making it available to React AND allows you to set input errors in state that in turn trigger `setCustomValidity` on DOM inputs enabling more control over how you render form errors in your applications.
 
 ## Install
 
@@ -14,7 +14,7 @@ yarn install @iwsio/forms
 pnpm install @iwsio/forms
 ```
 
-## Controlled inputs: `<Input />`, `<Select />`, and `<TextArea />`
+## Controlled/Uncontrolled inputs: `<Input />`, `<Select />`, and `<TextArea />`
 
 These controlled inputs allow you to track error state with a controlled component value. They are identical to (and pass along) all the props from their counterparts `input`, `select` and `textarea`. These means you can use regular HTML 5 browser validation AND you can set custom errors easily with React state and let browser validation do the work of reporting or checking for invalid fields. These components include: `Input`, `Select`, and `TextArea` and work exactly how native elements work, the key difference being: you can include a `fieldError` and `onFieldError` props to manage error state.
 
