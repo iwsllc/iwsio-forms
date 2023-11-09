@@ -4,7 +4,7 @@
 
 [See documentation](https://forms.iws.io) for more examples and working demos.
 
-I found myself recreating similar code in every project that performed the simple task of managing local state management for controlled inputs and client validation. So I ripped it out to its own library for re-use.
+This package combines browser form validation with React so you can more easily manage errors and input values in forms. More specifically, it tracks input validation in state making it available to React AND allows you to set input errors in state that in turn trigger `customValidationMessage` on DOM inputs enabling more control over how you render form errors in your applications.
 
 ## Install
 
