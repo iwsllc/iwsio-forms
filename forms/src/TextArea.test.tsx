@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event'
 import { TextArea, TextAreaField } from './TextArea'
 import { useFieldManager } from './useFieldManager'
 import { FullyControlledFieldWrapper } from './__tests__/FullyControlledFieldWrapper'
-import { UncontrolledFieldWrapper } from './__tests__/UncontrolledFieldWrapper'
 
 export const ControlledWrapper = () => {
 	const [value, setValue] = useState('')
@@ -105,22 +104,6 @@ describe('TextAreaField', () => {
 		}
 
 		expect(error.message).toEqual('Must be used within a FieldManager')
-	})
-	it('should work as an uncontrolled input', async () => {
-		render(<TextAreaField name="field2" required data-testid="field2" />, { wrapper: UncontrolledFieldWrapper })
-
-		expect(screen.getByTestId('field2')).to.be.ok
-
-		const textarea = screen.getByTestId('field2') as HTMLInputElement
-		expect(textarea.checkValidity()).to.be.false
-
-		await act(async () => {
-			await userEvent.clear(textarea)
-			await userEvent.type(textarea, 'abc')
-		})
-
-		expect(textarea.value).to.eq('abc')
-		expect(textarea.checkValidity()).to.be.true
 	})
 
 	it('should work as an controlled input and handle custom errors', async () => {

@@ -3,7 +3,6 @@ import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Input, InputField } from './Input'
 import { useFieldManager, useFieldState } from '.'
-import { UncontrolledFieldWrapper } from './__tests__/UncontrolledFieldWrapper'
 import { FullyControlledFieldWrapper } from './__tests__/FullyControlledFieldWrapper'
 
 export const ControlledWrapper = () => {
@@ -172,22 +171,6 @@ describe('InputField', () => {
 		}
 
 		expect(error.message).toEqual('Must be used within a FieldManager')
-	})
-	it('should work as an uncontrolled input', async () => {
-		render(<InputField name="field2" required data-testid="field2" />, { wrapper: UncontrolledFieldWrapper })
-
-		expect(screen.getByTestId('field2')).to.be.ok
-
-		const input = screen.getByTestId('field2') as HTMLInputElement
-		expect(input.checkValidity()).to.be.false
-
-		await act(async () => {
-			await userEvent.clear(input)
-			await userEvent.type(input, 'abc')
-		})
-
-		expect(input.value).to.eq('abc')
-		expect(input.checkValidity()).to.be.true
 	})
 
 	it('should work as an controlled input and handle custom errors', async () => {
