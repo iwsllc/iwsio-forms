@@ -1,18 +1,20 @@
 import { FieldManager, InputField, useFieldManager } from '@iwsio/forms'
-import { useMemo, useState } from 'react'
-
-export const InvalidFeedbackLabel = ({ children }) => <label className="peer-invalid:visible font-light">{children}</label>
+import { useState } from 'react'
 
 export const Field = () => {
-	const { fieldErrors } = useFieldManager()
-	const hasError = useMemo(() => fieldErrors.field != null, [fieldErrors])
+	const { checkFieldError } = useFieldManager()
+	const fieldError = checkFieldError('field')
 
 	return (
-		<label className={`flex flex-row gap-4 items-center ${hasError ? 'text-error' : ''}`}>
-			Generic field:
-			<InputField name="field" required className={`input input-bordered ${hasError ? 'input-error' : ''}`} />
-			{hasError && <InvalidFeedbackLabel>{fieldErrors.field}</InvalidFeedbackLabel>}
-		</label>
+		<div className="form-control">
+			<div className="indicator">
+				<InputField name="field" required className={`input input-bordered ${fieldError ? 'input-error' : ''}`} pattern="^[a-zA-Z]+$" />
+				{fieldError && <span className="indicator-item badge badge-error">{fieldError}</span>}
+			</div>
+			<label className="label">
+				<span className="label-text-alt">Required pattern:<code>^[a-zA-Z]+$</code></span>
+			</label>
+		</div>
 	)
 }
 
@@ -38,7 +40,7 @@ export const InvalidFeedbackDemo = () => {
 						<ResetButton />
 						<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>Submit</button>
 					</div>
-					<p><em>Submit with empty for error</em></p>
+					<p><em>Submit with empty or any non-alpha character for error.</em></p>
 				</div>
 			</fieldset>
 		</FieldManager>

@@ -12,6 +12,7 @@ import { FieldValues, UseFieldStateResult } from './types'
 export function useFieldState(fields: FieldValues, defaultValues?: FieldValues, onValidSubmit?: (fields: FieldValues) => void): UseFieldStateResult {
 	const defaultFieldValues = defaultValues != null ? defaults(omitBy(fields, (v) => v == null || v === ''), defaultValues) : fields
 
+	const [reportValidation, setReportValidation] = useState(false)
 	const [fieldValues, setFieldValues] = useState<FieldValues>(fields)
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string | undefined>>({})
 
@@ -25,9 +26,15 @@ export function useFieldState(fields: FieldValues, defaultValues?: FieldValues, 
 		setFieldErrors((old) => ({ ...old, [key]: message }))
 	}
 
+	const checkFieldError = (key: string): string | undefined => {
+		if (reportValidation && fieldErrors[key] != null && fieldErrors[key] !== '') return fieldErrors[key]
+		return undefined
+	}
+
 	function reset() {
 		setFieldErrors({})
 		setFieldValues(defaultFieldValues)
+		setReportValidation(false)
 	}
 
 	const handleChange: (_e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => Record<string, string> = (e) => {
@@ -50,14 +57,17 @@ export function useFieldState(fields: FieldValues, defaultValues?: FieldValues, 
 	}
 
 	return {
-		reset,
-		fields: fieldValues,
-		setField,
 		fieldErrors,
-		setFieldError,
-		setFieldErrors,
+		checkFieldError,
+		fields: fieldValues,
 		handleChange,
 		onChange: handleChange, // alias
-		onValidSubmit: localOnValidSubmit
+		onValidSubmit: localOnValidSubmit,
+		reportValidation,
+		reset,
+		setField,
+		setFieldError,
+		setFieldErrors,
+		setReportValidation
 	}
 }

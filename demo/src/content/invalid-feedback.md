@@ -2,31 +2,32 @@
 
 Using `<FieldManager>`, the value and error state is shared via context API. We can now more easily render error and value status.
 
-To do this, you would use `useFieldManager()` to get the current `fieldErrors` state. Then render wherever you want.
+To do this, use `useFieldManager()` to get a check function `checkFieldError(fieldName: string)`. The result of this function will indicate whether there is an error and it is "reportable" (meaning the form has been submitted at least once). You may also access the real-time error any time through `fieldErrors` state from the hook.
 
 <div class="not-prose">
 
 ```jsx
-const InvalidFeedbackLabel = ({ children }) => <label className="peer-invalid:visible font-light">{children}</label>
-
 export const Field = () => {
-	const { fieldErrors } = useFieldManager()
-	const hasError = useMemo(() => fieldErrors.field != null, [fieldErrors])
+	const { checkFieldError } = useFieldManager()
+	const fieldError = checkFieldError('field')
 
 	return (
-		<label className={`flex flex-row gap-4 items-center ${hasError ? 'text-error' : ''}`}>
-			Generic field:
-			<InputField name="field" required className={`input input-bordered ${hasError ? 'input-error' : ''}`} /> 
-			{hasError && <InvalidFeedbackLabel>{fieldErrors.field}</InvalidFeedbackLabel>}
-		</label>
+		<div className="form-control">
+			<div className="indicator">
+				<InputField name="field" required className={`input input-bordered ${fieldError ? 'input-error' : ''}`} pattern="^[a-zA-Z]+$" />
+				{fieldError && <span className="indicator-item badge badge-error">{fieldError}</span>}
+			</div>
+			<label className="label">
+				<span className="label-text-alt">Required pattern:<code>^[a-zA-Z]+$</code></span>
+			</label>
+		</div>
 	)
 }
 
 export const ResetButton = () => {
-	const { reset } = useFieldManager() // We need to use the field manager reset to reset validation state.
+	const { reset } = useFieldManager()
 	return <button type="reset" className="btn" onClick={() => reset()}>Reset</button>
 }
-
 export const InvalidFeedbackDemo = () => {
 	const [success, setSuccess] = useState(false)
 	const handleSubmit = () => {
@@ -45,7 +46,7 @@ export const InvalidFeedbackDemo = () => {
 						<ResetButton />
 						<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>Submit</button>
 					</div>
-					<p><em>Submit with empty for error</em></p>
+					<p><em>Submit with empty or any non-alpha character for error.</em></p>
 				</div>
 			</fieldset>
 		</FieldManager>

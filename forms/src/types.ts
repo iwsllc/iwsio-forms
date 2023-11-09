@@ -9,6 +9,14 @@ export type FieldValues = Record<string, string>
 
 export type UseFieldStateResult = {
 	/**
+	 * Indicates whether InputFields within should render validation errors based on the fieldError state. This is unrelated to the native browser `reportValidity()` function.
+	 */
+	reportValidation: boolean
+	/**
+	 * Set report validation manually. This reportValidation is the managed toggle that indicates whether to render validation error messages based on fieldError state. This is unrelated to the native browser `reportValidity()` function.
+	 */
+	setReportValidation: Dispatch<SetStateAction<boolean>>
+	/**
 	 * Reset a form's error and value states.
 	 */
 	reset: () => void;
@@ -26,6 +34,13 @@ export type UseFieldStateResult = {
 	 * Current field errors where kesy match input names.
 	 */
 	fieldErrors: Record<string, string>;
+
+	/**
+	 * Combines `reportValidation` and the `fieldErrors` state to determine if field requested should show an error.
+	 * @param name Field input name.
+	 * @returns Field error if it has one and should be reported.
+	 */
+	checkFieldError: (name: string) => string | undefined
 	/**
 	 * Set a single field's error
 	 * @param key Field name key
