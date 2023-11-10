@@ -21,7 +21,7 @@ export const SimpleForm = () => {
 	}
 
 	return (
-		<FieldManager fields={{field: ''}} onValidSubmit={handleSubmit}>
+		<FieldManager fields={{field: ''}} onValidSubmit={handleSubmit} nativeValidation>
 			<InputField type="text" name="field" required pattern="^\w{3,5}$"/>
 		</FieldManager>
 	)

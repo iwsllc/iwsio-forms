@@ -1,4 +1,4 @@
-import { FieldManager, InputField, useFieldManager } from '@iwsio/forms'
+import { FieldManager, InputField, InvalidFeedbackForField, useFieldManager } from '@iwsio/forms'
 import { useState } from 'react'
 
 export const Field = () => {
@@ -9,7 +9,7 @@ export const Field = () => {
 		<div className="form-control">
 			<div className="indicator">
 				<InputField name="field" required className={`input input-bordered ${fieldError ? 'input-error' : ''}`} pattern="^[a-zA-Z]+$" />
-				{fieldError && <span className="indicator-item badge badge-error">{fieldError}</span>}
+				<InvalidFeedbackForField name="field" className="indicator-item badge badge-error" />
 			</div>
 			<label className="label">
 				<span className="label-text-alt">Required pattern:<code>^[a-zA-Z]+$</code></span>
@@ -31,7 +31,7 @@ export const InvalidFeedbackDemo = () => {
 		setSuccess(true)
 	}
 	return (
-		<FieldManager fields={{ field: '' }} onValidSubmit={handleValidSubmit} onSubmit={handleSubmit}>
+		<FieldManager fields={{ field: '' }} onValidSubmit={handleValidSubmit} onSubmit={handleSubmit} onReset={() => setSuccess(false)}>
 			<fieldset className="border p-5">
 				<legend>Invalid Feedback</legend>
 				<div className="flex flex-col gap-5">

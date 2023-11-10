@@ -64,13 +64,16 @@ Next there is `useFieldState`, which manages all the field values and error stat
 
 hook props | Definition
 --- | ---
+`checkFieldError` | helper function to check error state in combination with `reportValidation`; returns true when fieldError exists and reportValidation is `true`
 `fieldErrors` | current field errors; `Record<string,string>` where keys match input names.
-`setFieldErrors` | Sets ALL field errors. This is useful when you want to set more than one error at once. Like for example handling an HTTP 400 response with specific input errors. 
-`setFieldError` | Sets a single field error. Useful when needing to set errors outside of browser validation. 
 `handleChange` | `ChangeEventHandler<*>` used to control the input.
 `onChange` | alias to `handleChange`
+`reportValidation` | boolean field that indicates if errors should be shown. Sets to true when using `FieldManager` after first form submit.
 `reset` | resets the fields back to `defaultValues` or `initValues` and resets fieldError state. 
 `setField` | manually set a single field's value by name.
+`setFieldError` | Sets a single field error. Useful when needing to set errors outside of browser validation. 
+`setFieldErrors` | Sets ALL field errors. This is useful when you want to set more than one error at once. Like for example handling an HTTP 400 response with specific input errors. 
+`setReportValidation` | sets reportValidation toggle for manual implementation.
 
 ```jsx
 const Sample = () => {
@@ -119,11 +122,25 @@ const Sample = () => {
         max={10}
         step={1}
       />
+    
       <InputField type="phone" name="field3" required />
       <button type="submit">Submit</button>
     </FieldManager>
   )
 }
+```
+
+## `<InvalidFeedbackForField />`
+One last component: this is just a helper component to display errors using the `useFieldState` properties mentioned above. Feel free to use this an example to make your own or consume it as-is. It currently returns a `<span/>` containing the error with any additional span attributes you provide as props. It consumes `checkFieldError(name)` to determine when to render and will return `null` when no error exists.
+
+### Source:
+```tsx
+<InvalidFeedbackForField name="field1" className="text-[red] font-bold text-2xl" />
+```
+
+### Renders with error:
+```html
+<span className="text-[red] font-bold text-2xl">This field is required.</span>
 ```
 
 ## References:
