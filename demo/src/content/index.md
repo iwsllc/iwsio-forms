@@ -96,6 +96,8 @@ Finally, `FieldManager` brings it all together and automatically wires up field 
 
 The props on `FieldManager` passthrough to the underlying `<form/>`. You can provide `className` and other HTML attributes commonly used on `<form/>`. For this to work however, you will need to provide at least an initial field state as `fields`. Use `onValidSubmit` to know when the form submit occurred with valid fields.
 
+See the [invalid feedback example](/invalid-feedback) to see how to customize showing errors manually instead of relying on native validation reporting. 
+
 Here is a quick example:
 
 ```tsx
@@ -104,7 +106,7 @@ const Sample = () => {
     // Do whatever you want with fields.
   }
   return (
-    <FieldManager fields={{ field1: "", field2: "", field3: "" }} onValidSubmit={handleValidSubmit} className="custom-form-css">
+    <FieldManager fields={{ field1: "", field2: "", field3: "" }} onValidSubmit={handleValidSubmit} className="custom-form-css" nativeValidation>
       <InputField type="text" name="field1" required pattern="^\w+$" />
       <InputField
         type="number"

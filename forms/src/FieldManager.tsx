@@ -3,11 +3,12 @@ import { FieldManagerContext } from './FieldManagerContext'
 import { useFieldState } from './useFieldState'
 import { FieldManagerForm } from './FieldManagerForm'
 import { ValidatedFormProps } from './ValidatedForm'
+import { FieldValues } from './types'
 
 export type FieldManagerProps = PropsWithChildren & {
-	fields: Record<string, any>
+	fields: FieldValues
 	defaultValues?: Record<string, string>
-	onValidSubmit?: (fields: Record<string, any>) => void
+	onValidSubmit?: (fields: FieldValues) => void
 } & Omit<ValidatedFormProps, 'onValidSubmit'>
 
 /**

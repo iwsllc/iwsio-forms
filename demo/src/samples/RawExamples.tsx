@@ -18,7 +18,7 @@ export function RawExamples() {
 			<RawSampleField
 				title="Numeric fields"
 				label="Step: 1, min: 1, max: 10"
-				help={<>Try <code>abc123</code>, <code>*</code>, or blank</>}
+				help={<>Try <code>1</code>, <code>11</code>, or blank</>}
 			>
 				<InputField type="number" required placeholder="Enter number" min={1} max={10} step={1} className="input input-bordered grow" name="field" />
 			</RawSampleField>

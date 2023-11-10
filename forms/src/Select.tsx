@@ -18,12 +18,17 @@ export const Select = forwardRef<Ref, SelectProps>(({ onFieldError, onInvalid, f
 		localSetError(undefined)
 		e.target.setCustomValidity('')
 		if (onChange != null) onChange(e)
+		if (!localRef.current.validity.valid) localSetError(localRef.current.validationMessage)
 	}
 
 	const handleInvalid = (e) => {
 		localSetError(e.target.validationMessage)
 		if (onInvalid != null) onInvalid(e)
 	}
+
+	useEffect(() => {
+		if (!localRef.current.validity.valid) localSetError(localRef.current.validationMessage)
+	}, [])
 
 	useEffect(() => {
 		if (fieldError !== localRef.current.validationMessage) {
