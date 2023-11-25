@@ -131,7 +131,7 @@ const Sample = () => {
 ```
 
 ## `<InvalidFeedbackForField />`
-One last component: this is just a helper component to display errors using the `useFieldState` properties mentioned above. Feel free to use this an example to make your own or consume it as-is. It currently returns a `<span/>` containing the error with any additional span attributes you provide as props. It consumes `checkFieldError(name)` to determine when to render and will return `null` when no error exists.
+One last component: this is just a helper component to display errors using the `useFieldState` properties mentioned above. Feel free to use this an example to make your own or consume it as-is. It currently returns a `<span/>` containing the error with any additional span attributes you provide as props. It consumes `checkFieldError(name)` to determine when to render and will return `null` when no error exists. You'll likely want to disable native validation reporting if you use this. Set `nativeValidation={false}` on the `ValidatedForm` or `FieldManager`, whichever one you use.
 
 ### Source:
 ```tsx

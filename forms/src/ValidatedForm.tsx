@@ -11,7 +11,7 @@ export type ValidatedFormProps = {
 	 */
 	reportValidity?: boolean,
 	/**
-	 * Toggles `noValidate` on the `<form/>`. When false, `noValidate` is true.
+	 * When true, relies on native browser validation. In other words: it toggles `noValidate` on the `<form/>`. When false, `noValidate` is true.
 	 */
 	nativeValidation?: boolean
 } & FormHTMLAttributes<HTMLFormElement> & PropsWithChildren
@@ -52,6 +52,6 @@ ValidatedForm.displayName = 'ValidatedForm'
 
 ValidatedForm.defaultProps = {
 	reportValidity: false,
-	nativeValidation: false,
+	nativeValidation: true, // NOTE: I think this makes most sense with the documentation. Much more effort is required when disabling this feature.
 	className: ''
 }
