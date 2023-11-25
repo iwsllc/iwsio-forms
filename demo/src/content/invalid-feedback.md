@@ -37,7 +37,7 @@ export const InvalidFeedbackDemo = () => {
 		setSuccess(true)
 	}
 	return (
-		<FieldManager fields={{ field: '' }} onValidSubmit={handleValidSubmit} onSubmit={handleSubmit} onReset={() => setSuccess(false)}>
+		<FieldManager fields={{ field: '' }} onValidSubmit={handleValidSubmit} onSubmit={handleSubmit} onReset={() => setSuccess(false)} nativeValidation={false}>
 			<fieldset className="border p-5">
 				<legend>Invalid Feedback</legend>
 				<div className="flex flex-col gap-5">
