@@ -1,6 +1,6 @@
 {
   "name": "@iwsio/forms",
-  "version": "1.2.0-alpha.1",
+  "version": "2.0.0-alpha.1",
   "description": "Simple library with useful React forms components and browser validation.",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
