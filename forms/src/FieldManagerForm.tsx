@@ -2,7 +2,7 @@ import { forwardRef } from 'react'
 import { useFieldManager } from './useFieldManager'
 import { ValidatedForm, ValidatedFormProps } from './ValidatedForm'
 
-export type ManagedValidatedFormProps = Omit<ValidatedFormProps, 'onValidSubmit'>
+export type ManagedValidatedFormProps = Omit<ValidatedFormProps, 'onValidSubmit' | 'noValidate'>
 
 export const FieldManagerForm = forwardRef<HTMLFormElement, ManagedValidatedFormProps>(({ children, ...props }, ref) => {
 	const { fields, onValidSubmit, setReportValidation } = useFieldManager()

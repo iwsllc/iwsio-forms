@@ -9,7 +9,7 @@ export type FieldManagerProps = PropsWithChildren & {
 	fields: FieldValues
 	defaultValues?: Record<string, string>
 	onValidSubmit?: (fields: FieldValues) => void
-} & Omit<ValidatedFormProps, 'onValidSubmit'>
+} & Omit<ValidatedFormProps, 'onValidSubmit' | 'noValidate'>
 
 /**
  * Setup a field manager to maintain field values and validation state in a form. This directly renders a <form> with attributes provided to this component.
