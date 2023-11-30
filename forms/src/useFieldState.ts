@@ -21,6 +21,7 @@ export function useFieldState(fields: FieldValues, defaultValues?: FieldValues, 
 
 	const setField = useCallback((key: string, value: string) => {
 		setFieldValues((oldFields) => ({ ...oldFields, [key]: value }))
+		setFieldError(key, undefined) // clear this error if one exists.
 	}, [])
 
 	const setFields = useCallback((values: Partial<FieldValues>) => {
@@ -30,6 +31,14 @@ export function useFieldState(fields: FieldValues, defaultValues?: FieldValues, 
 				if (values[key] != null) newFields[key] = values[key] // only set fields provided
 			}
 			return newFields
+		})
+		// clear errors for fields provided when setting fields
+		setFieldErrors((oldErrors) => {
+			const newErrors = { ...oldErrors }
+			for (const key in values) {
+				if (values[key] != null) delete newErrors[key]
+			}
+			return newErrors
 		})
 	}, [])
 
@@ -58,7 +67,7 @@ export function useFieldState(fields: FieldValues, defaultValues?: FieldValues, 
 		}
 
 		setFieldValues((old) => {
-			const newValues = { ...old } as Record<string, string>
+			const newValues = { ...old } as FieldValues
 			newValues[name] = value
 			updatedFields = newValues
 			return newValues

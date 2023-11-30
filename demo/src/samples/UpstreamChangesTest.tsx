@@ -1,52 +1,39 @@
-import { FieldManager, FieldValues, InputField, useFieldManager } from '@iwsio/forms'
-import { FC, createContext, useContext, useEffect, useState } from 'react'
+import { ControlledFieldManager, FieldValues, InputField, useFieldState } from '@iwsio/forms'
+import { useEffect, useState } from 'react'
+import { fetchMovies } from './fetchSample'
+import { useQuery } from '@tanstack/react-query'
 
-export const TestForm: FC<{fields: FieldValues}> = ({ fields }) => {
-	const handleSubmit = (values: FieldValues) => {
-		console.log(values)
+export const UpstreamChangesPage = () => {
+	const { data, refetch, isFetching, isSuccess } = useQuery({ queryKey: ['/movies.json'], queryFn: () => fetchMovies() })
+	const [success, setSuccess] = useState(false)
+	const handleValidSubmit = (values: FieldValues) => {
+		setSuccess(true)
 	}
+	const fieldState = useFieldState({ title: '', year: '', director: '' }, undefined, handleValidSubmit)
+	const { setFields, reset } = fieldState
+
+	useEffect(() => {
+		if (!isSuccess || isFetching) return
+		if (data == null || data.length === 0) return
+		const { title, year, director } = data[0]
+		setFields({ title, year, director })
+	}, [isFetching, isSuccess])
 
 	return (
-		<FieldManager className="flex flex-col items-start justify-start gap-2 max-w-4xl " fields={fields} onValidSubmit={handleSubmit} nativeValidation>
-			<UpstreamFieldMonitor />
-			<InputField placeholder="Name" name="name" type="text" className="input input-bordered" required />
-			<InputField placeholder="Phone" name="phone" type="text" pattern="^\d+$" className="input input-bordered" required />
-			<InputField placeholder="Email" name="email" type="email" className="input input-bordered" required />
-			<div className="flex w-full justify-end max-w-xs">
-				<button type="submit" className="btn btn-bordered btn-primary">Submit</button>
+		<ControlledFieldManager fieldState={fieldState} className="flex flex-col gap-2 w-1/2" nativeValidation>
+			<InputField placeholder="Title" name="title" type="text" className="input input-bordered" required />
+			<InputField placeholder="Year" name="year" type="number" pattern="^\d+$" className="input input-bordered" required />
+			<InputField placeholder="Director" name="director" type="text" className="input input-bordered" required />
+			<div className="flex gap-2">
+				<button type="reset" className="btn btn-info" onClick={() => refetch()}>Re-fetch</button>
+				<button type="reset" className="btn" onClick={() => { reset(); setSuccess(false) }}>Reset</button>
+				<button type="submit" className={`btn ${success ? 'btn-success' : 'btn-primary'}`}>
+					Submit
+				</button>
 			</div>
-		</FieldManager>
-	)
-}
-
-const Context = createContext<{fields: FieldValues} | undefined>(undefined)
-
-// seems kinda hacky
-export const UpstreamFieldMonitor = () => {
-	const { fields } = useContext(Context)
-	const { setFields } = useFieldManager()
-	useEffect(() => {
-		setFields(fields)
-	}, [fields])
-	return null
-}
-
-/**
- * This is an experimental component where the fields might be managed upstream: in this case via context api.
- * The FieldManager component doesn't rely on the fields prop changing. Once initialized, we need to update values
- * via the useFieldManager hook.
- */
-export const UpstreamChangesTest = () => {
-	const [fields, setFields] = useState<FieldValues>({ name: '', email: '', phone: '' })
-	useEffect(() => {
-		const id = setTimeout(() => {
-			setFields({ name: 'John', email: 'test@test.com', phone: '1234567890' })
-		}, 250)
-		return () => clearTimeout(id)
-	}, [])
-	return (
-		<Context.Provider value={{ fields }}>
-			<TestForm fields={fields} />
-		</Context.Provider>
+			<p>
+				Try clicking <strong>Reset</strong> to reset the form. Then <strong>Submit</strong> will show validation errors. Then try clicking the <strong>Re-fetch</strong> button to fetch new data from the server and reset the field validation.
+			</p>
+		</ControlledFieldManager>
 	)
 }

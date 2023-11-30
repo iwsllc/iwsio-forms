@@ -10,5 +10,6 @@ export const Nav = () => (
 		<li><Link to="/examples">Examples</Link></li>
 		<li><Link to="/input">Input Demo</Link></li>
 		<li><Link to="/invalid-feedback">Invalid Feedback</Link></li>
+		<li><Link to="/upstream-test">Async Init</Link></li>
 	</ul>
 )

@@ -131,6 +131,25 @@ describe('useFieldState', () => {
 		})
 	})
 
+	test('When changing one field', async () => {
+		const fieldValues = { firstName: '', lastName: '' }
+		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
+
+		const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+
+		const { result } = hook
+		expect(result.current.fields.firstName).toEqual('')
+		expect(result.current.fields.lastName).toEqual('')
+
+		act(() => {
+			result.current.setField('firstName', 'fred2')
+		})
+
+		await waitFor(() => {
+			expect(result.current.fields.firstName).toEqual('fred2')
+		})
+	})
+
 	test('When changing many fields at once (all fields)', async () => {
 		const fieldValues = { firstName: '', lastName: '' }
 		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
@@ -168,6 +187,93 @@ describe('useFieldState', () => {
 		await waitFor(() => {
 			expect(result.current.fields.firstName).toEqual('fred2')
 			expect(result.current.fields.lastName).toEqual('')
+		})
+	})
+
+	describe('Changing fields with existing errors', () => {
+		test('When changing one field', async () => {
+			const fieldValues = { firstName: '', lastName: '' }
+			const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
+
+			const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+
+			const { result } = hook
+			expect(result.current.fields.firstName).toEqual('')
+			expect(result.current.fields.lastName).toEqual('')
+
+			act(() => {
+				result.current.setFieldError('firstName', 'This field is required')
+			})
+			expect(result.current.fieldErrors.firstName).toEqual('This field is required')
+
+			act(() => {
+				result.current.setField('firstName', 'fred2')
+			})
+			expect(result.current.fieldErrors.firstName).to.not.be.ok
+
+			await waitFor(() => {
+				expect(result.current.fields.firstName).toEqual('fred2')
+			})
+		})
+
+		test('When changing many fields at once (all fields)', async () => {
+			const fieldValues = { firstName: '', lastName: '' }
+			const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
+
+			const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+
+			const { result } = hook
+			expect(result.current.fields.firstName).toEqual('')
+			expect(result.current.fields.lastName).toEqual('')
+
+			act(() => {
+				result.current.setFieldError('firstName', 'This field is required')
+				result.current.setFieldError('lastName', 'This field is required')
+			})
+			expect(result.current.fieldErrors.firstName).toEqual('This field is required')
+			expect(result.current.fieldErrors.lastName).toEqual('This field is required')
+
+			act(() => {
+				result.current.setFields({ firstName: 'fred2', lastName: 'flintstone2' })
+			})
+
+			expect(result.current.fieldErrors.firstName).not.to.be.ok
+			expect(result.current.fieldErrors.lastName).not.to.be.ok
+
+			await waitFor(() => {
+				expect(result.current.fields.firstName).toEqual('fred2')
+				expect(result.current.fields.lastName).toEqual('flintstone2')
+			})
+		})
+
+		test('When changing many fields at once (some fields)', async () => {
+			const fieldValues = { firstName: '', lastName: '' }
+			const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
+
+			const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+
+			const { result } = hook
+			expect(result.current.fields.firstName).toEqual('')
+			expect(result.current.fields.lastName).toEqual('')
+
+			act(() => {
+				result.current.setFieldError('firstName', 'This field is required')
+				result.current.setFieldError('lastName', 'This field is required')
+			})
+			expect(result.current.fieldErrors.firstName).toEqual('This field is required')
+			expect(result.current.fieldErrors.lastName).toEqual('This field is required')
+
+			act(() => {
+				result.current.setFields({ firstName: 'fred2' })
+			})
+
+			expect(result.current.fieldErrors.firstName).not.to.be.ok
+			expect(result.current.fieldErrors.lastName).toEqual('This field is required')
+
+			await waitFor(() => {
+				expect(result.current.fields.firstName).toEqual('fred2')
+				expect(result.current.fields.lastName).toEqual('')
+			})
 		})
 	})
 })
