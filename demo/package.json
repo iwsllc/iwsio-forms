@@ -1,6 +1,6 @@
 {
   "name": "@iwsio/forms-demo",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "private": true,
   "devDependencies": {
     "@babel/core": "^7.23.5",
