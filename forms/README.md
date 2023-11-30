@@ -130,6 +130,38 @@ const Sample = () => {
 }
 ```
 
+
+## `<ControlledFieldManager>`
+
+You might be wondering, how do I manage field state outside of the FieldManager? Imagine a scenario where these field values may be managed upstream in your application. Maybe they're being pulled in from an asynchronous request and loaded after the form renders. In this case, you'll want to manage the field state outside of the FieldManager component. For this, there is another component you can use. `<ControlledFieldManager/>` where you provide the fieldState yourself.
+
+```tsx
+export const DelayedFieldValuesTest = () => {
+	const handleValidSubmit = (values: FieldValues) => {
+		console.log(values)
+	}
+  // use this hook directly to set initail field values.
+	const fieldState = useFieldState({ name: '', email: '', phone: '' }, undefined, handleValidSubmit)
+	const { setFields } = fieldState
+
+	useEffect(() => {
+    // simple delay to emulate a network request or some other delay getting values
+		const id = setTimeout(() => {
+			setFields({ name: 'John Doe', email: 'test@example.com', phone: '1234567890' })
+		}, 250)
+		return () => clearTimeout(id)
+	}, [])
+
+	return (
+		<ControlledFieldManager fieldState={fieldState}>
+			<InputField placeholder="Name" name="name" type="text" className="input input-bordered" required />
+			<InputField placeholder="Phone" name="phone" type="text" pattern="^\d+$" className="input input-bordered" required />
+			<InputField placeholder="Email" name="email" type="email" className="input input-bordered" required />
+		</ControlledFieldManager>
+	)
+}
+```
+
 ## `<InvalidFeedbackForField />`
 One last component: this is just a helper component to display errors using the `useFieldState` properties mentioned above. Feel free to use this an example to make your own or consume it as-is. It currently returns a `<span/>` containing the error with any additional span attributes you provide as props. It consumes `checkFieldError(name)` to determine when to render and will return `null` when no error exists. You'll likely want to disable native validation reporting if you use this. Set `nativeValidation={false}` on the `ValidatedForm` or `FieldManager`, whichever one you use.
 
