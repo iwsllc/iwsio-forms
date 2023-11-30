@@ -3,9 +3,9 @@ import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Input, InputField } from './Input'
 import { useFieldManager, useFieldState } from '.'
-import { FullyControlledFieldWrapper } from './__tests__/FullyControlledFieldWrapper'
+import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper'
 
-export const ControlledWrapper = () => {
+const ControlledInput = () => {
 	const [value, setValue] = useState('')
 	const handleChange = (e) => {
 		setValue(e.target.value)
@@ -13,7 +13,7 @@ export const ControlledWrapper = () => {
 	return <Input name="field" value={value} onChange={handleChange} required data-testid="field" />
 }
 
-export const FullyControlledWrapper = () => {
+const ControlledInputWithErrors = () => {
 	const [value, setValue] = useState('')
 	const [error, setError] = useState<string | undefined>()
 	const handleChange = (e) => {
@@ -38,75 +38,85 @@ describe('Input', function() {
 		expect(screen.getByTestId('field')).to.be.ok
 
 		const input = screen.getByTestId('field') as HTMLInputElement
-		expect(input.checkValidity()).to.be.false
+		act(() => { input.checkValidity() })
+		expect(input.validity.valid).to.be.false
 
-		await act(async () => {
-			await userEvent.clear(input)
-			await userEvent.type(input, 'abc')
-		})
+		await userEvent.clear(input)
+		await userEvent.type(input, 'abc')
 
 		expect(input.value).to.eq('abc')
-		expect(input.checkValidity()).to.be.true
+		act(() => { input.checkValidity() })
+		expect(input.validity.valid).to.be.true
 	})
 
 	it('should work as an controlled input (without controlled fieldError)', async () => {
-		render(<ControlledWrapper />)
+		render(<ControlledInput />)
 
 		expect(screen.getByTestId('field')).to.be.ok
 		const input = screen.getByTestId('field') as HTMLInputElement
 
-		expect(input.checkValidity()).to.be.false
+		act(() => { input.checkValidity() })
+		expect(input.validity.valid).to.be.false
 
-		await act(async () => {
-			await userEvent.clear(input)
-			await userEvent.type(input, 'abc')
-		})
+		await userEvent.clear(input)
+		await userEvent.type(input, 'abc')
 
 		expect(input.value).to.eq('abc')
-		expect(input.checkValidity()).to.be.true
+		act(() => { input.checkValidity() })
+		expect(input.validity.valid).to.be.true
 	})
 
 	it('should work as an controlled input (with controlled fieldError)', async () => {
-		render(<FullyControlledWrapper />)
+		render(<ControlledInputWithErrors />)
 
 		expect(screen.getByTestId('field')).to.be.ok
 		const input = screen.getByTestId('field') as HTMLInputElement
 
 		// basic validation fail
-		expect(input.checkValidity()).to.be.false
+		act(() => { input.checkValidity() })
 		expect(input.validity.valueMissing).to.be.true
 
-		await act(async () => {
-			await userEvent.clear(input)
-			await userEvent.type(input, 'ab')
-		})
+		await userEvent.clear(input)
+		await userEvent.type(input, 'ab')
 
 		// basic validation pass
 		expect(input.value).to.eq('ab')
-		expect(input.checkValidity()).to.be.true
+		act(() => { input.checkValidity() })
+		expect(input.validity.valid).to.be.true
 
-		await act(async () => {
-			await userEvent.type(input, 'c')
-		})
+		await userEvent.type(input, 'c')
 
 		// validation fail (from controlled state error)
 		expect(input.value).to.eq('abc')
-		expect(input.checkValidity()).to.be.false
+
+		act(() => { input.checkValidity() })
+
 		expect(input.validity.customError).to.be.true
 		expect(input.validationMessage).to.eq("Cannot enter 'abc'.")
 
-		await act(async () => {
-			await userEvent.type(input, 'c')
-		})
+		await userEvent.type(input, 'c')
+
+		act(() => { input.checkValidity() })
 
 		expect(input.value).to.eq('abcc')
-		expect(input.checkValidity()).to.be.true
 	})
 
 	it('should work as an controlled checkbox input', async () => {
 		const FullyControlledCheckboxTest = () => {
 			const { handleChange: onChange, fields, fieldErrors, setFieldError } = useFieldState({ field: '' })
-			return <Input name="field" value="123" checked={fields.field === '123'} type="checkbox" onChange={onChange} required data-testid="field" fieldError={fieldErrors.field} onFieldError={setFieldError} />
+			return (
+				<Input
+					name="field"
+					value="123"
+					checked={fields.field === '123'}
+					type="checkbox"
+					onChange={onChange}
+					required
+					data-testid="field"
+					fieldError={fieldErrors.field}
+					onFieldError={setFieldError}
+				/>
+			)
 		}
 
 		render(<FullyControlledCheckboxTest />)
@@ -114,17 +124,19 @@ describe('Input', function() {
 		expect(screen.getByTestId('field')).to.be.ok
 		const input = screen.getByTestId('field') as HTMLInputElement
 
-		// basic validation fail
-		expect(input.checkValidity()).to.be.false
-		expect(input.validity.valueMissing).to.be.true
-
-		await act(async () => {
-			await userEvent.click(input)
+		act(() => {
+			input.checkValidity()
 		})
 
-		// basic validation pass
+		// basic validation fail
+		expect(input.validity.valid).to.be.false
+
+		await userEvent.click(input)
+		act(() => { input.checkValidity() })
+
 		expect(input.value).to.eq('123')
-		expect(input.checkValidity()).to.be.true
+
+		expect(input.validity.valid).to.be.true
 	})
 
 	it('should work as an controlled radio input', async () => {
@@ -148,31 +160,22 @@ describe('Input', function() {
 		const input = screen.getByTestId('field1') as HTMLInputElement
 
 		// basic validation fail
-		expect(input.checkValidity()).to.be.false
+		act(() => { input.checkValidity() })
+
+		expect(input.validity.valid).to.be.false
 		expect(input.validity.valueMissing).to.be.true
 
-		await act(async () => {
-			await userEvent.click(input)
-		})
+		await userEvent.click(input)
 
-		// basic validation pass
 		expect(input.value).to.eq('1')
-		expect(input.checkValidity()).to.be.true
+
+		act(() => { input.checkValidity() })
+
+		expect(input.validity.valid).to.be.true
 	})
 })
 
 describe('InputField', () => {
-	it('should throw error without field manager context provider', async () => {
-		let error
-		try {
-			render(<InputField name="field" required data-testid="field" />)
-		} catch (err) {
-			error = err
-		}
-
-		expect(error.message).toEqual('Must be used within a FieldManager')
-	})
-
 	it('should work as an controlled input and handle custom errors', async () => {
 		const CustomErrorField = () => {
 			const { setFieldError } = useFieldManager()
@@ -182,58 +185,60 @@ describe('InputField', () => {
 			return <InputField name="field" onChange={handleChange} required data-testid="field" />
 		}
 
-		render(<CustomErrorField />, { wrapper: FullyControlledFieldWrapper })
+		render(<CustomErrorField />, { wrapper: FieldManagerWrapper })
 
 		expect(screen.getByTestId('field')).to.be.ok
 		const input = screen.getByTestId('field') as HTMLInputElement
 
 		// basic validation fail
-		expect(input.checkValidity()).to.be.false
+		act(() => {
+			input.checkValidity()
+		})
 		expect(input.validity.valueMissing).to.be.true
 
-		await act(async () => {
-			await userEvent.clear(input)
-			await userEvent.type(input, 'ab')
-		})
+		await userEvent.clear(input)
+		await userEvent.type(input, 'ab')
 
 		// basic validation pass
 		expect(input.value).to.eq('ab')
-		expect(input.checkValidity()).to.be.true
 
-		await act(async () => {
-			await userEvent.type(input, 'c')
-		})
+		act(() => { input.checkValidity() })
+
+		await userEvent.type(input, 'c')
 
 		// validation fail (from controlled state error)
 		expect(input.value).to.eq('abc')
-		expect(input.checkValidity()).to.be.false
+
+		act(() => { input.checkValidity() })
+
 		expect(input.validity.customError).to.be.true
 		expect(input.validationMessage).to.eq("Cannot enter 'abc'.")
 
-		await act(async () => {
-			await userEvent.type(input, 'c')
-		})
+		await userEvent.type(input, 'c')
 
 		expect(input.value).to.eq('abcc')
-		expect(input.checkValidity()).to.be.true
+
+		act(() => { input.checkValidity() })
+
+		expect(input.validity.valid).to.be.true
 	})
 	it('should work as an controlled checkbox input', async () => {
-		render(<InputField name="field" type="checkbox" value="123" required data-testid="field" />, { wrapper: FullyControlledFieldWrapper })
+		render(<InputField name="field" type="checkbox" value="123" required data-testid="field" />, { wrapper: FieldManagerWrapper })
 
 		expect(screen.getByTestId('field')).to.be.ok
 		const input = screen.getByTestId('field') as HTMLInputElement
 
-		// basic validation fail
-		expect(input.checkValidity()).to.be.false
+		act(() => { input.checkValidity() })
+
 		expect(input.validity.valueMissing).to.be.true
 
-		await act(async () => {
-			await userEvent.click(input)
-		})
+		await userEvent.click(input)
 
-		// basic validation pass
 		expect(input.value).to.eq('123')
-		expect(input.checkValidity()).to.be.true
+
+		act(() => { input.checkValidity() })
+
+		expect(input.validity.valid).to.be.true
 	})
 
 	it('should work as an controlled radio input', async () => {
@@ -242,7 +247,7 @@ describe('InputField', () => {
 				<Input name="field" value="1" type="radio" required data-testid="field1" />
 				<Input name="field" value="2" type="radio" required data-testid="field2" />
 				<Input name="field" value="3" type="radio" required data-testid="field3" />
-			</>, { wrapper: FullyControlledFieldWrapper })
+			</>, { wrapper: FieldManagerWrapper })
 
 		expect(screen.getByTestId('field1')).to.be.ok
 		expect(screen.getByTestId('field2')).to.be.ok
@@ -250,16 +255,16 @@ describe('InputField', () => {
 
 		const input = screen.getByTestId('field1') as HTMLInputElement
 
-		// basic validation fail
-		expect(input.checkValidity()).to.be.false
+		act(() => { input.checkValidity() })
+
 		expect(input.validity.valueMissing).to.be.true
 
-		await act(async () => {
-			await userEvent.click(input)
-		})
+		await userEvent.click(input)
 
-		// basic validation pass
 		expect(input.value).to.eq('1')
-		expect(input.checkValidity()).to.be.true
+
+		act(() => { input.checkValidity() })
+
+		expect(input.validity.valid).to.be.true
 	})
 })

@@ -5,6 +5,7 @@ import { InputDemo } from './samples/InputDemo'
 import { InputCheckDemo } from './samples/InputCheckDemo'
 import { RawExamples } from './samples/RawExamples'
 import { InvalidFeedbackDemo } from './samples/InvalidFeedback'
+import { UpstreamChangesTest } from './samples/UpstreamChangesTest'
 
 export const Routes = () => {
 	return (
@@ -17,6 +18,7 @@ export const Routes = () => {
 				<Route path="input-check-radio" element={<FetchPage page="input-check-radio" demo={<InputCheckDemo />} />} />
 				<Route path="select" element={<FetchPage page="select" demo={<InputDemo />} />} />
 				<Route path="textarea" element={<FetchPage page="textarea" demo={<InputDemo />} />} />
+				<Route path="upstream-test" element={<FetchPage page="test" demo={<UpstreamChangesTest />} />} />
 				<Route path=":page" element={<FetchPage />} />
 			</Route>
 		</ReactRoutes>

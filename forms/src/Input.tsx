@@ -53,7 +53,7 @@ Input.defaultProps = {
 	type: 'text'
 }
 
-export const InputField = forwardRef<Ref, InputProps>(({ type, name, onChange, value, ...other }, ref) => {
+export const InputField = forwardRef<Ref, Omit<InputProps, 'DefaultValue'>>(({ type, name, onChange, value, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
 	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors } = useFieldManager()
 

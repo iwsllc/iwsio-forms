@@ -6,8 +6,17 @@ import { ValidatedFormProps } from './ValidatedForm'
 import { FieldValues } from './types'
 
 export type FieldManagerProps = PropsWithChildren & {
+	/**
+	 * Initial field values to setup the form with. If you want to change these after initialization, use the `setFieldValues` method from the `useFieldManager` hook.
+	 */
 	fields: FieldValues
+	/**
+	 * Initial default values to setup the form with. If you want to change these after initialization, use the `setDefaultValues` method from the `useFieldManager` hook.
+	 */
 	defaultValues?: Record<string, string>
+	/**
+	 * Callback to be called when form is valid and submitted. Provides current field values.
+	 */
 	onValidSubmit?: (fields: FieldValues) => void
 } & Omit<ValidatedFormProps, 'onValidSubmit' | 'noValidate'>
 
@@ -19,6 +28,7 @@ export type FieldManagerProps = PropsWithChildren & {
  */
 export const FieldManager = forwardRef<HTMLFormElement, FieldManagerProps>(({ children, fields, defaultValues, onValidSubmit, ...props }, ref) => {
 	const fieldState = useFieldState(fields, defaultValues, onValidSubmit)
+
 	return (
 		<FieldManagerContext.Provider value={fieldState}>
 			<FieldManagerForm ref={ref} {...props}>

@@ -51,7 +51,7 @@ export const Select = forwardRef<Ref, SelectProps>(({ onFieldError, onInvalid, f
 })
 Select.displayName = 'Select'
 
-export const SelectField = forwardRef<Ref, SelectProps>(({ name, onChange, ...other }, ref) => {
+export const SelectField = forwardRef<Ref, Omit<SelectProps, 'DefaultValue'>>(({ name, onChange, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
 	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors } = useFieldManager()
 

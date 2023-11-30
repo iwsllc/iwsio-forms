@@ -49,7 +49,7 @@ export const TextArea = forwardRef<Ref, TextAreaProps>(({ onFieldError, onInvali
 })
 TextArea.displayName = 'TextArea'
 
-export const TextAreaField = forwardRef<Ref, TextAreaProps>(({ name, onChange, ...other }, ref) => {
+export const TextAreaField = forwardRef<Ref, Omit<TextAreaProps, 'DefaultValue'>>(({ name, onChange, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
 
 	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors } = useFieldManager()
