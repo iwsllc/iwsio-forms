@@ -1,11 +1,12 @@
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { useFieldState } from './useFieldState'
-import defaults from 'lodash.defaults'
-import omitBy from 'lodash.omitby'
 
 describe('useFieldState', () => {
 	test('When initializing, getting, and setting fields', async () => {
-		const { result } = renderHook(() => useFieldState({ firstName: '', lastName: '' }, { firstName: 'fred', lastName: 'flintstone' }))
+		const fieldValues = { firstName: '', lastName: '' }
+		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
+
+		const { result } = renderHook(() => useFieldState(fieldValues, defaultValues))
 
 		const { fields, fieldErrors, handleChange } = result.current
 		expect(fields.firstName).toEqual('')
@@ -13,7 +14,7 @@ describe('useFieldState', () => {
 		expect(Object.keys(fieldErrors).length).toEqual(0)
 
 		let updates
-		act(() => {
+		await act(() => {
 			updates = handleChange({ target: { name: 'firstName', value: '123' } } as any)
 		})
 
@@ -22,13 +23,13 @@ describe('useFieldState', () => {
 
 		expect(result.current.fields.firstName).toEqual('123')
 
-		act(() => {
+		await act(() => {
 			result.current.setFieldError('firstName', 'failed')
 		})
 
 		expect(result.current.fieldErrors?.firstName).toEqual('failed')
 
-		act(() => {
+		await act(() => {
 			result.current.reset()
 		})
 
@@ -39,19 +40,22 @@ describe('useFieldState', () => {
 		})
 	})
 
-	test('Set all errors', () => {
-		const { result } = renderHook(() => useFieldState({ firstName: '', lastName: '' }, { firstName: 'fred', lastName: 'flintstone' }))
+	test('Set all errors', async () => {
+		const fieldValues = { firstName: '', lastName: '' }
+		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
+
+		const { result } = renderHook(() => useFieldState(fieldValues, defaultValues))
 
 		const { fieldErrors, setFieldError, setFieldErrors } = result.current
 		expect(Object.keys(fieldErrors).length).toEqual(0)
 
-		act(() => {
+		await act(() => {
 			setFieldError('firstName', 'input is invalid.')
 		})
 
 		expect(result.current.fieldErrors.firstName).toEqual('input is invalid.')
 
-		act(() => {
+		await act(() => {
 			setFieldErrors({ general: 'test', firstName: '' })
 		})
 
@@ -59,10 +63,111 @@ describe('useFieldState', () => {
 		expect(result.current.fieldErrors.general).toEqual('test')
 	})
 
-	test('init values with defaults; testing expression', () => {
-		const initValues = { field: '', field2: '' }
-		const defaultValues = { field: 'field', field2: 'field2' }
-		const result = defaults(omitBy(initValues, (v) => v == null || v === ''), defaultValues)
-		expect(result).to.eql({ field: 'field', field2: 'field2' })
+	test('init values with defaults; rerendering with new initial props (should not change values), and updating state from within, (should change values)', async () => {
+		const fieldValues = { firstName: '', lastName: '' }
+		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
+
+		const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+
+		const { result, rerender } = hook
+		expect(result.current.fields.firstName).toEqual('')
+		expect(result.current.fields.lastName).toEqual('')
+		expect(Object.keys(result.current.fieldErrors).length).toEqual(0)
+
+		act(() => {
+			result.current.reset()
+		})
+
+		expect(result.current.fields.firstName).toEqual('fred')
+		expect(result.current.fields.lastName).toEqual('flintstone')
+
+		fieldValues.firstName = 'fred2'
+		fieldValues.firstName = 'flintstone2'
+
+		rerender()
+
+		waitFor(() => {
+			expect(result.current.fields.firstName).toEqual('fred')
+			expect(result.current.fields.lastName).toEqual('flintstone')
+		})
+
+		act(() => {
+			result.current.setField('firstName', 'fred2')
+			result.current.setField('lastName', 'flintstone2')
+		})
+
+		waitFor(() => {
+			expect(result.current.fields.firstName).toEqual('fred2')
+			expect(result.current.fields.lastName).toEqual('flintstone2')
+		})
+	})
+
+	test('Changing defaults will allow reset to use the new defaults.', async () => {
+		const fieldValues = { firstName: '', lastName: '' }
+		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
+
+		const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+
+		const { result } = hook
+		expect(result.current.fields.firstName).toEqual('')
+		expect(result.current.fields.lastName).toEqual('')
+
+		act(() => {
+			result.current.reset()
+		})
+
+		expect(result.current.fields.firstName).toEqual('fred')
+		expect(result.current.fields.lastName).toEqual('flintstone')
+
+		act(() => {
+			result.current.setDefaultValues({ firstName: 'fred2', lastName: 'flintstone2' })
+		})
+
+		act(() => { result.current.reset() })
+
+		await waitFor(() => {
+			expect(result.current.fields.firstName).toEqual('fred2')
+			expect(result.current.fields.lastName).toEqual('flintstone2')
+		})
+	})
+
+	test('When changing many fields at once (all fields)', async () => {
+		const fieldValues = { firstName: '', lastName: '' }
+		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
+
+		const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+
+		const { result } = hook
+		expect(result.current.fields.firstName).toEqual('')
+		expect(result.current.fields.lastName).toEqual('')
+
+		act(() => {
+			result.current.setFields({ firstName: 'fred2', lastName: 'flintstone2' })
+		})
+
+		await waitFor(() => {
+			expect(result.current.fields.firstName).toEqual('fred2')
+			expect(result.current.fields.lastName).toEqual('flintstone2')
+		})
+	})
+
+	test('When changing many fields at once (some fields)', async () => {
+		const fieldValues = { firstName: '', lastName: '' }
+		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
+
+		const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+
+		const { result } = hook
+		expect(result.current.fields.firstName).toEqual('')
+		expect(result.current.fields.lastName).toEqual('')
+
+		act(() => {
+			result.current.setFields({ firstName: 'fred2' })
+		})
+
+		await waitFor(() => {
+			expect(result.current.fields.firstName).toEqual('fred2')
+			expect(result.current.fields.lastName).toEqual('')
+		})
 	})
 })

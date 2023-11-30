@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { FullyControlledFieldWrapper } from './__tests__/FullyControlledFieldWrapper'
+import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper'
 import { InputField } from './Input'
 import { InvalidFeedbackForField } from './InvalidFeedbackForField'
 import userEvent from '@testing-library/user-event'
@@ -8,10 +8,10 @@ describe('InvalidFeedbackForField', () => {
 	it('should render nothing without an error and with report validation off', async () => {
 		render((
 			<>
-				<InputField name="name" required pattern="^\D+$" data-testid="input" />
-				<InvalidFeedbackForField name="name" data-testid="error" className="frogs" />
+				<InputField name="field" required pattern="^\D+$" data-testid="input" />
+				<InvalidFeedbackForField name="field" data-testid="error" className="frogs" />
 				<button type="submit" data-testid="submit">submit</button>
-			</>), { wrapper: FullyControlledFieldWrapper }
+			</>), { wrapper: FieldManagerWrapper }
 		)
 
 		expect(screen.queryByTestId('error')).to.not.be.ok // doesn't show yet

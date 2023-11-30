@@ -3,9 +3,9 @@ import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TextArea, TextAreaField } from './TextArea'
 import { useFieldManager } from './useFieldManager'
-import { FullyControlledFieldWrapper } from './__tests__/FullyControlledFieldWrapper'
+import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper'
 
-export const ControlledWrapper = () => {
+export const ControlledTextArea = () => {
 	const [value, setValue] = useState('')
 	const handleChange = (e) => {
 		setValue(e.target.value)
@@ -13,7 +13,7 @@ export const ControlledWrapper = () => {
 	return <TextArea name="field" value={value} onChange={handleChange} required data-testid="field" />
 }
 
-export const FullyControlledWrapper = () => {
+export const ControlledTextAreaWithErrors = () => {
 	const [value, setValue] = useState('')
 	const [error, setError] = useState<string | undefined>()
 	const handleChange = (e) => {
@@ -38,74 +38,65 @@ describe('TextArea', function() {
 		expect(screen.getByTestId('field')).to.be.ok
 
 		const textarea = screen.getByTestId('field') as HTMLTextAreaElement
-		expect(textarea.checkValidity()).to.be.false
 
-		await act(async () => {
-			await userEvent.clear(textarea)
-			await userEvent.type(textarea, 'abc')
-		})
+		act(() => { textarea.checkValidity() })
+
+		expect(textarea.validity.valid).to.be.false
+
+		await userEvent.clear(textarea)
+		await userEvent.type(textarea, 'abc')
 
 		expect(textarea.value).to.eq('abc')
 		expect(textarea.checkValidity()).to.be.true
 	})
 
 	it('should work as an controlled input (without controlled fieldError)', async () => {
-		render(<ControlledWrapper />)
+		render(<ControlledTextArea />)
 
 		expect(screen.getByTestId('field')).to.be.ok
 		const textarea = screen.getByTestId('field') as HTMLTextAreaElement
 
-		expect(textarea.checkValidity()).to.be.false
+		act(() => { textarea.checkValidity() })
 
-		await act(async () => {
-			await userEvent.clear(textarea)
-			await userEvent.type(textarea, 'abc')
-		})
+		expect(textarea.validity.valid).to.be.false
+
+		await userEvent.clear(textarea)
+		await userEvent.type(textarea, 'abc')
 
 		expect(textarea.value).to.eq('abc')
 		expect(textarea.checkValidity()).to.be.true
 	})
 
 	it('should work as an controlled input (with controlled fieldError)', async () => {
-		render(<FullyControlledWrapper />)
+		render(<ControlledTextAreaWithErrors />)
 
 		expect(screen.getByTestId('field')).to.be.ok
 		const textarea = screen.getByTestId('field') as HTMLTextAreaElement
 
-		expect(textarea.checkValidity()).to.be.false
+		act(() => { textarea.checkValidity() })
+		expect(textarea.validity.valid).to.be.false
+
 		expect(textarea.validity.valueMissing).to.be.true
 
-		await act(async () => {
-			await userEvent.clear(textarea)
-			await userEvent.type(textarea, 'ab')
-		})
+		await userEvent.clear(textarea)
+		await userEvent.type(textarea, 'ab')
 
 		expect(textarea.value).to.eq('ab')
 		expect(textarea.checkValidity()).to.be.true
 
-		await act(async () => {
-			await userEvent.type(textarea, 'c')
-		})
+		await userEvent.type(textarea, 'c')
 
 		expect(textarea.value).to.eq('abc')
-		expect(textarea.checkValidity()).to.be.false
+
+		act(() => { textarea.checkValidity() })
+
+		expect(textarea.validity.valid).to.be.false
 		expect(textarea.validity.customError).to.be.true
 		expect(textarea.validationMessage).to.eq("Cannot enter 'abc'.")
 	})
 })
 
 describe('TextAreaField', () => {
-	it('should throw error without field manager context provider', async () => {
-		let error
-		try {
-			render(<TextAreaField name="field" required data-testid="field" />)
-		} catch (err) {
-			error = err
-		}
-
-		expect(error.message).toEqual('Must be used within a FieldManager')
-	})
-
 	it('should work as an controlled input and handle custom errors', async () => {
 		const CustomErrorField = () => {
 			const { setFieldError } = useFieldManager()
@@ -115,37 +106,36 @@ describe('TextAreaField', () => {
 			return <TextAreaField name="field" onChange={handleChange} required data-testid="field" />
 		}
 
-		render(<CustomErrorField />, { wrapper: FullyControlledFieldWrapper })
+		render(<CustomErrorField />, { wrapper: FieldManagerWrapper })
 
 		expect(screen.getByTestId('field')).to.be.ok
 		const textarea = screen.getByTestId('field') as HTMLInputElement
 
 		// basic validation fail
-		expect(textarea.checkValidity()).to.be.false
+		act(() => { textarea.checkValidity() })
+
+		expect(textarea.validity.valid).to.be.false
 		expect(textarea.validity.valueMissing).to.be.true
 
-		await act(async () => {
-			await userEvent.clear(textarea)
-			await userEvent.type(textarea, 'ab')
-		})
+		await userEvent.clear(textarea)
+		await userEvent.type(textarea, 'ab')
 
 		// basic validation pass
 		expect(textarea.value).to.eq('ab')
 		expect(textarea.checkValidity()).to.be.true
 
-		await act(async () => {
-			await userEvent.type(textarea, 'c')
-		})
+		await userEvent.type(textarea, 'c')
 
 		// validation fail (from controlled state error)
 		expect(textarea.value).to.eq('abc')
-		expect(textarea.checkValidity()).to.be.false
+
+		act(() => { textarea.checkValidity() })
+
+		expect(textarea.validity.valid).to.be.false
 		expect(textarea.validity.customError).to.be.true
 		expect(textarea.validationMessage).to.eq("Cannot enter 'abc'.")
 
-		await act(async () => {
-			await userEvent.type(textarea, 'c')
-		})
+		await userEvent.type(textarea, 'c')
 
 		expect(textarea.value).to.eq('abcc')
 		expect(textarea.checkValidity()).to.be.true

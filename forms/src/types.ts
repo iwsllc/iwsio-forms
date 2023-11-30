@@ -30,6 +30,11 @@ export type UseFieldStateResult = {
 	 * @param value Value to set
 	 */
 	setField: (key: string, value: string) => void;
+
+	/**
+	 * Set all field values at once. Ignores undefined values.
+	 */
+	setFields: (values: Partial<FieldValues>) => void;
 	/**
 	 * Current field errors where kesy match input names.
 	 */
@@ -54,17 +59,23 @@ export type UseFieldStateResult = {
 	 * @param e passthrough of native change event arguments
 	 * @returns Returns the latest field value state after change applied.
 	 */
-	handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => Record<string, string>;
+	handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => FieldValues;
 	/**
 	 * @deprecated Please use handleChange
 	 * @param e passthrough of native change event arguments
 	 * @returns Returns the latest field value state after change applied.
 	 */
-	onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => Record<string, string>;
+	onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => FieldValues;
 
 	/**
 	 * Invokes when submit event triggered and form has been validated and is valid.
 	 * @param fields Current values stored in field state.
 	 */
 	onValidSubmit: (fields: FieldValues) => void
+
+	/**
+	 * Use this to change the default values after initialization.
+	 * @param values The new default values to set.
+	 */
+	setDefaultValues: (values: FieldValues) => void
 };
