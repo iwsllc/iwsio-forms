@@ -5,7 +5,7 @@ import { InputDemo } from './samples/InputDemo'
 import { InputCheckDemo } from './samples/InputCheckDemo'
 import { RawExamples } from './samples/RawExamples'
 import { InvalidFeedbackDemo } from './samples/InvalidFeedback'
-import { UpstreamChangesPage } from './samples/UpstreamChangesTest'
+import { UpstreamChangesPage } from './samples/UpstreamChangesPage'
 
 export const Routes = () => {
 	return (

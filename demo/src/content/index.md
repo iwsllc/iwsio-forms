@@ -18,7 +18,7 @@ These controlled inputs allow you to track error state with a controlled compone
 
 ## `<ValidatedForm>`
 
-Complimenting the inputs, I've included a form component to simplify styling and validated submit handling. It includes some CSS sugar `needs-validation` and `was-validated` for pre and post first submission. (This is kind of a throwback to Bootstrap, but you can use it however you like). You also still have acess to the psuedo classes `:valid` `:invalid` as usual with these input components.
+Complimenting the inputs, I've included a form component to simplify styling and validated submit handling. It includes some CSS sugar `needs-validation` and `was-validated` for pre and post first submission. (This is kind of a throwback to Bootstrap, but you can use it however you like). You also still have acess to the psuedo classes `:valid` or `:invalid` as usual with these input components.
 
 `onValidSubmit` invokes when form submit happens with all valid inputs. It's the same as using a regular `<form/>` `onSubmit` but with a built-in `form.checkValidity()` call to ensure field inputs are valid. `className` provided here will style the underlying HTML form.
 
@@ -69,6 +69,8 @@ hook props | Definition
 `reportValidation` | boolean field that indicates if errors should be shown. Sets to true when using `FieldManager` after first form submit.
 `reset` | resets the fields back to `defaultValues` or `initValues` and resets fieldError state. 
 `setField` | manually set a single field's value by name.
+`setFields` | manually set many values with a Record<string, string>. Undefined values are ignored.
+`setDefaultValues` | manually reset the default values.
 `setFieldError` | Sets a single field error. Useful when needing to set errors outside of browser validation. 
 `setFieldErrors` | Sets ALL field errors. This is useful when you want to set more than one error at once. Like for example handling an HTTP 400 response with specific input errors. 
 `setReportValidation` | sets reportValidation toggle for manual implementation.
@@ -99,7 +101,8 @@ Finally, `FieldManager` brings it all together and automatically wires up field 
 
 The props on `FieldManager` passthrough to the underlying `<form/>`. You can provide `className` and other HTML attributes commonly used on `<form/>`. For this to work however, you will need to provide at least an initial field state as `fields`. Use `onValidSubmit` to know when the form submit occurred with valid fields.
 
-See the [invalid feedback example](/invalid-feedback) to see how to customize showing errors manually instead of relying on native validation reporting. 
+This can be manually styled as well. Use `useFieldManager()` to get a check function `checkFieldError(fieldName: string)`. The result of this function will indicate whether there is an error and it is "reportable" (meaning the form has been submitted at least once). The real-time error is accessible using the `fieldErrors` state from the hook as well.
+
 
 Here is a quick example:
 
@@ -127,6 +130,54 @@ const Sample = () => {
 }
 ```
 
+
+## `<ControlledFieldManager>`
+
+You might be wondering, how do I manage field state outside of the FieldManager? Imagine a scenario where these field values may be managed upstream in your application. Maybe they're being pulled in from an asynchronous request and loaded after the form renders. In this case, you'll want to manage the field state outside of the FieldManager component. For this, there is another component you can use. `<ControlledFieldManager/>` where you provide the fieldState yourself. See this in action [in the docs](/upstream-test).
+
+```tsx
+export const UpstreamChangesPage = () => {
+	// a little help from @tanstack/react-query
+	// NOTE: fetchMovies = async() => (await fetch('/movies.json')).json() // returns unawaited json()
+	const { data, refetch, isFetching, isSuccess } = useQuery({ queryKey: ['/movies.json'], queryFn: () => fetchMovies() })
+
+	const [success, setSuccess] = useState(false)
+	const handleValidSubmit = (values: FieldValues) => {
+		setSuccess(true)
+	}
+	// use useFieldState here
+	const fieldState = useFieldState({ title: '', year: '', director: '' }, undefined, handleValidSubmit)
+	const { setFields, reset } = fieldState
+
+	// some fetch management
+	useEffect(() => {
+		if (!isSuccess || isFetching) return
+		if (data == null || data.length === 0) return
+		const { title, year, director } = data[0]
+		setFields({ title, year, director })
+	}, [isFetching, isSuccess])
+
+	return (
+		// controlled field manager takes fieldState prop
+		<ControlledFieldManager fieldState={fieldState} className="flex flex-col gap-2 w-1/2" nativeValidation>
+			<InputField placeholder="Title" name="title" type="text" className="input input-bordered" required />
+			<InputField placeholder="Year" name="year" type="number" pattern="^\d+$" className="input input-bordered" required />
+			<InputField placeholder="Director" name="director" type="text" className="input input-bordered" required />
+			<div className="flex gap-2">
+				<button type="reset" className="btn btn-info" onClick={() => refetch()}>Re-fetch</button>
+				<button type="reset" className="btn" onClick={() => { reset(); setSuccess(false) }}>Reset</button>
+				<button type="submit" className={`btn ${success ? 'btn-success' : 'btn-primary'}`}>
+					Submit
+				</button>
+			</div>
+			<p>
+				Try clicking <strong>Reset</strong> to reset the form. Then <strong>Submit</strong> will show validation errors. Then try clicking the <strong>Re-fetch</strong> button to fetch new data from the server and reset the field validation.
+			</p>
+		</ControlledFieldManager>
+	)
+}
+```
+
 ## `<InvalidFeedbackForField />`
 One last component: this is just a helper component to display errors using the `useFieldState` properties mentioned above. Feel free to use this an example to make your own or consume it as-is. It currently returns a `<span/>` containing the error with any additional span attributes you provide as props. It consumes `checkFieldError(name)` to determine when to render and will return `null` when no error exists. You'll likely want to disable native validation reporting if you use this. Set `nativeValidation={false}` on the `ValidatedForm` or `FieldManager`, whichever one you use.
 
@@ -144,4 +195,4 @@ One last component: this is just a helper component to display errors using the 
 
 ### MDN Forms validation
 
-[https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation](https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation)
+https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation

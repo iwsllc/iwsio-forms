@@ -71,6 +71,8 @@ hook props | Definition
 `reportValidation` | boolean field that indicates if errors should be shown. Sets to true when using `FieldManager` after first form submit.
 `reset` | resets the fields back to `defaultValues` or `initValues` and resets fieldError state. 
 `setField` | manually set a single field's value by name.
+`setFields` | manually set many values with a Record<string, string>. Undefined values are ignored.
+`setDefaultValues` | manually reset the default values.
 `setFieldError` | Sets a single field error. Useful when needing to set errors outside of browser validation. 
 `setFieldErrors` | Sets ALL field errors. This is useful when you want to set more than one error at once. Like for example handling an HTTP 400 response with specific input errors. 
 `setReportValidation` | sets reportValidation toggle for manual implementation.
@@ -133,30 +135,46 @@ const Sample = () => {
 
 ## `<ControlledFieldManager>`
 
-You might be wondering, how do I manage field state outside of the FieldManager? Imagine a scenario where these field values may be managed upstream in your application. Maybe they're being pulled in from an asynchronous request and loaded after the form renders. In this case, you'll want to manage the field state outside of the FieldManager component. For this, there is another component you can use. `<ControlledFieldManager/>` where you provide the fieldState yourself.
+You might be wondering, how do I manage field state outside of the FieldManager? Imagine a scenario where these field values may be managed upstream in your application. Maybe they're being pulled in from an asynchronous request and loaded after the form renders. In this case, you'll want to manage the field state outside of the FieldManager component. For this, there is another component you can use. `<ControlledFieldManager/>` where you provide the fieldState yourself. See this in action [in the docs](https://forms.iws.io/upstream-test).
 
 ```tsx
-export const DelayedFieldValuesTest = () => {
-	const handleValidSubmit = (values: FieldValues) => {
-		console.log(values)
-	}
-  // use this hook directly to set initail field values.
-	const fieldState = useFieldState({ name: '', email: '', phone: '' }, undefined, handleValidSubmit)
-	const { setFields } = fieldState
+export const UpstreamChangesPage = () => {
+	// a little help from @tanstack/react-query
+	// NOTE: fetchMovies = async() => (await fetch('/movies.json')).json() // returns unawaited json()
+	const { data, refetch, isFetching, isSuccess } = useQuery({ queryKey: ['/movies.json'], queryFn: () => fetchMovies() })
 
+	const [success, setSuccess] = useState(false)
+	const handleValidSubmit = (values: FieldValues) => {
+		setSuccess(true)
+	}
+	// use useFieldState here
+	const fieldState = useFieldState({ title: '', year: '', director: '' }, undefined, handleValidSubmit)
+	const { setFields, reset } = fieldState
+
+	// some fetch management
 	useEffect(() => {
-    // simple delay to emulate a network request or some other delay getting values
-		const id = setTimeout(() => {
-			setFields({ name: 'John Doe', email: 'test@example.com', phone: '1234567890' })
-		}, 250)
-		return () => clearTimeout(id)
-	}, [])
+		if (!isSuccess || isFetching) return
+		if (data == null || data.length === 0) return
+		const { title, year, director } = data[0]
+		setFields({ title, year, director })
+	}, [isFetching, isSuccess])
 
 	return (
-		<ControlledFieldManager fieldState={fieldState}>
-			<InputField placeholder="Name" name="name" type="text" className="input input-bordered" required />
-			<InputField placeholder="Phone" name="phone" type="text" pattern="^\d+$" className="input input-bordered" required />
-			<InputField placeholder="Email" name="email" type="email" className="input input-bordered" required />
+		// controlled field manager takes fieldState prop
+		<ControlledFieldManager fieldState={fieldState} className="flex flex-col gap-2 w-1/2" nativeValidation>
+			<InputField placeholder="Title" name="title" type="text" className="input input-bordered" required />
+			<InputField placeholder="Year" name="year" type="number" pattern="^\d+$" className="input input-bordered" required />
+			<InputField placeholder="Director" name="director" type="text" className="input input-bordered" required />
+			<div className="flex gap-2">
+				<button type="reset" className="btn btn-info" onClick={() => refetch()}>Re-fetch</button>
+				<button type="reset" className="btn" onClick={() => { reset(); setSuccess(false) }}>Reset</button>
+				<button type="submit" className={`btn ${success ? 'btn-success' : 'btn-primary'}`}>
+					Submit
+				</button>
+			</div>
+			<p>
+				Try clicking <strong>Reset</strong> to reset the form. Then <strong>Submit</strong> will show validation errors. Then try clicking the <strong>Re-fetch</strong> button to fetch new data from the server and reset the field validation.
+			</p>
 		</ControlledFieldManager>
 	)
 }
