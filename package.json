@@ -29,7 +29,7 @@
     "prebuild:ts": "tsc --build --clean",
     "build": "npm-run-all -s build:ts build:demo",
     "build:ts": "tsc --build",
-    "build:demo": "npm run build -w demo",
+    "build:demo": "CI=true npm run build -w demo",
     "dev:demo": "npm start -w demo",
     "predev:ts": "tsc --build --clean",
     "dev:ts": "tsc --build --watch --preserveWatchOutput"
@@ -40,7 +40,6 @@
     "demo"
   ],
   "devDependencies": {
-    "demo": "file:demo",
-    "markdown-it": "^13.0.2"
+    "demo": "file:demo"
   }
 }
