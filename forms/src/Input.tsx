@@ -11,7 +11,7 @@ export const Input = forwardRef<Ref, InputProps>(({ onFieldError, fieldError, na
 	const localRef = useForwardRef<Ref>(ref)
 
 	const localSetError = (message?: string) => {
-		if (onFieldError != null) onFieldError(name, message)
+		if (onFieldError != null) onFieldError(name, localRef.current.validity, message)
 	}
 
 	const localOnChange: ChangeEventHandler<Ref> = (e) => {
@@ -31,8 +31,11 @@ export const Input = forwardRef<Ref, InputProps>(({ onFieldError, fieldError, na
 	}, [])
 
 	useEffect(() => {
-		if (fieldError !== localRef.current.validationMessage) {
-			localRef.current.setCustomValidity(fieldError || '')
+		if (fieldError == null) return localRef.current.setCustomValidity('')
+		if (fieldError.message == null) return localRef.current.setCustomValidity('')
+
+		if (fieldError.validity?.customError && fieldError.message !== localRef.current.validationMessage) {
+			localRef.current.setCustomValidity(fieldError.message)
 		}
 	}, [fieldError])
 
@@ -55,11 +58,16 @@ Input.defaultProps = {
 
 export const InputField = forwardRef<Ref, Omit<InputProps, 'DefaultValue'>>(({ type, name, onChange, value, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
-	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors } = useFieldManager()
+	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors, mapError } = useFieldManager()
 
 	const handleOnChange: ChangeEventHandler<Ref> = (e) => {
 		managerOnChange(e)
 		if (onChange != null) onChange(e)
+	}
+
+	const handleFieldError = (key, validity, message) => {
+		const mappedError = mapError(validity, message)
+		setFieldError(key, mappedError, validity)
 	}
 
 	return (
@@ -70,7 +78,7 @@ export const InputField = forwardRef<Ref, Omit<InputProps, 'DefaultValue'>>(({ t
 			type={type}
 			name={name}
 			fieldError={fieldErrors[name]}
-			onFieldError={setFieldError}
+			onFieldError={handleFieldError}
 			{...other}
 		/>
 	)

@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { TextArea, TextAreaField } from './TextArea'
 import { useFieldManager } from './useFieldManager'
 import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper'
+import { FieldError } from './types'
 
 export const ControlledTextArea = () => {
 	const [value, setValue] = useState('')
@@ -15,18 +16,18 @@ export const ControlledTextArea = () => {
 
 export const ControlledTextAreaWithErrors = () => {
 	const [value, setValue] = useState('')
-	const [error, setError] = useState<string | undefined>()
+	const [error, setError] = useState<FieldError | undefined>()
 	const handleChange = (e) => {
 		setValue(e.target.value)
-		if (e.target.value === 'abc') setError("Cannot enter 'abc'.")
+		if (e.target.value === 'abc') setError({ message: "Cannot enter 'abc'.", validity: { valid: false, customError: true } as any })
 	}
-	const handleFieldError = (key, message) => {
-		setError(message)
+	const handleFieldError = (_key, validity, message) => {
+		setError({ message, validity })
 	}
 	return (
 		<>
 			<TextArea name="field" value={value} onChange={handleChange} required data-testid="field" fieldError={error} onFieldError={handleFieldError} />
-			<span data-testid="error">{error}</span>
+			<span data-testid="error">{error?.message}</span>
 		</>
 	)
 }
@@ -47,7 +48,8 @@ describe('TextArea', function() {
 		await userEvent.type(textarea, 'abc')
 
 		expect(textarea.value).to.eq('abc')
-		expect(textarea.checkValidity()).to.be.true
+		act(() => { textarea.checkValidity() })
+		expect(textarea.validity.valid).to.be.true
 	})
 
 	it('should work as an controlled input (without controlled fieldError)', async () => {
@@ -64,7 +66,8 @@ describe('TextArea', function() {
 		await userEvent.type(textarea, 'abc')
 
 		expect(textarea.value).to.eq('abc')
-		expect(textarea.checkValidity()).to.be.true
+		act(() => { textarea.checkValidity() })
+		expect(textarea.validity.valid).to.be.true
 	})
 
 	it('should work as an controlled input (with controlled fieldError)', async () => {
@@ -82,7 +85,8 @@ describe('TextArea', function() {
 		await userEvent.type(textarea, 'ab')
 
 		expect(textarea.value).to.eq('ab')
-		expect(textarea.checkValidity()).to.be.true
+		act(() => { textarea.checkValidity() })
+		expect(textarea.validity.valid).to.be.true
 
 		await userEvent.type(textarea, 'c')
 

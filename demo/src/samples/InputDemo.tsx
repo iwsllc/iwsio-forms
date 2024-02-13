@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react'
-import { Input } from '@iwsio/forms'
+import { FieldError, Input } from '@iwsio/forms'
 
 export const InputDemo = () => {
 	const refForm = useRef<HTMLFormElement>(null)
 	const [success, setSuccess] = useState(false)
 	const [text, setText] = useState('')
 	// Keep track of validation state. (This will be the first error, if any, encountered in browser validation)
-	const [fieldError, setFieldError] = useState(undefined)
+	const [fieldError, setFieldError] = useState<FieldError | undefined>(undefined)
 
 	const reset = () => {
 		setSuccess(false)
@@ -30,7 +30,7 @@ export const InputDemo = () => {
 	const handleChange = (e) => {
 		setSuccess(false)
 		setText(e.target.value)
-		if (e.target.value === 'abc') setFieldError('cannot use abc')
+		if (e.target.value === 'abc') setFieldError({ message: 'cannot use abc', validity: { customError: true, valid: false } as any })
 	}
 
 	return (
@@ -44,7 +44,7 @@ export const InputDemo = () => {
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>{fieldError || 'undefined'}</code></td>
+							<td><code>{fieldError?.message ?? 'undefined'}</code></td>
 						</tr>
 					</tbody>
 				</table>
@@ -57,7 +57,7 @@ export const InputDemo = () => {
 				required
 				pattern="^[a-zA-Z]+$"
 				fieldError={fieldError}
-				onFieldError={(key, message) => { setFieldError(message) }}
+				onFieldError={(key, validity, message) => { setFieldError({ message, validity }) }}
 			/>
 			<p className="text-sm"><em>Try <code>abc</code> for custom error, <strong>blank</strong> for required, or any <strong>non-alpha</strong> for pattern check.</em></p>
 			<p className="flex flex-row justify-end gap-2">

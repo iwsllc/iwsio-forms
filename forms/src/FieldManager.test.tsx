@@ -9,7 +9,7 @@ describe('FieldManager', () => {
 		const Test = () => {
 			return <FieldManager fields={{ field: '' }}><Input data-testid="field" name="field" /></FieldManager>
 		}
-		render(<Test />)
+		const { container } = render(<Test />)
 
 		const input = screen.getByTestId('field') as HTMLInputElement
 		expect(input.value).to.eq('')
@@ -19,6 +19,7 @@ describe('FieldManager', () => {
 		})
 
 		expect(input.value).to.eq('123') // bindings made, state updated and the input is controlled
+		expect(container.querySelector('form[errorMapping="*"]')).toBeFalsy()
 	})
 
 	test('When rendering field manager with no fields', async () => {
@@ -110,5 +111,18 @@ describe('ControlledFieldManager', () => {
 		})
 
 		expect(input.value).to.eq('123') // field still works as normal
+	})
+
+	test('When rendering field manager with fields and error mapping; should not render component attributes', async () => {
+		const Test = () => {
+			const fieldState = useFieldState({ field: '' }, undefined, undefined, { customError: 'failed' } as any)
+			return <ControlledFieldManager fieldState={fieldState} data-testid="form"><Input data-testid="field" name="field" /><button type="submit" data-testid="submit">submit</button></ControlledFieldManager>
+		}
+		const { container } = render(<Test />)
+
+		await userEvent.click(screen.getByTestId('submit'))
+
+		expect(container.querySelector('form[errorMapping]')).toBeFalsy()
+		expect(screen.getByTestId('form')).toBeTruthy()
 	})
 })

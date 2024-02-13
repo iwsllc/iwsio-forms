@@ -4,6 +4,7 @@ import { useFieldState } from './useFieldState'
 import { FieldManagerForm } from './FieldManagerForm'
 import { ValidatedFormProps } from './ValidatedForm'
 import { FieldValues } from './types'
+import { ErrorMapping } from './useErrorMapping'
 
 export type FieldManagerProps = PropsWithChildren & {
 	/**
@@ -14,6 +15,11 @@ export type FieldManagerProps = PropsWithChildren & {
 	 * Initial default values to setup the form with. If you want to change these after initialization, use the `setDefaultValues` method from the `useFieldManager` hook.
 	 */
 	defaultValues?: Record<string, string>
+
+	/**
+	 * Error mapping to be used for validation. If not provided, default error messages are used.
+	 */
+	errorMapping?: ErrorMapping
 	/**
 	 * Callback to be called when form is valid and submitted. Provides current field values.
 	 */
@@ -26,8 +32,8 @@ export type FieldManagerProps = PropsWithChildren & {
  * `onValidSubmit`: provides calls on submit when form is valid and provides current fields with values.
  * `ref` here will give access to the HTML Form element rendered.
  */
-export const FieldManager = forwardRef<HTMLFormElement, FieldManagerProps>(({ children, fields, defaultValues, onValidSubmit, ...props }, ref) => {
-	const fieldState = useFieldState(fields, defaultValues, onValidSubmit)
+export const FieldManager = forwardRef<HTMLFormElement, FieldManagerProps>(({ children, fields, defaultValues, onValidSubmit, errorMapping, ...props }, ref) => {
+	const fieldState = useFieldState(fields, defaultValues, onValidSubmit, errorMapping)
 
 	return (
 		<FieldManagerContext.Provider value={fieldState}>

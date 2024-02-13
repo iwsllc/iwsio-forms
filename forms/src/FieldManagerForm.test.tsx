@@ -15,7 +15,7 @@ const SampleFieldWithRenderError = () => {
 			<InputField data-testid="field" name="field" required />
 			<button type="submit" data-testid="submit">Submit</button>
 			<button type="button" data-testid="reset" onClick={() => reset()}>Reset</button>
-			{fieldErrors.field && <div data-testid="error-state">{fieldErrors.field}</div>}
+			{fieldErrors.field && <div data-testid="error-state">anything</div>}
 			{error && <div data-testid="error-show">{error}</div>}
 		</>
 	)

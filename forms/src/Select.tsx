@@ -11,7 +11,7 @@ export const Select = forwardRef<Ref, SelectProps>(({ onFieldError, onInvalid, f
 	const localRef = useForwardRef<Ref>(ref)
 
 	const localSetError = (message?: string) => {
-		if (onFieldError != null) onFieldError(name, message)
+		if (onFieldError != null) onFieldError(name, localRef.current.validity, message)
 	}
 
 	const localOnChange: ChangeEventHandler<Ref> = (e) => {
@@ -31,8 +31,9 @@ export const Select = forwardRef<Ref, SelectProps>(({ onFieldError, onInvalid, f
 	}, [])
 
 	useEffect(() => {
-		if (fieldError !== localRef.current.validationMessage) {
-			localRef.current.setCustomValidity(fieldError || '')
+		if (fieldError == null) return
+		if (fieldError.validity?.customError && fieldError.message !== localRef.current.validationMessage) {
+			localRef.current.setCustomValidity(fieldError.message || '')
 		}
 	}, [fieldError])
 
@@ -53,18 +54,23 @@ Select.displayName = 'Select'
 
 export const SelectField = forwardRef<Ref, Omit<SelectProps, 'DefaultValue'>>(({ name, onChange, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
-	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors } = useFieldManager()
+	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors, mapError } = useFieldManager()
 
 	const handleOnChange: ChangeEventHandler<Ref> = (e) => {
 		managerOnChange(e)
 		if (onChange != null) onChange(e)
 	}
 
+	const handleFieldError = (key, validity, message) => {
+		const mappedError = mapError(validity, message)
+		setFieldError(key, mappedError, validity)
+	}
+
 	return (
 		<Select
 			ref={localRef}
 			onChange={handleOnChange}
-			onFieldError={setFieldError}
+			onFieldError={handleFieldError}
 			name={name}
 			fieldError={fieldErrors[name]}
 			value={fields[name]}

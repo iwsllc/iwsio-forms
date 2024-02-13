@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 export const UpstreamChangesPage = () => {
 	const { data, refetch, isFetching, isSuccess } = useQuery({ queryKey: ['/movies.json'], queryFn: () => fetchMovies() })
 	const [success, setSuccess] = useState(false)
-	const handleValidSubmit = (values: FieldValues) => {
+	const handleValidSubmit = (_values: FieldValues) => {
 		setSuccess(true)
 	}
 	const fieldState = useFieldState({ title: '', year: '', director: '' }, undefined, handleValidSubmit)
