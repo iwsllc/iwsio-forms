@@ -1,5 +1,18 @@
-import { FieldManager, InputField, InvalidFeedbackForField, useFieldManager } from '@iwsio/forms'
+import { FieldManager, InputField, InvalidFeedbackForField, useFieldManager, ErrorMapping } from '@iwsio/forms'
 import { useState } from 'react'
+
+const mapping: ErrorMapping = {
+	badInput: 'Invalid',
+	customError: 'Invalid',
+	patternMismatch: 'Invalid',
+	rangeOverflow: 'Too high',
+	rangeUnderflow: 'Too low',
+	stepMismatch: 'Invalid',
+	tooLong: 'Too long',
+	tooShort: 'Too short',
+	typeMismatch: 'Invalid',
+	valueMissing: 'Required'
+}
 
 export const Field = () => {
 	const { checkFieldError } = useFieldManager()
@@ -8,7 +21,7 @@ export const Field = () => {
 	return (
 		<div className="form-control">
 			<div className="indicator">
-				<InputField name="field" required className={`input input-bordered ${fieldError ? 'input-error' : ''}`} pattern="^[a-zA-Z]+$" />
+				<InputField name="field" required className={`input input-bordered ${fieldError ? 'input-error' : ''}`} pattern="^[a-zA-Z]+$" minLength={2} />
 				<InvalidFeedbackForField name="field" className="indicator-item badge badge-error" />
 			</div>
 			<label className="label">
@@ -31,7 +44,7 @@ export const InvalidFeedbackDemo = () => {
 		setSuccess(true)
 	}
 	return (
-		<FieldManager fields={{ field: '' }} onValidSubmit={handleValidSubmit} onSubmit={handleSubmit} onReset={() => setSuccess(false)}>
+		<FieldManager fields={{ field: '' }} onValidSubmit={handleValidSubmit} onSubmit={handleSubmit} onReset={() => setSuccess(false)} errorMapping={mapping}>
 			<fieldset className="border p-5">
 				<legend>Invalid Feedback</legend>
 				<div className="flex flex-col gap-5">

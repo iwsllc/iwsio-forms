@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Input } from '@iwsio/forms'
+import { FieldError, Input } from '@iwsio/forms'
 
 export const InputCheckDemo = () => {
 	const refForm = useRef<HTMLFormElement>(null)
@@ -8,8 +8,8 @@ export const InputCheckDemo = () => {
 	const [checked, setChecked] = useState(false)
 	const [selectedRadio, setSelectedRadio] = useState('')
 
-	const [checkError, setCheckError] = useState<string | undefined>()
-	const [radioError, setRadioError] = useState<string | undefined>()
+	const [checkError, setCheckError] = useState<FieldError | undefined>()
+	const [radioError, setRadioError] = useState<FieldError | undefined>()
 
 	const reset = () => {
 		setSuccess(false)
@@ -39,7 +39,7 @@ export const InputCheckDemo = () => {
 							checked={checked}
 							name="field"
 							fieldError={checkError}
-							onFieldError={(key, message) => { setCheckError(message) }}
+							onFieldError={(key, validity, message) => { setCheckError({ message, validity }) }}
 							className="checkbox"
 							required
 						/>
@@ -58,7 +58,7 @@ export const InputCheckDemo = () => {
 							type="radio"
 							checked={selectedRadio === 'yes'}
 							fieldError={radioError}
-							onFieldError={(key, message) => { setRadioError(message) }}
+							onFieldError={(key, validity, message) => { setRadioError({ message, validity }) }}
 							required
 						/>
 					</label>
@@ -71,7 +71,7 @@ export const InputCheckDemo = () => {
 							name="field2"
 							checked={selectedRadio === 'no'}
 							fieldError={radioError}
-							onFieldError={(key, message) => { setRadioError(message) }}
+							onFieldError={(key, validity, message) => { setRadioError({ message, validity }) }}
 							required
 						/>
 					</label>

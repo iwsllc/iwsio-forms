@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { Select, SelectField } from './Select'
 import { useFieldManager } from './useFieldManager'
 import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper'
+import { FieldError } from './types'
 
 const ControlledSelect = () => {
 	const [value, setValue] = useState('')
@@ -21,13 +22,13 @@ const ControlledSelect = () => {
 
 const ControlledSelectWithErrors = () => {
 	const [value, setValue] = useState('')
-	const [error, setError] = useState<string | undefined>()
+	const [error, setError] = useState<FieldError | undefined>()
 	const handleChange = (e) => {
 		setValue(e.target.value)
-		if (e.target.value === '1') setError("Cannot select '1'.")
+		if (e.target.value === '1') setError({ message: "Cannot select '1'.", validity: { valid: false, customError: true } as any })
 	}
-	const handleFieldError = (key, message) => {
-		setError(message)
+	const handleFieldError = (_key, validity, message) => {
+		setError({ message, validity })
 	}
 	return (
 		<>
@@ -36,7 +37,7 @@ const ControlledSelectWithErrors = () => {
 				<option>1</option>
 				<option>2</option>
 			</Select>
-			<span data-testid="error">{error}</span>
+			<span data-testid="error">{error?.message}</span>
 		</>
 	)
 }

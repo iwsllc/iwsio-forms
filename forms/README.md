@@ -65,7 +65,7 @@ Next there is `useFieldState`, which manages all the field values and error stat
 hook props | Definition
 --- | ---
 `checkFieldError` | helper function to check error state in combination with `reportValidation`; returns true when fieldError exists and reportValidation is `true`
-`fieldErrors` | current field errors; `Record<string,string>` where keys match input names.
+`fieldErrors` | current field errors; `Record<string, FieldError>` where keys match input names.
 `handleChange` | `ChangeEventHandler<*>` used to control the input.
 `onChange` | alias to `handleChange`
 `reportValidation` | boolean field that indicates if errors should be shown. Sets to true when using `FieldManager` after first form submit.
@@ -191,6 +191,35 @@ One last component: this is just a helper component to display errors using the 
 ### Renders with error:
 ```html
 <span className="text-[red] font-bold text-2xl">This field is required.</span>
+```
+
+## Mapping Errors
+
+When disabling browser validation and customizing styling around error reporting, you might want to change the text for each error. Well, you can by providing an `errorMapping` prop to the `useFieldState` hook or to the `<FieldManager>` component. You can see [an example of customized error styling](https://forms.iws.io/invalid-feedback).
+
+The basic idea is to create a `ValidityState` map assigning each type of error to a message. 
+
+```typescript
+// Note: These are intentionally vague for brevity.
+const mapping: ErrorMapping = {
+	badInput: 'Invalid',
+	customError: 'Invalid',
+	patternMismatch: 'Invalid',
+	rangeOverflow: 'Too high',
+	rangeUnderflow: 'Too low',
+	stepMismatch: 'Invalid',
+	tooLong: 'Too long',
+	tooShort: 'Too short',
+	typeMismatch: 'Invalid',
+	valueMissing: 'Required'
+}
+const { setFieldError, checkFieldError } = useFieldState(fields, defaultValues, onSubmit, mapping)
+```
+
+Or with FieldManager: 
+
+```jsx
+<FieldManager errorMapping={mapping} fields={fields}>
 ```
 
 ## References:

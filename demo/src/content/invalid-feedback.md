@@ -4,9 +4,26 @@ Using `<FieldManager>`, the value and error state is shared via context API. We 
 
 To do this, use `useFieldManager()` to get a check function `checkFieldError(fieldName: string)`. The result of this function will indicate whether there is an error and it is "reportable" (meaning the form has been submitted at least once). You may also access the real-time error any time through `fieldErrors` state from the hook.
 
+One additional note: `<FieldManager>` is now delcared with an `errorMapping` property that allows us to override the different kinds of messaging used in [`ValidityState`](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState)
+
+This examples puts this to use and shows how you can customize the error messaging and styling around html 5 validation (and custom errors).
+
 <div class="not-prose">
 
 ```jsx
+const mapping: ErrorMapping = {
+	badInput: 'Invalid',
+	customError: 'Invalid',
+	patternMismatch: 'Invalid',
+	rangeOverflow: 'Too high',
+	rangeUnderflow: 'Too low',
+	stepMismatch: 'Invalid',
+	tooLong: 'Too long',
+	tooShort: 'Too short',
+	typeMismatch: 'Invalid',
+	valueMissing: 'Required'
+}
+
 export const Field = () => {
 	const { checkFieldError } = useFieldManager()
 	const fieldError = checkFieldError('field')
@@ -14,7 +31,7 @@ export const Field = () => {
 	return (
 		<div className="form-control">
 			<div className="indicator">
-				<InputField name="field" required className={`input input-bordered ${fieldError ? 'input-error' : ''}`} pattern="^[a-zA-Z]+$" />
+				<InputField name="field" required className={`input input-bordered ${fieldError ? 'input-error' : ''}`} pattern="^[a-zA-Z]+$" minLength={2} />
 				<InvalidFeedbackForField name="field" className="indicator-item badge badge-error" />
 			</div>
 			<label className="label">
@@ -31,13 +48,13 @@ export const ResetButton = () => {
 export const InvalidFeedbackDemo = () => {
 	const [success, setSuccess] = useState(false)
 	const handleSubmit = () => {
-		setSuccess(false) // before validation, reset success.
+		setSuccess(false)
 	}
 	const handleValidSubmit = (_fields: any) => {
 		setSuccess(true)
 	}
 	return (
-		<FieldManager fields={{ field: '' }} onValidSubmit={handleValidSubmit} onSubmit={handleSubmit} onReset={() => setSuccess(false)} nativeValidation={false}>
+		<FieldManager fields={{ field: '' }} onValidSubmit={handleValidSubmit} onSubmit={handleSubmit} onReset={() => setSuccess(false)} errorMapping={mapping}>
 			<fieldset className="border p-5">
 				<legend>Invalid Feedback</legend>
 				<div className="flex flex-col gap-5">

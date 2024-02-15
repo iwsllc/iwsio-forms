@@ -1,8 +1,10 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react'
 
+export type FieldError = { message: string | undefined, validity?: ValidityState | undefined }
+
 export type ValidationProps = {
-	fieldError?: string;
-	onFieldError?: (key: string, message?: string) => void;
+	fieldError?: FieldError;
+	onFieldError?: (key: string, validity: ValidityState, message?: string) => void;
 };
 
 export type FieldValues = Record<string, string>
@@ -38,7 +40,7 @@ export type UseFieldStateResult = {
 	/**
 	 * Current field errors where kesy match input names.
 	 */
-	fieldErrors: Record<string, string>;
+	fieldErrors: Record<string, FieldError>;
 
 	/**
 	 * Combines `reportValidation` and the `fieldErrors` state to determine if field requested should show an error.
@@ -51,9 +53,10 @@ export type UseFieldStateResult = {
 	 * @param key Field name key
 	 * @param message Error message
 	 */
-	setFieldError: (key: string, message?: string) => void;
+	setFieldError: (key: string, message?: string, validity?: ValidityState | undefined) => void;
+
 	/** Set ALL errors at once */
-	setFieldErrors: Dispatch<SetStateAction<Record<string, string>>>;
+	setFieldErrors: Dispatch<SetStateAction<Record<string, FieldError>>>;
 	/**
 	 * onChange handler to manage state and errors for input, select, and textarea changes.
 	 * @param e passthrough of native change event arguments
@@ -78,4 +81,12 @@ export type UseFieldStateResult = {
 	 * @param values The new default values to set.
 	 */
 	setDefaultValues: (values: FieldValues) => void
+
+	/**
+	 * Map the error message based on the field's validity state.
+	 * @param validity
+	 * @param message
+	 * @returns
+	 */
+	mapError: (validity: ValidityState, message?: string) => string | undefined
 };
