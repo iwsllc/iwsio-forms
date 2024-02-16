@@ -3,6 +3,7 @@ import { omitBy } from './omitBy'
 import { defaults } from './defaults'
 import { FieldError, FieldValues, UseFieldStateResult } from './types'
 import { ErrorMapping, useErrorMapping } from './useErrorMapping'
+import { emptyValidity } from './validityState'
 
 /**
  * Manages field state via change handler, values and error state.
@@ -49,7 +50,7 @@ export function useFieldState(fields: FieldValues, defaultValues?: FieldValues, 
 		const hasMessage = message != null && message.trim().length > 0
 
 		if (hasMessage) {
-			_validity = validity ?? { valid: false, badInput: false, customError: true, patternMismatch: false, rangeOverflow: false, rangeUnderflow: false, stepMismatch: false, tooLong: false, tooShort: false, typeMismatch: false, valueMissing: false }
+			_validity = validity ?? { ...emptyValidity, customError: true }
 		}
 		setFieldErrors((old) => ({ ...old, [key]: !hasMessage ? undefined : { message, validity: _validity } }))
 	}, [errorMapping])
@@ -60,7 +61,7 @@ export function useFieldState(fields: FieldValues, defaultValues?: FieldValues, 
 
 		if (fieldError == null) return undefined
 		return mapError(fieldError.validity, fieldError.message)
-	}, [fieldErrors, reportValidation, mapError])
+	}, [fieldErrors, reportValidation, mapError, fieldValues])
 
 	const reset = useCallback(() => {
 		setFieldErrors((_old) => ({}))
