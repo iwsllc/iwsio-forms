@@ -31,7 +31,7 @@ export const TextArea = forwardRef<Ref, TextAreaProps>(({ onFieldError, onInvali
 	}, [])
 
 	useEffect(() => {
-		if (fieldError == null) return
+		if (fieldError == null) return localRef.current.setCustomValidity('') // clear it.
 		if (fieldError.validity?.customError && fieldError.message !== localRef.current.validationMessage) {
 			localRef.current.setCustomValidity(fieldError.message || '')
 		}

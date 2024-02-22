@@ -31,7 +31,7 @@ export const Select = forwardRef<Ref, SelectProps>(({ onFieldError, onInvalid, f
 	}, [])
 
 	useEffect(() => {
-		if (fieldError == null) return
+		if (fieldError == null) return localRef.current.setCustomValidity('')
 		if (fieldError.validity?.customError && fieldError.message !== localRef.current.validationMessage) {
 			localRef.current.setCustomValidity(fieldError.message || '')
 		}

@@ -38,6 +38,7 @@ const ControlledSelectWithErrors = () => {
 				<option>2</option>
 			</Select>
 			<span data-testid="error">{error?.message}</span>
+			<button onClick={() => setError(undefined)} data-testid="clear">Clear</button>
 		</>
 	)
 }
@@ -121,6 +122,29 @@ describe('Select', function() {
 
 		expect(select.validity.customError).to.be.true
 		expect(select.validationMessage).to.eq("Cannot select '1'.")
+	})
+
+	it('should clear custom validity when upstream fieldError changes to nothing', async () => {
+		render(<ControlledSelectWithErrors />)
+
+		const field = screen.getByTestId('field') as HTMLSelectElement
+
+		await userEvent.selectOptions(field, '1')
+
+		act(() => { field.checkValidity() })
+
+		expect(field.validity.valid).to.be.false
+		expect(field.validity.customError).to.be.true
+		expect(field.validationMessage).to.eq("Cannot select '1'.")
+
+		await userEvent.click(screen.getByTestId('clear'))
+
+		expect(field.validity.customError).to.be.false
+
+		await userEvent.selectOptions(field, '2')
+		act(() => { field.checkValidity() })
+
+		expect(field.validity.valid).to.be.true
 	})
 })
 

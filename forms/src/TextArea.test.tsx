@@ -28,6 +28,7 @@ export const ControlledTextAreaWithErrors = () => {
 		<>
 			<TextArea name="field" value={value} onChange={handleChange} required data-testid="field" fieldError={error} onFieldError={handleFieldError} />
 			<span data-testid="error">{error?.message}</span>
+			<button onClick={() => setError(undefined)} data-testid="clear">Clear</button>
 		</>
 	)
 }
@@ -97,6 +98,27 @@ describe('TextArea', function() {
 		expect(textarea.validity.valid).to.be.false
 		expect(textarea.validity.customError).to.be.true
 		expect(textarea.validationMessage).to.eq("Cannot enter 'abc'.")
+	})
+	it('should clear custom validity when upstream fieldError changes to nothing', async () => {
+		render(<ControlledTextAreaWithErrors />)
+
+		const textarea = screen.getByTestId('field') as HTMLTextAreaElement
+
+		await userEvent.type(textarea, 'abc')
+
+		act(() => { textarea.checkValidity() })
+
+		expect(textarea.validity.valid).to.be.false
+		expect(textarea.validity.customError).to.be.true
+		expect(textarea.validationMessage).to.eq("Cannot enter 'abc'.")
+
+		await userEvent.click(screen.getByTestId('clear'))
+
+		await userEvent.type(textarea, 'ab')
+		act(() => { textarea.checkValidity() })
+
+		expect(textarea.validity.valid).to.be.true
+		expect(textarea.validity.customError).to.be.false
 	})
 })
 
