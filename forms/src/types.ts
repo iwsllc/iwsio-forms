@@ -71,12 +71,6 @@ export type UseFieldStateResult = {
 	onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => FieldValues;
 
 	/**
-	 * Invokes when submit event triggered and form has been validated and is valid.
-	 * @param fields Current values stored in field state.
-	 */
-	onValidSubmit: (fields: FieldValues) => void
-
-	/**
 	 * Use this to change the default values after initialization.
 	 * @param values The new default values to set.
 	 */
@@ -89,4 +83,15 @@ export type UseFieldStateResult = {
 	 * @returns
 	 */
 	mapError: (validity: ValidityState, message?: string) => string | undefined
+
+	/**
+	 * Indicates whether the form is in a busy state. This is useful for forms that need to wait for a server response before allowing another submit.
+	 *
+	 * Use this to disable form inputs or show a loading indicator.
+	 */
+	isFormBusy: boolean
+	/**
+	 * Toggles the form's `isFormBusy` state. If no value is provided, it will toggle the current state.
+	 */
+	toggleFormBusy: (value?: boolean) => void
 };

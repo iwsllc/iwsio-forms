@@ -51,7 +51,7 @@ describe('FieldManager', () => {
 describe('ControlledFieldManager', () => {
 	test('When rendering field manager with fields; happy path', async () => {
 		const Test = () => {
-			const fieldState = useFieldState({ field: '' })
+			const fieldState = useFieldState({ field1: '' })
 			return <ControlledFieldManager fieldState={fieldState}><InputField data-testid="field" name="field" /></ControlledFieldManager>
 		}
 		render(<Test />)
@@ -68,7 +68,7 @@ describe('ControlledFieldManager', () => {
 
 	test('When rendering field manager with no fields', async () => {
 		const Test = () => {
-			const fieldState = useFieldState({ field: '' })
+			const fieldState = useFieldState({ field1: '' })
 			return <ControlledFieldManager fieldState={fieldState} />
 		}
 		const { container } = render(<Test />)
@@ -97,7 +97,7 @@ describe('ControlledFieldManager', () => {
 
 	test('When rendering field manager with uncontrolled field', async () => {
 		const Test = () => {
-			const fieldState = useFieldState({ field: '' })
+			const fieldState = useFieldState({ field1: '' })
 			return <ControlledFieldManager fieldState={fieldState}><Input data-testid="field2" name="field2" /></ControlledFieldManager>
 		}
 		render(<Test />)
@@ -115,7 +115,7 @@ describe('ControlledFieldManager', () => {
 
 	test('When rendering field manager with fields and error mapping; should not render component attributes', async () => {
 		const Test = () => {
-			const fieldState = useFieldState({ field: '' }, undefined, undefined, { customError: 'failed' } as any)
+			const fieldState = useFieldState({ field: '' }, { errorMapping: { customError: 'failed' } })
 			return <ControlledFieldManager fieldState={fieldState} data-testid="form"><Input data-testid="field" name="field" /><button type="submit" data-testid="submit">submit</button></ControlledFieldManager>
 		}
 		const { container } = render(<Test />)

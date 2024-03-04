@@ -5,22 +5,41 @@ import { FieldError, FieldValues, UseFieldStateResult } from './types'
 import { ErrorMapping, useErrorMapping } from './useErrorMapping'
 import { emptyValidity } from './validityState'
 
+export type UseFieldStateMethod = (
+	/**
+	 * Initial values for all fields; should include blank strings for fields without values. Change these later with the setFieldValues and setFieldValue methods returned from the hook.
+	 */
+	fields: FieldValues,
+	options?: {
+		/**
+		 * Initial default values to be set when invoking `reset()`, which falls back to `fields` if undefined. Change these later with the setDefaultValues method returned from the hook.
+		*/
+		defaultValues?: FieldValues
+		/**
+		 * Optional error mapping function to map custom error messages to validity state.
+		*/
+		errorMapping?: ErrorMapping
+	}
+) => UseFieldStateResult
+
 /**
  * Manages field state via change handler, values and error state.
- * @param fields Initial values for all fields; should include blank strings for fields without values. Change these later with the setFieldValues and setFieldValue methods returned from the hook.
- * @param defaultValues Initial default values to be set when invoking `reset()`, which falls back to `fields` if undefined. Change these later with the setDefaultValues method returned from the hook.
- * @param onValidSubmit Optional callback when form submit event triggered with valid form. Provides current field values as an argument.
  */
-export function useFieldState(fields: FieldValues, defaultValues?: FieldValues, onValidSubmit?: (fields: FieldValues) => void, errorMapping?: ErrorMapping): UseFieldStateResult {
+export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
+	const { defaultValues, errorMapping } = options
 	const initDefaultFieldValues = defaultValues != null ? defaults(omitBy(fields, (v) => v == null || v === ''), defaultValues) : fields
 
 	const [reportValidation, setReportValidation] = useState(false)
 	const [fieldValues, setFieldValues] = useState<FieldValues>(fields)
 	const [fieldErrors, setFieldErrors] = useState<Record<string, FieldError>>({})
 	const [defaultFieldValues, setDefaultFieldValues] = useState<FieldValues>(initDefaultFieldValues)
+	const [isFormBusy, setIsFormBusy] = useState(false)
 	const mapError = useErrorMapping(errorMapping)
 
-	const localOnValidSubmit = useCallback(onValidSubmit, [])
+	const toggleFormBusy = useCallback((value?: boolean) => {
+		if (value == null) return setIsFormBusy(_old => !_old)
+		setIsFormBusy(_old => value)
+	}, [])
 
 	const setField = useCallback((key: string, value: string) => {
 		setFieldValues((oldFields) => ({ ...oldFields, [key]: value }))
@@ -93,8 +112,7 @@ export function useFieldState(fields: FieldValues, defaultValues?: FieldValues, 
 		checkFieldError,
 		fields: fieldValues,
 		handleChange,
-		onChange: handleChange, // alias
-		onValidSubmit: localOnValidSubmit,
+		onChange: handleChange,
 		reportValidation,
 		reset,
 		setField,
@@ -103,6 +121,8 @@ export function useFieldState(fields: FieldValues, defaultValues?: FieldValues, 
 		setFieldErrors,
 		setReportValidation,
 		setDefaultValues: setDefaultFieldValues,
-		mapError
+		mapError,
+		isFormBusy,
+		toggleFormBusy
 	}
 }

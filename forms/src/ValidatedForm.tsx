@@ -4,6 +4,7 @@ import { useForwardRef } from './useForwardRef'
 export type ValidatedFormProps = {
 	/**
 	 * Invokes when submit event triggered and form has been validated and is valid.
+	 * @param fields Current values stored in field state.
 	 */
 	onValidSubmit?: () => void
 	/**

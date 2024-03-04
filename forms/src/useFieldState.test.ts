@@ -1,6 +1,5 @@
-import { renderHook, act, waitFor } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { useFieldState } from './useFieldState'
-import { ErrorMapping } from './useErrorMapping'
 
 const _validity = { valid: true, badInput: false, customError: false, patternMismatch: false, rangeOverflow: false, rangeUnderflow: false, stepMismatch: false, tooLong: false, tooShort: false, typeMismatch: false, valueMissing: false }
 
@@ -9,7 +8,7 @@ describe('useFieldState', () => {
 		const fieldValues = { firstName: '', lastName: '' }
 		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
 
-		const { result } = renderHook(() => useFieldState(fieldValues, defaultValues))
+		const { result } = renderHook(() => useFieldState(fieldValues, { defaultValues }))
 
 		const { fields, fieldErrors, handleChange } = result.current
 		expect(fields.firstName).toEqual('')
@@ -47,7 +46,7 @@ describe('useFieldState', () => {
 		const fieldValues = { firstName: '', lastName: '' }
 		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
 
-		const { result } = renderHook(() => useFieldState(fieldValues, defaultValues))
+		const { result } = renderHook(() => useFieldState(fieldValues, { defaultValues }))
 
 		const { fieldErrors, setFieldError, setFieldErrors } = result.current
 		expect(Object.keys(fieldErrors).length).toEqual(0)
@@ -70,7 +69,7 @@ describe('useFieldState', () => {
 		const fieldValues = { firstName: '', lastName: '' }
 		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
 
-		const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+		const hook = renderHook(() => useFieldState(fieldValues, { defaultValues }))
 
 		const { result, rerender } = hook
 		expect(result.current.fields.firstName).toEqual('')
@@ -109,7 +108,7 @@ describe('useFieldState', () => {
 		const fieldValues = { firstName: '', lastName: '' }
 		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
 
-		const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+		const hook = renderHook(() => useFieldState(fieldValues, { defaultValues }))
 
 		const { result } = hook
 		expect(result.current.fields.firstName).toEqual('')
@@ -138,7 +137,7 @@ describe('useFieldState', () => {
 		const fieldValues = { firstName: '', lastName: '' }
 		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
 
-		const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+		const hook = renderHook(() => useFieldState(fieldValues, { defaultValues }))
 
 		const { result } = hook
 		expect(result.current.fields.firstName).toEqual('')
@@ -157,7 +156,7 @@ describe('useFieldState', () => {
 		const fieldValues = { firstName: '', lastName: '' }
 		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
 
-		const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+		const hook = renderHook(() => useFieldState(fieldValues, { defaultValues }))
 
 		const { result } = hook
 		expect(result.current.fields.firstName).toEqual('')
@@ -177,7 +176,7 @@ describe('useFieldState', () => {
 		const fieldValues = { firstName: '', lastName: '' }
 		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
 
-		const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+		const hook = renderHook(() => useFieldState(fieldValues, { defaultValues }))
 
 		const { result } = hook
 		expect(result.current.fields.firstName).toEqual('')
@@ -198,7 +197,7 @@ describe('useFieldState', () => {
 			const fieldValues = { firstName: '', lastName: '' }
 			const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
 
-			const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+			const hook = renderHook(() => useFieldState(fieldValues, { defaultValues }))
 
 			const { result } = hook
 			expect(result.current.fields.firstName).toEqual('')
@@ -223,7 +222,7 @@ describe('useFieldState', () => {
 			const fieldValues = { firstName: '', lastName: '' }
 			const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
 
-			const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+			const hook = renderHook(() => useFieldState(fieldValues, { defaultValues }))
 
 			const { result } = hook
 			expect(result.current.fields.firstName).toEqual('')
@@ -253,7 +252,7 @@ describe('useFieldState', () => {
 			const fieldValues = { firstName: '', lastName: '' }
 			const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
 
-			const hook = renderHook(() => useFieldState(fieldValues, defaultValues))
+			const hook = renderHook(() => useFieldState(fieldValues, { defaultValues }))
 
 			const { result } = hook
 			expect(result.current.fields.firstName).toEqual('')

@@ -1,16 +1,21 @@
 import { ControlledFieldManager, FieldValues, InputField, useFieldState } from '@iwsio/forms'
-import { useEffect, useState } from 'react'
-import { fetchMovies } from './fetchSample'
 import { useQuery } from '@tanstack/react-query'
+import { useCallback, useEffect, useState } from 'react'
+import { fetchMovies } from './fetchSample'
 
 export const UpstreamChangesPage = () => {
 	const { data, refetch, isFetching, isSuccess } = useQuery({ queryKey: ['/movies.json'], queryFn: () => fetchMovies() })
 	const [success, setSuccess] = useState(false)
-	const handleValidSubmit = (_values: FieldValues) => {
-		setSuccess(true)
-	}
-	const fieldState = useFieldState({ title: '', year: '', director: '' }, undefined, handleValidSubmit)
-	const { setFields, reset } = fieldState
+
+	const fieldState = useFieldState({ title: '', year: '', director: '' })
+	const { setFields, reset, isFormBusy, toggleFormBusy } = fieldState
+
+	const handleValidSubmit = useCallback((_values: FieldValues) => {
+		setTimeout(() => {
+			setSuccess(_old => true)
+			toggleFormBusy(false)
+		}, 500)
+	}, [toggleFormBusy, setSuccess])
 
 	useEffect(() => {
 		if (!isSuccess || isFetching) return
@@ -20,14 +25,19 @@ export const UpstreamChangesPage = () => {
 	}, [isFetching, isSuccess])
 
 	return (
-		<ControlledFieldManager fieldState={fieldState} className="flex flex-col gap-2 w-1/2" nativeValidation>
+		<ControlledFieldManager fieldState={fieldState} onValidSubmit={handleValidSubmit} holdBusyAfterSubmit className="flex flex-col gap-2 w-1/2" nativeValidation>
 			<InputField placeholder="Title" name="title" type="text" className="input input-bordered" required />
 			<InputField placeholder="Year" name="year" type="number" pattern="^\d+$" className="input input-bordered" required />
 			<InputField placeholder="Director" name="director" type="text" className="input input-bordered" required />
 			<div className="flex gap-2">
 				<button type="reset" className="btn btn-info" onClick={() => refetch()}>Re-fetch</button>
 				<button type="reset" className="btn" onClick={() => { reset(); setSuccess(false) }}>Reset</button>
-				<button type="submit" className={`btn ${success ? 'btn-success' : 'btn-primary'}`}>
+				{/*
+					NOTE: using holdBusyAfterSubmit on the FieldManager, which keeps the busy
+					status true until manually clearing it. This allows us to use the `isFormBusy` flag
+					to style the form and disable the submission button while an async process is busy.
+				*/}
+				<button type="submit" disabled={isFormBusy} className={`btn ${success ? 'btn-success' : 'btn-primary'} ${isFormBusy ? 'btn-disabled' : ''}`}>
 					Submit
 				</button>
 			</div>

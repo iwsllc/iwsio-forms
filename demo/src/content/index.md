@@ -4,6 +4,12 @@
 
 This package combines browser form validation with React so you can more easily manage errors and input values in forms. More specifically, it tracks input validation in state making it available to React AND allows you to set input errors in state that in turn trigger `setCustomValidity` on DOM inputs enabling more control over how you render form errors in your applications.
 
+## Breaking Changes in 4.0
+I've been continuing to make improvements while I use it myself in projects. This time, the breaking change is the signature on `useFieldState(fields, defaults, onValidSubmit, errorMapping)`, which seems to be getting pretty long and ambiguious. The first two arguments are even the same type. So I've turned this into an object to more clearly define the options. This signature now looks like: `useFieldState(fields, options)` with options being nearly the same definition, just as an object: `{ defaults, errorMapping }`.
+
+I removed `onValidSubmit` from the `fieldState` altogether. This seemed oddly placed to me, and I started twisting myself trying dealing with chicken and egg problems: (like passing it into `useFieldState` while still using the output of this function within the `onValidSubmit` function). To clean this up, now `onValidSubmit` is solely a prop on the components: `FieldManager` and `ControlledFieldManager`.
+
+
 ## Install
 
 ```bash
@@ -11,6 +17,7 @@ npm install @iwsio/forms
 yarn install @iwsio/forms
 pnpm install @iwsio/forms
 ```
+
 
 ## Controlled/Uncontrolled inputs: `<Input />`, `<Select />`, and `<TextArea />`
 
@@ -63,7 +70,7 @@ Next there is `useFieldState`, which manages all the field values and error stat
 hook props | Definition
 --- | ---
 `checkFieldError` | helper function to check error state in combination with `reportValidation`; returns true when fieldError exists and reportValidation is `true`
-`fieldErrors` | current field errors; `Record<string,FieldError>` where keys match input names.
+`fieldErrors` | current field errors; `Record<string, FieldError>` where keys match input names.
 `handleChange` | `ChangeEventHandler<*>` used to control the input.
 `onChange` | alias to `handleChange`
 `reportValidation` | boolean field that indicates if errors should be shown. Sets to true when using `FieldManager` after first form submit.
@@ -74,6 +81,8 @@ hook props | Definition
 `setFieldError` | Sets a single field error. Useful when needing to set errors outside of browser validation. 
 `setFieldErrors` | Sets ALL field errors. This is useful when you want to set more than one error at once. Like for example handling an HTTP 400 response with specific input errors. 
 `setReportValidation` | sets reportValidation toggle for manual implementation.
+`isFormBusy` | Can be used to indicate the form has been submitted and is busy. This can be used to toggle disabled and styling state on DOM within the FieldManager.
+`toggleFormBusy` | Manages the `isFormBusy` state. During long-running async submit handlers, use this in combination with FieldManager prop: `holdBusyAfterSubmit` to hold the busy status after the initial onValidSubmit executes. Then clear the busy state with this method after the async process finishes.
 
 ```jsx
 const Sample = () => {
@@ -133,23 +142,23 @@ const Sample = () => {
 
 ## `<ControlledFieldManager>`
 
-You might be wondering, how do I manage field state outside of the FieldManager? Imagine a scenario where these field values may be managed upstream in your application. Maybe they're being pulled in from an asynchronous request and loaded after the form renders. In this case, you'll want to manage the field state outside of the FieldManager component. For this, there is another component you can use. `<ControlledFieldManager/>` where you provide the fieldState yourself. See this in action [in the docs](/upstream-test).
+You might be wondering, how do I manage field state outside of the FieldManager? Imagine a scenario where these field values may be managed upstream in your application. Maybe they're being pulled in from an asynchronous request and loaded after the form renders. In this case, you'll want to manage the field state outside of the FieldManager component. For this, there is another component you can use. `<ControlledFieldManager/>` where you provide the fieldState yourself. See this in action [in the docs](https://forms.iws.io/upstream-test).
 
 ```tsx
 export const UpstreamChangesPage = () => {
-	// a little help from @tanstack/react-query
-	// NOTE: fetchMovies = async() => (await fetch('/movies.json')).json() // returns unawaited json()
 	const { data, refetch, isFetching, isSuccess } = useQuery({ queryKey: ['/movies.json'], queryFn: () => fetchMovies() })
-
 	const [success, setSuccess] = useState(false)
-	const handleValidSubmit = (values: FieldValues) => {
-		setSuccess(true)
-	}
-	// use useFieldState here
-	const fieldState = useFieldState({ title: '', year: '', director: '' }, undefined, handleValidSubmit)
-	const { setFields, reset } = fieldState
 
-	// some fetch management
+	const fieldState = useFieldState({ title: '', year: '', director: '' })
+	const { setFields, reset, isFormBusy, toggleFormBusy } = fieldState
+
+	const handleValidSubmit = useCallback((_values: FieldValues) => {
+		setTimeout(() => { // NOTE: I added a quick half second delay to show how `isFormBusy` can be used.
+			setSuccess(_old => true)
+			toggleFormBusy(false)
+		}, 500)
+	}, [toggleFormBusy, setSuccess])
+
 	useEffect(() => {
 		if (!isSuccess || isFetching) return
 		if (data == null || data.length === 0) return
@@ -158,15 +167,19 @@ export const UpstreamChangesPage = () => {
 	}, [isFetching, isSuccess])
 
 	return (
-		// controlled field manager takes fieldState prop
-		<ControlledFieldManager fieldState={fieldState} className="flex flex-col gap-2 w-1/2" nativeValidation>
+		<ControlledFieldManager fieldState={fieldState} onValidSubmit={handleValidSubmit} holdBusyAfterSubmit className="flex flex-col gap-2 w-1/2" nativeValidation>
 			<InputField placeholder="Title" name="title" type="text" className="input input-bordered" required />
 			<InputField placeholder="Year" name="year" type="number" pattern="^\d+$" className="input input-bordered" required />
 			<InputField placeholder="Director" name="director" type="text" className="input input-bordered" required />
 			<div className="flex gap-2">
 				<button type="reset" className="btn btn-info" onClick={() => refetch()}>Re-fetch</button>
 				<button type="reset" className="btn" onClick={() => { reset(); setSuccess(false) }}>Reset</button>
-				<button type="submit" className={`btn ${success ? 'btn-success' : 'btn-primary'}`}>
+				{/*
+					NOTE: using holdBusyAfterSubmit on the FieldManager, which keeps the busy 
+					status true until manually clearing it. This allows us to use the `isFormBusy` flag
+					to style the form and disable the submission button while an async process is busy.
+				*/}
+				<button type="submit" disabled={isFormBusy} className={`btn ${success ? 'btn-success' : 'btn-primary'} ${isFormBusy ? 'btn-disabled' : ''}`}>
 					Submit
 				</button>
 			</div>
@@ -190,7 +203,6 @@ One last component: this is just a helper component to display errors using the 
 ```html
 <span className="text-[red] font-bold text-2xl">This field is required.</span>
 ```
-
 
 ## Mapping Errors
 
@@ -220,7 +232,6 @@ Or with FieldManager:
 ```jsx
 <FieldManager errorMapping={mapping} fields={fields}>
 ```
-
 
 ## References:
 
