@@ -75,12 +75,15 @@ export const ResetButton = () => {
 	const { reset } = useFieldManager()
 	return <button type="reset" className="btn" onClick={() => reset()}>Reset</button>
 }
+
 export const InvalidFeedbackDemo = () => {
 	const [success, setSuccess] = useState(false)
 	const handleSubmit = () => {
+		// happens before validation
 		setSuccess(false)
 	}
 	const handleValidSubmit = (_fields: any) => {
+		// happens after validation and when valid
 		setSuccess(true)
 	}
 	return (

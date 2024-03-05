@@ -7,9 +7,9 @@ export const Nav = () => (
 		</li>
 		<li><Link to="/">Overview</Link></li>
 		<li><Link to="/install">Installing</Link></li>
-		<li><Link to="/examples">Examples</Link></li>
-		<li><Link to="/input">Input Demo</Link></li>
-		<li><Link to="/invalid-feedback">Invalid Feedback</Link></li>
+		<li><Link to="/examples">Input Examples</Link></li>
+		<li><Link to="/input">Input Details</Link></li>
+		<li><Link to="/invalid-feedback">Styled Feedback</Link></li>
 		<li><Link to="/upstream-test">Async Init</Link></li>
 	</ul>
 )

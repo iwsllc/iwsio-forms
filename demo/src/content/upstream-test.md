@@ -1,3 +1,3 @@
 # Async field values on init
 
-This is a small test to ensure we can update field values from an asynchronous fetch. 
+The main point of this example is to show that you can change the field values in state after initialization. In this example, we're using an async fetch to set data after the initial render. I've also enabled `holdBusyAfterSubmit` to show how we can manually manage form busy state around async processes. You'll notice a 500ms delay and disabled `Submit` state when submitting a valid form.

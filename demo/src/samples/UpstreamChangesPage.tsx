@@ -6,15 +6,13 @@ import { fetchMovies } from './fetchSample'
 export const UpstreamChangesPage = () => {
 	const { data, refetch, isFetching, isSuccess } = useQuery({ queryKey: ['/movies.json'], queryFn: () => fetchMovies() })
 	const [success, setSuccess] = useState(false)
+	const [doingSomething, setDoingSomething] = useState(false)
 
 	const fieldState = useFieldState({ title: '', year: '', director: '' })
 	const { setFields, reset, isFormBusy, toggleFormBusy } = fieldState
 
 	const handleValidSubmit = useCallback((_values: FieldValues) => {
-		setTimeout(() => {
-			setSuccess(_old => true)
-			toggleFormBusy(false)
-		}, 500)
+		setDoingSomething(true) // kick off async process
 	}, [toggleFormBusy, setSuccess])
 
 	useEffect(() => {
@@ -23,6 +21,22 @@ export const UpstreamChangesPage = () => {
 		const { title, year, director } = data[0]
 		setFields({ title, year, director })
 	}, [isFetching, isSuccess])
+
+	useEffect(() => {
+		if (!doingSomething) return
+
+		const id = setTimeout(() => {
+			setDoingSomething(_old => false)
+
+			// NOTE: just showing we can set the busy flag from anywhere (not just in the submit handler)
+			setSuccess(true)
+			toggleFormBusy(false)
+		}, 500)
+
+		return () => {
+			clearTimeout(id)
+		}
+	}, [doingSomething])
 
 	return (
 		<ControlledFieldManager fieldState={fieldState} onValidSubmit={handleValidSubmit} holdBusyAfterSubmit className="flex flex-col gap-2 w-1/2" nativeValidation>
