@@ -9,6 +9,17 @@ export type ValidationProps = {
 
 export type FieldValues = Record<string, string>
 
+export type UpdatedFieldsOnChangeEvent = {
+	/**
+	* The updated field values after the change event.
+	*/
+	fields: FieldValues;
+	/**
+	* The target element that triggered the change event.
+	*/
+	target: EventTarget & (HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement);
+};
+
 export type UseFieldStateResult = {
 	/**
 	 * Indicates whether InputFields within should render validation errors based on the fieldError state. This is unrelated to the native browser `reportValidity()` function.
@@ -62,13 +73,13 @@ export type UseFieldStateResult = {
 	 * @param e passthrough of native change event arguments
 	 * @returns Returns the latest field value state after change applied.
 	 */
-	handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => FieldValues;
+	handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => UpdatedFieldsOnChangeEvent;
 	/**
 	 * @deprecated Please use handleChange
 	 * @param e passthrough of native change event arguments
 	 * @returns Returns the latest field value state after change applied.
 	 */
-	onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => FieldValues;
+	onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => UpdatedFieldsOnChangeEvent;
 
 	/**
 	 * Use this to change the default values after initialization.

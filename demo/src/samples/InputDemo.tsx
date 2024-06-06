@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { ChangeEventHandler, useRef, useState } from 'react'
 import { FieldError, Input } from '@iwsio/forms'
 
 export const InputDemo = () => {
@@ -27,7 +27,7 @@ export const InputDemo = () => {
 		} else refForm.current.reportValidity()
 	}
 
-	const handleChange = (e) => {
+	const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
 		setSuccess(false)
 		setText(e.target.value)
 		if (e.target.value === 'abc') setFieldError({ message: 'cannot use abc', validity: { customError: true, valid: false } as any })

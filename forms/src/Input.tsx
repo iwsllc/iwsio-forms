@@ -1,13 +1,13 @@
 import { forwardRef, useEffect, InputHTMLAttributes, ChangeEventHandler } from 'react'
 import { useForwardRef } from './useForwardRef'
-import { ValidationProps } from './types'
+import { FieldValues, UpdatedFieldsOnChangeEvent, ValidationProps } from './types'
 import { useFieldManager } from './useFieldManager'
 
 export type InputProps = ValidationProps & InputHTMLAttributes<HTMLInputElement>
 
 type Ref = HTMLInputElement;
 
-export const Input = forwardRef<Ref, InputProps>(({ onFieldError, fieldError, name, type, onChange, value, checked, onInvalid, ...other }, ref) => {
+export const Input = forwardRef<Ref, InputProps>(({ onFieldError, fieldError, name, type = 'text', onChange, value, checked, onInvalid, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
 
 	const localSetError = (message?: string) => {
@@ -52,17 +52,17 @@ export const Input = forwardRef<Ref, InputProps>(({ onFieldError, fieldError, na
 	)
 })
 Input.displayName = 'Input'
-Input.defaultProps = {
-	type: 'text'
-}
 
-export const InputField = forwardRef<Ref, Omit<InputProps, 'DefaultValue'>>(({ type, name, onChange, value, ...other }, ref) => {
+export type FieldOnChange = { onChange?: (e: UpdatedFieldsOnChangeEvent) => void }
+export type InputFieldProps = Omit<InputProps, 'DefaultValue' | 'onChange'> & FieldOnChange
+
+export const InputField = forwardRef<Ref, InputFieldProps>(({ type = 'text', name, onChange, value, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
 	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors, mapError } = useFieldManager()
 
 	const handleOnChange: ChangeEventHandler<Ref> = (e) => {
-		managerOnChange(e)
-		if (onChange != null) onChange(e)
+		const result = managerOnChange(e)
+		if (onChange != null) onChange(result)
 	}
 
 	const handleFieldError = (key, validity, message) => {
@@ -84,6 +84,3 @@ export const InputField = forwardRef<Ref, Omit<InputProps, 'DefaultValue'>>(({ t
 	)
 })
 InputField.displayName = 'InputField'
-InputField.defaultProps = {
-	type: 'text'
-}

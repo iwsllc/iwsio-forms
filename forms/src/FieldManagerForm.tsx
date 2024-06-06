@@ -16,7 +16,7 @@ export type ManagedValidatedFormProps = Omit<ValidatedFormProps, 'onValidSubmit'
 	holdBusyAfterSubmit?: boolean
 }
 
-export const FieldManagerForm = forwardRef<HTMLFormElement, ManagedValidatedFormProps>(({ children, onValidSubmit, holdBusyAfterSubmit, ...props }, ref) => {
+export const FieldManagerForm = forwardRef<HTMLFormElement, ManagedValidatedFormProps>(({ children, onValidSubmit, holdBusyAfterSubmit, reportValidity = false, nativeValidation = false, className = '', ...props }, ref) => {
 	const { fields, setReportValidation, toggleFormBusy } = useFieldManager()
 	const handleLocalSubmit = () => {
 		setReportValidation(true)
@@ -30,13 +30,7 @@ export const FieldManagerForm = forwardRef<HTMLFormElement, ManagedValidatedForm
 		if (holdBusyAfterSubmit) return
 		toggleFormBusy(false)
 	}
-	return <ValidatedForm ref={ref} {...props} onValidSubmit={handleLocalValidSubmit} onSubmit={handleLocalSubmit}>{children}</ValidatedForm>
+	return <ValidatedForm ref={ref} {...props} nativeValidation={nativeValidation} reportValidity={reportValidity} className={className} onValidSubmit={handleLocalValidSubmit} onSubmit={handleLocalSubmit}>{children}</ValidatedForm>
 })
 
 FieldManagerForm.displayName = 'FieldManagerForm'
-
-FieldManagerForm.defaultProps = {
-	reportValidity: false,
-	nativeValidation: false,
-	className: ''
-}

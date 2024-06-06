@@ -51,7 +51,7 @@ describe('FieldManager', () => {
 describe('ControlledFieldManager', () => {
 	test('When rendering field manager with fields; happy path', async () => {
 		const Test = () => {
-			const fieldState = useFieldState({ field1: '' })
+			const fieldState = useFieldState({ field: '' })
 			return <ControlledFieldManager fieldState={fieldState}><InputField data-testid="field" name="field" /></ControlledFieldManager>
 		}
 		render(<Test />)
@@ -79,8 +79,8 @@ describe('ControlledFieldManager', () => {
 	test('When rendering field manager with manually controlled field', async () => {
 		const Test = () => {
 			const fieldState = useFieldState({ field1: '' })
-			const { handleChange } = fieldState
-			return <ControlledFieldManager fieldState={fieldState}><Input data-testid="field1" name="field1" onChange={handleChange} value={fieldState.fields.field1} /></ControlledFieldManager>
+			const { fields, handleChange } = fieldState
+			return <ControlledFieldManager fieldState={fieldState}><Input data-testid="field1" name="field1" onChange={handleChange} value={fields.field1} /></ControlledFieldManager>
 		}
 		render(<Test />)
 
