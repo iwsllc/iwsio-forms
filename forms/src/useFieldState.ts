@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useState } from 'react'
 import { omitBy } from './omitBy'
 import { defaults } from './defaults'
-import { FieldError, FieldValues, UseFieldStateResult } from './types'
+import { FieldError, FieldValues, UpdatedFieldsOnChangeEvent, UseFieldStateResult } from './types'
 import { ErrorMapping, useErrorMapping } from './useErrorMapping'
 import { emptyValidity } from './validityState'
 
@@ -88,10 +88,10 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 		setReportValidation((_old) => false)
 	}, [defaultFieldValues])
 
-	const handleChange: (_e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => FieldValues = useCallback((e) => {
+	const handleChange: (_e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => UpdatedFieldsOnChangeEvent = useCallback((e) => {
 		let value = e.target.value
 		const name = e.target.name
-		let updatedFields
+		const updatedFields = { ...fieldValues, [name]: value }
 
 		if (e.target.type === 'checkbox' || e.target.type === 'radiobutton') {
 			value = (e.target as HTMLInputElement).checked ? value : ''
@@ -100,12 +100,11 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 		setFieldValues((old) => {
 			const newValues = { ...old } as FieldValues
 			newValues[name] = value
-			updatedFields = newValues
 			return newValues
 		})
 
-		return updatedFields
-	}, [])
+		return { fields: updatedFields, target: e.target }
+	}, [fieldValues])
 
 	return {
 		fieldErrors,

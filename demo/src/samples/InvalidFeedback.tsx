@@ -23,11 +23,11 @@ export const Field: FC<{name: string}> = ({ name }) => {
 
 	// this change event invokes AFTER the field manager change handler; so the state should be updated with a value along with any validity state from the base input
 	const handleChange = (e) => {
-		// NOTE: dont' reference state here, it could be out of sync w/ the field manager
+		// NOTE: dont' use result.fields to refer to the the field values; state hasn't updated yet.
 		if (!e.target.validity.valid) return // already failed; likely required or pattern mismatch
 		// parsed
 		// text value treated like a number; another way of handling step/min/max
-		const value = +e.target.value
+		const value = +e.fields[name]
 		if (isNaN(value)) return setFieldError(name, 'Invalid') // numeric: handled as custom error
 		if (value < 2) return setFieldError(name, 'Too low') // range low: handled as custom error
 		if (value > 99) return setFieldError(name, 'Too high') // range high: handled as custom error

@@ -1,6 +1,6 @@
 {
   "name": "@iwsio/forms-root",
-  "version": "4.0.0",
+  "version": "4.1.0-alpha.1",
   "description": "Simple library with useful React forms components and browser validation.",
   "files": [],
   "engines": {

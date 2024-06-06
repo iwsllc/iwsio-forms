@@ -20,8 +20,8 @@ describe('useFieldState', () => {
 			updates = handleChange({ target: { name: 'firstName', value: '123' } } as any)
 		})
 
-		expect(updates.firstName).toEqual('123')
-		expect(updates.lastName).toEqual('')
+		expect(updates.fields.firstName).toEqual('123')
+		expect(updates.fields.lastName).toEqual('')
 
 		expect(result.current.fields.firstName).toEqual('123')
 
@@ -149,6 +149,27 @@ describe('useFieldState', () => {
 
 		await waitFor(() => {
 			expect(result.current.fields.firstName).toEqual('fred2')
+		})
+	})
+
+	test('When using change handler', async () => {
+		const fieldValues = { firstName: '', lastName: '' }
+		const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
+
+		const hook = renderHook(() => useFieldState(fieldValues, { defaultValues }))
+
+		const { result } = hook
+		expect(result.current.fields.firstName).toEqual('')
+		expect(result.current.fields.lastName).toEqual('')
+
+		let returnValue
+		act(() => {
+			returnValue = result.current.handleChange({ target: { name: 'firstName', value: 'fred2' } } as any)
+		})
+
+		await waitFor(() => {
+			expect(result.current.fields.firstName).toEqual('fred2')
+			expect(returnValue).to.deep.equal({ fields: { firstName: 'fred2', lastName: '' }, target: { name: 'firstName', value: 'fred2' } })
 		})
 	})
 

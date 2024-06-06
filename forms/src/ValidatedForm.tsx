@@ -17,7 +17,7 @@ export type ValidatedFormProps = {
 	nativeValidation?: boolean
 } & FormHTMLAttributes<HTMLFormElement> & PropsWithChildren
 
-export const ValidatedForm = forwardRef<HTMLFormElement, ValidatedFormProps>(({ children, onValidSubmit, onSubmit, className, reportValidity, nativeValidation, onReset, ...props }, ref) => {
+export const ValidatedForm = forwardRef<HTMLFormElement, ValidatedFormProps>(({ children, onValidSubmit, onSubmit, onReset, reportValidity = false, nativeValidation = false, className = '', ...props }, ref) => {
 	const refForm = useForwardRef<HTMLFormElement>(ref)
 	const [validatedClassName, setValidatedClassName] = useState('needs-validation')
 	// TODO: setup context API to track THIS form's validation state. This allows consumers elsewhere to report it.
@@ -50,9 +50,3 @@ export const ValidatedForm = forwardRef<HTMLFormElement, ValidatedFormProps>(({ 
 	)
 })
 ValidatedForm.displayName = 'ValidatedForm'
-
-ValidatedForm.defaultProps = {
-	reportValidity: false,
-	nativeValidation: true, // NOTE: I think this makes most sense with the documentation. Much more effort is required when disabling this feature.
-	className: ''
-}

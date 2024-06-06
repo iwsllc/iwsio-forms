@@ -5,7 +5,7 @@ describe('omitby', () => {
 		const result = omitBy({ a: 1, b: 2, c: 3 }, (v) => v % 2 === 0)
 		expect(result).to.deep.equal({ a: 1, c: 3 })
 	})
-	it('should omit matching args', async () => {
+	it('should omit matching args 2', async () => {
 		const result = omitBy([1, 2, 3], (v) => v % 2 === 0)
 		expect(result).to.deep.equal([1, 3])
 	})

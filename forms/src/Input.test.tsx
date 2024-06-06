@@ -197,8 +197,8 @@ describe('InputField', () => {
 	it('should work as an controlled input and handle custom errors', async () => {
 		const CustomErrorField = () => {
 			const { setFieldError } = useFieldManager()
-			const handleChange = (e) => {
-				if (e.target.value === 'abc') setFieldError(e.target.name, "Cannot enter 'abc'.")
+			const handleChange = (results) => {
+				if (results.fields.field === 'abc') setFieldError('field', "Cannot enter 'abc'.")
 			}
 			return <InputField name="field" onChange={handleChange} required data-testid="field" />
 		}
@@ -309,8 +309,8 @@ describe('InputField', () => {
 			)
 			const Test = () => {
 				const { setFieldError } = useFieldManager()
-				const handleTest2Change = (e) => {
-					if (e.target.value === 'abc') setFieldError(e.target.name, 'custom error')
+				const handleTest2Change = (updatedFields) => {
+					if (updatedFields.fields.field2 === 'abc') setFieldError('field2', 'custom error')
 				}
 				return (
 					<>
