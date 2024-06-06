@@ -1,7 +1,7 @@
-import { ChangeEvent, useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { defaults } from './defaults'
 import { omitBy } from './omitBy'
-import { FieldChangeResult, FieldError, FieldStateChangeEventHandler, FieldValues, UseFieldStateResult } from './types'
+import { FieldError, FieldStateChangeEventHandler, FieldValues, UseFieldStateResult } from './types'
 import { ErrorMapping, useErrorMapping } from './useErrorMapping'
 import { emptyValidity } from './validityState'
 

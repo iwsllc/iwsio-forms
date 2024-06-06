@@ -1,4 +1,4 @@
-import { ErrorMapping, FieldChangeEventHandler, FieldManager, InputField, InvalidFeedbackForField, FieldChangeResult, useFieldManager } from '@iwsio/forms'
+import { ErrorMapping, FieldChangeEventHandler, FieldManager, InputField, InvalidFeedbackForField, useFieldManager } from '@iwsio/forms'
 import { FC, useState } from 'react'
 
 // NOTE: leaving customError excluded so they report directly as-is.
