@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useState } from 'react'
-import { omitBy } from './omitBy'
 import { defaults } from './defaults'
-import { FieldError, FieldValues, UpdatedFieldsOnChangeEvent, UseFieldStateResult } from './types'
+import { omitBy } from './omitBy'
+import { FieldChangeResult, FieldError, FieldStateChangeEventHandler, FieldValues, UseFieldStateResult } from './types'
 import { ErrorMapping, useErrorMapping } from './useErrorMapping'
 import { emptyValidity } from './validityState'
 
@@ -88,7 +88,7 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 		setReportValidation((_old) => false)
 	}, [defaultFieldValues])
 
-	const handleChange: (_e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => UpdatedFieldsOnChangeEvent = useCallback((e) => {
+	const handleChange: FieldStateChangeEventHandler = useCallback((e) => {
 		let value = e.target.value
 		const name = e.target.name
 		const updatedFields = { ...fieldValues, [name]: value }

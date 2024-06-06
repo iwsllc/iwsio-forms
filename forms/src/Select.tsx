@@ -1,9 +1,11 @@
-import { forwardRef, useEffect, ChangeEventHandler, SelectHTMLAttributes, PropsWithChildren } from 'react'
-import { useForwardRef } from './useForwardRef'
-import { ValidationProps } from './types'
+import { ChangeEventHandler, PropsWithChildren, SelectHTMLAttributes, forwardRef, useEffect } from 'react'
+import { FieldChangeEventHandler, ValidationProps } from './types'
 import { useFieldManager } from './useFieldManager'
+import { useForwardRef } from './useForwardRef'
 
 export type SelectProps = PropsWithChildren & ValidationProps & SelectHTMLAttributes<HTMLSelectElement>
+
+export type SelectFieldProps = Omit<SelectProps, 'DefaultValue' | 'onChange'> & { onChange?: FieldChangeEventHandler }
 
 type Ref = HTMLSelectElement;
 
@@ -52,13 +54,13 @@ export const Select = forwardRef<Ref, SelectProps>(({ onFieldError, onInvalid, f
 })
 Select.displayName = 'Select'
 
-export const SelectField = forwardRef<Ref, Omit<SelectProps, 'DefaultValue'>>(({ name, onChange, ...other }, ref) => {
+export const SelectField = forwardRef<Ref, Omit<SelectFieldProps, 'DefaultValue'>>(({ name, onChange, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
 	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors, mapError } = useFieldManager()
 
 	const handleOnChange: ChangeEventHandler<Ref> = (e) => {
-		managerOnChange(e)
-		if (onChange != null) onChange(e)
+		const result = managerOnChange(e)
+		if (onChange != null) onChange(result)
 	}
 
 	const handleFieldError = (key, validity, message) => {

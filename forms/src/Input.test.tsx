@@ -198,6 +198,52 @@ describe('InputField', () => {
 		const CustomErrorField = () => {
 			const { setFieldError } = useFieldManager()
 			const handleChange = (results) => {
+				if (results.target.value === 'abc') setFieldError(results.target.name, "Cannot enter 'abc'.")
+			}
+			return <InputField name="field" onChange={handleChange} required data-testid="field" />
+		}
+
+		render(<CustomErrorField />, { wrapper: FieldManagerWrapper })
+
+		expect(screen.getByTestId('field')).to.be.ok
+		const input = screen.getByTestId('field') as HTMLInputElement
+
+		// basic validation fail
+		act(() => {
+			input.checkValidity()
+		})
+		expect(input.validity.valueMissing).to.be.true
+
+		await userEvent.clear(input)
+		await userEvent.type(input, 'ab')
+
+		// basic validation pass
+		expect(input.value).to.eq('ab')
+
+		act(() => { input.checkValidity() })
+
+		await userEvent.type(input, 'c')
+
+		// validation fail (from controlled state error)
+		expect(input.value).to.eq('abc')
+
+		act(() => { input.checkValidity() })
+
+		expect(input.validity.customError).to.be.true
+		expect(input.validationMessage).to.eq("Cannot enter 'abc'.")
+
+		await userEvent.type(input, 'c')
+
+		expect(input.value).to.eq('abcc')
+
+		act(() => { input.checkValidity() })
+
+		expect(input.validity.valid).to.be.true
+	})
+	it('should work as an controlled input and handle custom errors via field results', async () => {
+		const CustomErrorField = () => {
+			const { setFieldError } = useFieldManager()
+			const handleChange = (results) => {
 				if (results.fields.field === 'abc') setFieldError('field', "Cannot enter 'abc'.")
 			}
 			return <InputField name="field" onChange={handleChange} required data-testid="field" />
