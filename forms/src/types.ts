@@ -9,7 +9,7 @@ export type ValidationProps = {
 
 export type FieldValues = Record<string, string>
 
-export type UpdatedFieldsOnChangeEvent = {
+export type FieldChangeResult<Element extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = {
 	/**
 	* The updated field values after the change event.
 	*/
@@ -17,8 +17,12 @@ export type UpdatedFieldsOnChangeEvent = {
 	/**
 	* The target element that triggered the change event.
 	*/
-	target: EventTarget & (HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement);
+	target: EventTarget & Element;
 };
+
+export type FieldChangeEventHandler = <Element extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(e: FieldChangeResult<Element>) => void
+
+export type FieldStateChangeEventHandler = <Element extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(e: ChangeEvent<Element>) => FieldChangeResult<Element>
 
 export type UseFieldStateResult = {
 	/**
@@ -73,13 +77,13 @@ export type UseFieldStateResult = {
 	 * @param e passthrough of native change event arguments
 	 * @returns Returns the latest field value state after change applied.
 	 */
-	handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => UpdatedFieldsOnChangeEvent;
+	handleChange: FieldStateChangeEventHandler
 	/**
 	 * @deprecated Please use handleChange
 	 * @param e passthrough of native change event arguments
 	 * @returns Returns the latest field value state after change applied.
 	 */
-	onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => UpdatedFieldsOnChangeEvent;
+	onChange: FieldStateChangeEventHandler
 
 	/**
 	 * Use this to change the default values after initialization.

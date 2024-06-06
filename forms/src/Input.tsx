@@ -1,11 +1,13 @@
 import { forwardRef, useEffect, InputHTMLAttributes, ChangeEventHandler } from 'react'
 import { useForwardRef } from './useForwardRef'
-import { FieldValues, UpdatedFieldsOnChangeEvent, ValidationProps } from './types'
+import { FieldChangeEventHandler, FieldValues, FieldChangeResult, ValidationProps } from './types'
 import { useFieldManager } from './useFieldManager'
 
 export type InputProps = ValidationProps & InputHTMLAttributes<HTMLInputElement>
 
 type Ref = HTMLInputElement;
+
+export type InputFieldProps = Omit<InputProps, 'DefaultValue' | 'onChange'> & { onChange?: FieldChangeEventHandler }
 
 export const Input = forwardRef<Ref, InputProps>(({ onFieldError, fieldError, name, type = 'text', onChange, value, checked, onInvalid, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
@@ -53,15 +55,12 @@ export const Input = forwardRef<Ref, InputProps>(({ onFieldError, fieldError, na
 })
 Input.displayName = 'Input'
 
-export type FieldOnChange = { onChange?: (e: UpdatedFieldsOnChangeEvent) => void }
-export type InputFieldProps = Omit<InputProps, 'DefaultValue' | 'onChange'> & FieldOnChange
-
 export const InputField = forwardRef<Ref, InputFieldProps>(({ type = 'text', name, onChange, value, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
 	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors, mapError } = useFieldManager()
 
 	const handleOnChange: ChangeEventHandler<Ref> = (e) => {
-		const result = managerOnChange(e)
+		const result = managerOnChange<HTMLInputElement>(e)
 		if (onChange != null) onChange(result)
 	}
 

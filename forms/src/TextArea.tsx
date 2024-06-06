@@ -1,9 +1,11 @@
 import { forwardRef, useEffect, ChangeEventHandler, TextareaHTMLAttributes } from 'react'
 import { useForwardRef } from './useForwardRef'
-import { ValidationProps } from './types'
+import { FieldChangeEventHandler, ValidationProps } from './types'
 import { useFieldManager } from './useFieldManager'
 
 export type TextAreaProps = ValidationProps & TextareaHTMLAttributes<HTMLTextAreaElement>
+
+export type TextAreaFieldProps = Omit<TextAreaProps, 'DefaultValue' | 'onChange'> & { onChange?: FieldChangeEventHandler }
 
 type Ref = HTMLTextAreaElement;
 
@@ -50,14 +52,14 @@ export const TextArea = forwardRef<Ref, TextAreaProps>(({ onFieldError, onInvali
 })
 TextArea.displayName = 'TextArea'
 
-export const TextAreaField = forwardRef<Ref, Omit<TextAreaProps, 'DefaultValue'>>(({ name, onChange, ...other }, ref) => {
+export const TextAreaField = forwardRef<Ref, Omit<TextAreaFieldProps, 'DefaultValue'>>(({ name, onChange, ...other }, ref) => {
 	const localRef = useForwardRef<Ref>(ref)
 
 	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors, mapError } = useFieldManager()
 
 	const handleOnChange: ChangeEventHandler<Ref> = (e) => {
-		managerOnChange(e)
-		if (onChange != null) onChange(e)
+		const result = managerOnChange(e)
+		if (onChange != null) onChange(result)
 	}
 	const handleFieldError = (key, validity, message) => {
 		const mappedError = mapError(validity, message)

@@ -1,4 +1,4 @@
-import { FieldManager, InputField, InvalidFeedbackForField, useFieldManager, ErrorMapping, emptyValidity } from '@iwsio/forms'
+import { ErrorMapping, FieldChangeEventHandler, FieldManager, InputField, InvalidFeedbackForField, FieldChangeResult, useFieldManager } from '@iwsio/forms'
 import { FC, useState } from 'react'
 
 // NOTE: leaving customError excluded so they report directly as-is.
@@ -22,7 +22,7 @@ export const Field: FC<{name: string}> = ({ name }) => {
 	const fieldError = checkFieldError(name)
 
 	// this change event invokes AFTER the field manager change handler; so the state should be updated with a value along with any validity state from the base input
-	const handleChange = (e) => {
+	const handleChange: FieldChangeEventHandler = (e) => {
 		// NOTE: dont' use result.fields to refer to the the field values; state hasn't updated yet.
 		if (!e.target.validity.valid) return // already failed; likely required or pattern mismatch
 		// parsed
