@@ -15,10 +15,10 @@ export const RawSampleField: FC<{children?: ReactNode, title?: string, label?: s
 
 	return (
 		<FieldManager fields={{ field: '', field2: '', field3: '' }} onValidSubmit={handleSubmit} className="flex flex-col" nativeValidation onReset={handleReset}>
-			<fieldset className="border-2 p-5">
+			<fieldset className="border-2 p-5 flex flex-col gap-2">
 				<legend>{title}</legend>
 
-				<label className="flex flex-row items-center gap-5">
+				<label className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
 					<span className="label-text">{label}</span>
 					{children}
 				</label>

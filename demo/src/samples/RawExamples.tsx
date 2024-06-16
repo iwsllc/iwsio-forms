@@ -12,7 +12,7 @@ export function RawExamples() {
 				label="Required, word chars:"
 				help={<>Try <code>abc123</code>, <code>*</code>, or blank</>}
 			>
-				<InputField pattern="^\w+$" name="field" required placeholder="Type here" className="input input-bordered grow" />
+				<InputField pattern="^\w+$" name="field" required placeholder="Type here" className="input input-bordered w-full sm:w-auto" />
 			</RawSampleField>
 
 			<RawSampleField
@@ -20,7 +20,7 @@ export function RawExamples() {
 				label="Step: 1, min: 1, max: 10"
 				help={<>Try <code>1</code>, <code>11</code>, or blank</>}
 			>
-				<InputField type="number" required placeholder="Enter number" min={1} max={10} step={1} className="input input-bordered grow" name="field" />
+				<InputField type="number" required placeholder="Enter number" min={1} max={10} step={1} className="input input-bordered w-full sm:w-auto" name="field" />
 			</RawSampleField>
 
 			<RawSampleField
@@ -48,7 +48,7 @@ export function RawExamples() {
 				label="Options"
 				help={<>Try unselected</>}
 			>
-				<SelectField required className="select select-bordered" name="field">
+				<SelectField required className="select select-bordered w-full sm:w-auto" name="field">
 					<option />
 					<option>A</option>
 					<option>B</option>
@@ -61,7 +61,7 @@ export function RawExamples() {
 				label="Memo"
 				help={<>Try blank</>}
 			>
-				<TextAreaField required className="textarea textarea-bordered grow" name="field" maxLength={10} />
+				<TextAreaField required className="textarea textarea-bordered w-full sm:w-auto" name="field" maxLength={10} />
 			</RawSampleField>
 		</div>
 	)
