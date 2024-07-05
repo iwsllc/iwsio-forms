@@ -33,7 +33,7 @@ export const InputCheckDemo = () => {
 					<label className="label gap-2">
 						<span className="label-text">Did you see the example?</span>
 						<Input
-							onChange={(e) => setChecked(e.target.checked)}
+							onChange={e => setChecked(e.target.checked)}
 							value="true"
 							type="checkbox"
 							checked={checked}
@@ -52,7 +52,7 @@ export const InputCheckDemo = () => {
 					<label className="label gap-2">
 						<span className="label-text">Yes</span>
 						<Input
-							onChange={(e) => setSelectedRadio(e.target.value)}
+							onChange={e => setSelectedRadio(e.target.value)}
 							value="yes"
 							name="field2"
 							type="radio"
@@ -65,7 +65,7 @@ export const InputCheckDemo = () => {
 					<label className="label gap-2">
 						<span className="label-text">No</span>
 						<Input
-							onChange={(e) => setSelectedRadio(e.target.value)}
+							onChange={e => setSelectedRadio(e.target.value)}
 							value="no"
 							type="radio"
 							name="field2"
@@ -77,7 +77,20 @@ export const InputCheckDemo = () => {
 					</label>
 				</div>
 			</fieldset>
-			<p className="text-sm"><em>Try <code>abc</code> for custom error, <strong>blank</strong> for required, or any <strong>non-alpha</strong> for pattern check.</em></p>
+			<p className="text-sm">
+				<em>
+					Try
+					<code>abc</code>
+					{' '}
+					for custom error,
+					<strong>blank</strong>
+					{' '}
+					for required, or any
+					<strong>non-alpha</strong>
+					{' '}
+					for pattern check.
+				</em>
+			</p>
 			<p className="flex flex-row justify-end gap-2">
 				<button type="reset" className="btn btn-secondary" onClick={() => reset()}>Reset</button>
 				<button type="submit" className={`btn ${success ? 'btn-success' : 'btn-primary'}`}>Submit</button>

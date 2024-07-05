@@ -10,7 +10,7 @@ export type ValidatedFormProps = {
 	/**
 	 * Trigger report validity on every submission? Default: false
 	 */
-	reportValidity?: boolean,
+	reportValidity?: boolean
 	/**
 	 * When true, relies on native browser validation. In other words: it toggles `noValidate` on the `<form/>`. When false, `noValidate` is true.
 	 */

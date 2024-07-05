@@ -4,13 +4,28 @@ import { InputField, SelectField, TextAreaField } from '@iwsio/forms'
 export function RawExamples() {
 	return (
 		<div className="prose">
-			<h3>Showing field types <code>&lt;input&nbsp;/&gt;</code>, <code>&lt;select&nbsp;/&gt;</code>, and <code>&lt;textarea&nbsp;/&gt;</code></h3>
+			<h3>
+				Showing field types
+				<code>&lt;input&nbsp;/&gt;</code>
+				,
+				<code>&lt;select&nbsp;/&gt;</code>
+				, and
+				<code>&lt;textarea&nbsp;/&gt;</code>
+			</h3>
 			<hr className="my-5" />
 
 			<RawSampleField
 				title="Text and patterns"
 				label="Required, word chars:"
-				help={<>Try <code>abc123</code>, <code>*</code>, or blank</>}
+				help={(
+					<>
+						Try
+						<code>abc123</code>
+						,
+						<code>*</code>
+						, or blank
+					</>
+				)}
 			>
 				<InputField pattern="^\w+$" name="field" required placeholder="Type here" className="input input-bordered w-full sm:w-auto" />
 			</RawSampleField>
@@ -18,7 +33,15 @@ export function RawExamples() {
 			<RawSampleField
 				title="Numeric fields"
 				label="Step: 1, min: 1, max: 10"
-				help={<>Try <code>1</code>, <code>11</code>, or blank</>}
+				help={(
+					<>
+						Try
+						<code>1</code>
+						,
+						<code>11</code>
+						, or blank
+					</>
+				)}
 			>
 				<InputField type="number" required placeholder="Enter number" min={1} max={10} step={1} className="input input-bordered w-full sm:w-auto" name="field" />
 			</RawSampleField>
@@ -37,9 +60,18 @@ export function RawExamples() {
 				help={<>Try unchecked</>}
 			>
 				<div className="flex flex-col gap-3">
-					<label className="label-text cursor-pointer flex flex-row items-center gap-2">A: <InputField type="radio" required className="radio" value="A" radioGroup="field" name="field" /></label>
-					<label className="label-text cursor-pointer flex flex-row items-center gap-2">B: <InputField type="radio" required className="radio" value="B" radioGroup="field" name="field" /></label>
-					<label className="label-text cursor-pointer flex flex-row items-center gap-2">C: <InputField type="radio" required className="radio" value="C" radioGroup="field" name="field" /></label>
+					<label className="label-text cursor-pointer flex flex-row items-center gap-2">
+						A:
+						<InputField type="radio" required className="radio" value="A" radioGroup="field" name="field" />
+					</label>
+					<label className="label-text cursor-pointer flex flex-row items-center gap-2">
+						B:
+						<InputField type="radio" required className="radio" value="B" radioGroup="field" name="field" />
+					</label>
+					<label className="label-text cursor-pointer flex flex-row items-center gap-2">
+						C:
+						<InputField type="radio" required className="radio" value="C" radioGroup="field" name="field" />
+					</label>
 				</div>
 			</RawSampleField>
 

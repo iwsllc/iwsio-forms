@@ -56,7 +56,19 @@ export const UpstreamChangesPage = () => {
 				</button>
 			</div>
 			<p>
-				Try clicking <strong>Reset</strong> to reset the form. Then <strong>Submit</strong> will show validation errors. Then try clicking the <strong>Re-fetch</strong> button to fetch new data from the server and reset the field validation.
+				Try clicking
+				{' '}
+				<strong>Reset</strong>
+				{' '}
+				to reset the form. Then
+				{' '}
+				<strong>Submit</strong>
+				{' '}
+				will show validation errors. Then try clicking the
+				{' '}
+				<strong>Re-fetch</strong>
+				{' '}
+				button to fetch new data from the server and reset the field validation.
 			</p>
 		</ControlledFieldManager>
 	)

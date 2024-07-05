@@ -3,9 +3,9 @@ import { ChangeEvent, Dispatch, SetStateAction } from 'react'
 export type FieldError = { message: string | undefined, validity?: ValidityState | undefined }
 
 export type ValidationProps = {
-	fieldError?: FieldError;
-	onFieldError?: (key: string, validity: ValidityState, message?: string) => void;
-};
+	fieldError?: FieldError
+	onFieldError?: (key: string, validity: ValidityState, message?: string) => void
+}
 
 export type FieldValues = Record<string, string>
 
@@ -13,12 +13,12 @@ export type FieldChangeResult<Element extends HTMLInputElement | HTMLTextAreaEle
 	/**
 	* The updated field values after the change event.
 	*/
-	fields: FieldValues;
+	fields: FieldValues
 	/**
 	* The target element that triggered the change event.
 	*/
-	target: EventTarget & Element;
-};
+	target: EventTarget & Element
+}
 
 export type FieldChangeEventHandler = <Element extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(e: FieldChangeResult<Element>) => void
 
@@ -36,26 +36,26 @@ export type UseFieldStateResult = {
 	/**
 	 * Reset a form's error and value states.
 	 */
-	reset: () => void;
+	reset: () => void
 	/**
 	 * Current field values where keys match input names.
 	 */
-	fields: FieldValues;
+	fields: FieldValues
 	/**
 	 * Set a field's value.
 	 * @param key Field name
 	 * @param value Value to set
 	 */
-	setField: (key: string, value: string) => void;
+	setField: (key: string, value: string) => void
 
 	/**
 	 * Set all field values at once. Ignores undefined values.
 	 */
-	setFields: (values: Partial<FieldValues>) => void;
+	setFields: (values: Partial<FieldValues>) => void
 	/**
 	 * Current field errors where kesy match input names.
 	 */
-	fieldErrors: Record<string, FieldError>;
+	fieldErrors: Record<string, FieldError>
 
 	/**
 	 * Combines `reportValidation` and the `fieldErrors` state to determine if field requested should show an error.
@@ -68,10 +68,10 @@ export type UseFieldStateResult = {
 	 * @param key Field name key
 	 * @param message Error message
 	 */
-	setFieldError: (key: string, message?: string, validity?: ValidityState | undefined) => void;
+	setFieldError: (key: string, message?: string, validity?: ValidityState | undefined) => void
 
 	/** Set ALL errors at once */
-	setFieldErrors: Dispatch<SetStateAction<Record<string, FieldError>>>;
+	setFieldErrors: Dispatch<SetStateAction<Record<string, FieldError>>>
 	/**
 	 * onChange handler to manage state and errors for input, select, and textarea changes.
 	 * @param e passthrough of native change event arguments
@@ -109,4 +109,4 @@ export type UseFieldStateResult = {
 	 * Toggles the form's `isFormBusy` state. If no value is provided, it will toggle the current state.
 	 */
 	toggleFormBusy: (value?: boolean) => void
-};
+}

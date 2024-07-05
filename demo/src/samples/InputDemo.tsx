@@ -24,7 +24,8 @@ export const InputDemo = () => {
 	const handleButton = () => {
 		if (refForm.current.checkValidity()) {
 			setSuccess(true)
-		} else refForm.current.reportValidity()
+		}
+		else refForm.current.reportValidity()
 	}
 
 	const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -59,7 +60,20 @@ export const InputDemo = () => {
 				fieldError={fieldError}
 				onFieldError={(key, validity, message) => { setFieldError({ message, validity }) }}
 			/>
-			<p className="text-sm"><em>Try <code>abc</code> for custom error, <strong>blank</strong> for required, or any <strong>non-alpha</strong> for pattern check.</em></p>
+			<p className="text-sm">
+				<em>
+					Try
+					<code>abc</code>
+					{' '}
+					for custom error,
+					<strong>blank</strong>
+					{' '}
+					for required, or any
+					<strong>non-alpha</strong>
+					{' '}
+					for pattern check.
+				</em>
+			</p>
 			<p className="flex flex-row justify-end gap-2">
 				<button type="button" className="btn btn-secondary" onClick={reset}>Reset</button>
 				<button type="submit" className={`btn ${success ? 'btn-success' : 'btn-primary'}`}>Submit</button>

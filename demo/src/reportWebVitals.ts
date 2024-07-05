@@ -1,3 +1,6 @@
+/* eslint-disable promise/always-return */
+/* eslint-disable promise/catch-or-return */
+
 const reportWebVitals = (onPerfEntry?: any) => {
 	if (onPerfEntry && onPerfEntry instanceof Function) {
 		import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {

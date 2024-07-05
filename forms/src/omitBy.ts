@@ -5,7 +5,7 @@
  * @returns Shallow copied object or array without values/keys ommitted.
  */
 export function omitBy(values: any, omitWhen?: (v: any) => boolean): any {
-	if (Array.isArray(values)) return values.filter((v) => !omitWhen(v))
+	if (Array.isArray(values)) return values.filter(v => !omitWhen(v))
 
 	if (typeof values !== 'object') return values
 	const result: any = {}
