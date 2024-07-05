@@ -7,7 +7,13 @@ describe('ValidatedForm', () => {
 		const spyOnValidSubmit = vi.fn()
 		const spyOnSubmit = vi.fn()
 
-		render(<ValidatedForm data-testid="form" nativeValidation={false} onValidSubmit={spyOnValidSubmit} onSubmit={spyOnSubmit}><input data-testid="field" type="text" name="field" required /><button type="reset" data-testid="reset">reset</button><button data-testid="submit" type="submit">submit</button></ValidatedForm>)
+		render(
+			<ValidatedForm data-testid="form" nativeValidation={false} onValidSubmit={spyOnValidSubmit} onSubmit={spyOnSubmit}>
+				<input data-testid="field" type="text" name="field" required />
+				<button type="reset" data-testid="reset">reset</button>
+				<button data-testid="submit" type="submit">submit</button>
+			</ValidatedForm>
+		)
 
 		const field = screen.getByTestId('field')
 		const form = screen.getByTestId('form')

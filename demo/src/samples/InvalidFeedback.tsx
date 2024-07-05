@@ -17,7 +17,7 @@ const mapping: ErrorMapping = {
 /**
  * In this example, we render a text input field and apply custom onChange validation rules to treat it like a number.
  */
-export const Field: FC<{name: string}> = ({ name }) => {
+export const Field: FC<{ name: string }> = ({ name }) => {
 	const { checkFieldError, setFieldError } = useFieldManager()
 	const fieldError = checkFieldError(name)
 
@@ -42,11 +42,34 @@ export const Field: FC<{name: string}> = ({ name }) => {
 					<InvalidFeedbackForField name={name} className="indicator-item badge badge-error" />
 				</div>
 				<label className="label">
-					<span className="label-text-alt">Text input with onChange custom valdiation; Required value:<code>number &gt; 1 and &lt; 100, step: 1</code></span>
+					<span className="label-text-alt">
+						Text input with onChange custom valdiation; Required value:
+						<code>number &gt; 1 and &lt; 100, step: 1</code>
+					</span>
 				</label>
 			</div>
-			<p className="mt-0">This nuanced approach above shows a more responsive interaction. Try: <code>submit</code>, then enter: <code>.1</code> <em>(shows Too low)</em>, <code>backspace</code> <em>(will show invalid)</em>, <code>backspace</code> <em>(shows required)</em></p>
-			<p className="m-0"><code>&lt;input type="number"&gt;</code> (below) does not do this. It only triggers onChange with number value differences and remains "Invalid" after clearing the text.</p>
+			<p className="mt-0">
+				This nuanced approach above shows a more responsive interaction. Try:
+				<code>submit</code>
+				, then enter:
+				<code>.1</code>
+				{' '}
+				<em>(shows Too low)</em>
+				,
+				{' '}
+				<code>backspace</code>
+				{' '}
+				<em>(will show invalid)</em>
+				,
+				{' '}
+				<code>backspace</code>
+				{' '}
+				<em>(shows required)</em>
+			</p>
+			<p className="m-0">
+				<code>&lt;input type=&quot;number&quot;&gt;</code>
+				(below) does not do this. It only triggers onChange with number value differences and remains &quot;Invalid&quot; after clearing the text.
+			</p>
 		</>
 	)
 }
@@ -54,7 +77,7 @@ export const Field: FC<{name: string}> = ({ name }) => {
 /**
  * This example shows a simple input type="number" with min, max, and step validation
  */
-export const Field2: FC<{name: string}> = ({ name }) => {
+export const Field2: FC<{ name: string }> = ({ name }) => {
 	const { checkFieldError } = useFieldManager()
 	const fieldError = checkFieldError(name)
 
@@ -65,7 +88,10 @@ export const Field2: FC<{name: string}> = ({ name }) => {
 				<InvalidFeedbackForField name={name} className="indicator-item badge badge-error" />
 			</div>
 			<label className="label">
-				<span className="label-text-alt">Number input using min, max, and step validation. Required value:<code>number &gt; 1 and &lt; 100, step: 1</code></span>
+				<span className="label-text-alt">
+					Number input using min, max, and step validation. Required value:
+					<code>number &gt; 1 and &lt; 100, step: 1</code>
+				</span>
 			</label>
 		</div>
 	)

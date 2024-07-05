@@ -3,9 +3,9 @@ import { Busy } from './common/Busy'
 import { useLocation, useParams } from 'react-router-dom'
 import Prism from 'prismjs'
 
-type PageData = { html?: string, name: string, loaded: Date}
+type PageData = { html?: string, name: string, loaded: Date }
 
-export const FetchPage: FC<{demo?: ReactNode, page?: string}> = ({ demo, page }) => {
+export const FetchPage: FC<{ demo?: ReactNode, page?: string }> = ({ demo, page }) => {
 	const location = useLocation()
 	const refLocation = useRef('')
 	const [pages, setPages] = useState<PageData[]>([])
@@ -33,7 +33,8 @@ export const FetchPage: FC<{demo?: ReactNode, page?: string}> = ({ demo, page })
 					return [...old, cached]
 				} return [...old]
 			})
-		} else {
+		}
+		else {
 			cached.loaded = new Date()
 		}
 		setHtml(cached.html)

@@ -2,20 +2,20 @@
  * Overrides input validation message with custom message. When undefined, the default message will be used.
  */
 export type ErrorMapping = {
-		badInput?: string
-		/**
+	badInput?: string
+	/**
 		 * Override custom error to display. If not provided, the default message will be used.
 		 */
-		customError?: string
-		patternMismatch?: string
-		rangeOverflow?: string
-		rangeUnderflow?: string
-		stepMismatch?: string
-		tooLong?: string
-		tooShort?: string
-		typeMismatch?: string
-		valueMissing?: string
-	}
+	customError?: string
+	patternMismatch?: string
+	rangeOverflow?: string
+	rangeUnderflow?: string
+	stepMismatch?: string
+	tooLong?: string
+	tooShort?: string
+	typeMismatch?: string
+	valueMissing?: string
+}
 
 export const useErrorMapping = (mapping?: ErrorMapping | undefined) => {
 	const mapError = (validity: ValidityState, message: string | undefined) => {

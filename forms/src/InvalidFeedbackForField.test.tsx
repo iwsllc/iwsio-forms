@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper'
-import { InputField } from './Input'
+import { InputField } from './InputField'
 import { InvalidFeedbackForField } from './InvalidFeedbackForField'
 import userEvent from '@testing-library/user-event'
 
@@ -11,7 +11,8 @@ describe('InvalidFeedbackForField', () => {
 				<InputField name="field" required pattern="^\D+$" data-testid="input" />
 				<InvalidFeedbackForField name="field" data-testid="error" className="frogs" />
 				<button type="submit" data-testid="submit">submit</button>
-			</>), { wrapper: FieldManagerWrapper }
+			</>
+		), { wrapper: FieldManagerWrapper }
 		)
 
 		expect(screen.queryByTestId('error')).to.not.be.ok // doesn't show yet

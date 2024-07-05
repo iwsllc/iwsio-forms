@@ -27,7 +27,7 @@ export type UseFieldStateMethod = (
  */
 export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 	const { defaultValues, errorMapping } = options
-	const initDefaultFieldValues = defaultValues != null ? defaults(omitBy(fields, (v) => v == null || v === ''), defaultValues) : fields
+	const initDefaultFieldValues = defaultValues != null ? defaults(omitBy(fields, v => v == null || v === ''), defaultValues) : fields
 
 	const [reportValidation, setReportValidation] = useState(false)
 	const [fieldValues, setFieldValues] = useState<FieldValues>(fields)
@@ -42,7 +42,7 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 	}, [])
 
 	const setField = useCallback((key: string, value: string) => {
-		setFieldValues((oldFields) => ({ ...oldFields, [key]: value }))
+		setFieldValues(oldFields => ({ ...oldFields, [key]: value }))
 		setFieldError(key, undefined) // clear this error if one exists.
 	}, [])
 
@@ -71,7 +71,7 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 		if (hasMessage) {
 			_validity = validity ?? { ...emptyValidity, customError: true }
 		}
-		setFieldErrors((old) => ({ ...old, [key]: !hasMessage ? undefined : { message, validity: _validity } }))
+		setFieldErrors(old => ({ ...old, [key]: !hasMessage ? undefined : { message, validity: _validity } }))
 	}, [errorMapping])
 
 	const checkFieldError = useCallback((key: string): string | undefined => {
@@ -83,9 +83,9 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 	}, [fieldErrors, reportValidation, mapError, fieldValues])
 
 	const reset = useCallback(() => {
-		setFieldErrors((_old) => ({}))
-		setFieldValues((_old) => ({ ...defaultFieldValues }))
-		setReportValidation((_old) => false)
+		setFieldErrors(_old => ({}))
+		setFieldValues(_old => ({ ...defaultFieldValues }))
+		setReportValidation(_old => false)
 	}, [defaultFieldValues])
 
 	const handleChange: FieldStateChangeEventHandler = useCallback((e) => {
