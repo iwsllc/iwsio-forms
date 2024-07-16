@@ -31,7 +31,7 @@ function buildConfig(argv) {
 		VERSION_HASH: process.env.GITHUB_SHA?.substring(0, 7)
 	}
 
-	let devtool; let plugins = []; let sourceMapLoader
+	let devtool, plugins = [], sourceMapLoader
 	if (!prodMode) {
 		devtool = 'source-map'
 		sourceMapLoader = {
@@ -39,8 +39,7 @@ function buildConfig(argv) {
 			enforce: 'pre',
 			use: ['source-map-loader']
 		}
-	}
-	else {
+	} else {
 		if (!CI) { // no bundle analyzer for a CI build
 			plugins = [new BundleAnalyzerPlugin({
 				openAnalyzer: false,

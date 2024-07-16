@@ -40,12 +40,12 @@
     "demo"
   ],
   "devDependencies": {
-    "@eslint/js": "^9.6.0",
+    "@eslint/js": "^9.7.0",
     "@stylistic/eslint-plugin": "^2.3.0",
     "eslint": "^8.57.0",
     "eslint-plugin-promise": "^6.4.0",
-    "eslint-plugin-react": "^7.34.3",
+    "eslint-plugin-react": "^7.34.4",
     "globals": "^15.8.0",
-    "typescript-eslint": "^7.15.0"
+    "typescript-eslint": "^7.16.1"
   }
 }

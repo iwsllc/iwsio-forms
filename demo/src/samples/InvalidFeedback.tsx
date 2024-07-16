@@ -18,8 +18,7 @@ const mapping: ErrorMapping = {
  * In this example, we render a text input field and apply custom onChange validation rules to treat it like a number.
  */
 export const Field: FC<{ name: string }> = ({ name }) => {
-	const { checkFieldError, setFieldError } = useFieldManager()
-	const fieldError = checkFieldError(name)
+	const { setFieldError } = useFieldManager()
 
 	// this change event invokes AFTER the field manager change handler; so the state should be updated with a value along with any validity state from the base input
 	const handleChange: FieldChangeEventHandler = (e) => {
@@ -38,7 +37,14 @@ export const Field: FC<{ name: string }> = ({ name }) => {
 		<>
 			<div className="form-control w-1/2">
 				<div className="indicator w-full">
-					<InputField name={name} required className={`input input-bordered w-full ${fieldError ? 'input-error' : ''}`} type="text" pattern="^[\d\.]+$" onChange={handleChange} />
+					<InputField
+						name={name}
+						required
+						className="input input-bordered w-full group-[.was-validated]/form:invalid:border-[red]"
+						type="text"
+						pattern="^[\d\.]+$"
+						onChange={handleChange}
+					/>
 					<InvalidFeedbackForField name={name} className="indicator-item badge badge-error" />
 				</div>
 				<label className="label">
@@ -77,25 +83,28 @@ export const Field: FC<{ name: string }> = ({ name }) => {
 /**
  * This example shows a simple input type="number" with min, max, and step validation
  */
-export const Field2: FC<{ name: string }> = ({ name }) => {
-	const { checkFieldError } = useFieldManager()
-	const fieldError = checkFieldError(name)
-
-	return (
-		<div className="form-control w-1/2">
-			<div className="indicator w-full">
-				<InputField name={name} required className={`input input-bordered w-full ${fieldError ? 'input-error' : ''}`} type="number" step="1" min="2" max="99" />
-				<InvalidFeedbackForField name={name} className="indicator-item badge badge-error" />
-			</div>
-			<label className="label">
-				<span className="label-text-alt">
-					Number input using min, max, and step validation. Required value:
-					<code>number &gt; 1 and &lt; 100, step: 1</code>
-				</span>
-			</label>
+export const Field2: FC<{ name: string }> = ({ name }) => (
+	<div className="form-control w-1/2">
+		<div className="indicator w-full">
+			<InputField
+				name={name}
+				required
+				className="input input-bordered w-full group-[.was-validated]/form:invalid:border-[red]"
+				type="number"
+				step="1"
+				min="2"
+				max="99"
+			/>
+			<InvalidFeedbackForField name={name} className="indicator-item badge badge-error" />
 		</div>
-	)
-}
+		<label className="label">
+			<span className="label-text-alt">
+				Number input using min, max, and step validation. Required value:
+				<code>number &gt; 1 and &lt; 100, step: 1</code>
+			</span>
+		</label>
+	</div>
+)
 
 export const ResetButton = () => {
 	const { reset } = useFieldManager()
@@ -113,7 +122,14 @@ export const InvalidFeedbackDemo = () => {
 		setSuccess(true)
 	}
 	return (
-		<FieldManager fields={{ field: '', field2: '' }} onValidSubmit={handleValidSubmit} onSubmit={handleSubmit} onReset={() => setSuccess(false)} errorMapping={mapping}>
+		<FieldManager
+			fields={{ field: '', field2: '' }}
+			onValidSubmit={handleValidSubmit}
+			onSubmit={handleSubmit}
+			onReset={() => setSuccess(false)}
+			errorMapping={mapping}
+			className="group/form" /** NOTE: this simplifies the selector to indicate and error; see line 86 */
+		>
 			<fieldset className="border p-5">
 				<legend>Invalid Feedback</legend>
 				<div className="flex flex-col gap-5">

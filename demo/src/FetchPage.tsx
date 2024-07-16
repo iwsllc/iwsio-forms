@@ -31,10 +31,10 @@ export const FetchPage: FC<{ demo?: ReactNode, page?: string }> = ({ demo, page 
 			setPages((old) => {
 				if (!old.find(o => o.name === cached.name)) {
 					return [...old, cached]
-				} return [...old]
+				}
+				return [...old]
 			})
-		}
-		else {
+		} else {
 			cached.loaded = new Date()
 		}
 		setHtml(cached.html)
@@ -51,7 +51,7 @@ export const FetchPage: FC<{ demo?: ReactNode, page?: string }> = ({ demo, page 
 	useEffect(() => {
 		// debounce the fetch
 		const timeoutId = setTimeout(() => {
-			fetchContent(pageName).catch((e) => { console.error(e) })
+			fetchContent(pageName).catch(console.error)
 		}, 200)
 		return () => {
 			clearTimeout(timeoutId)

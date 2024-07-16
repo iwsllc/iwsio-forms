@@ -18,8 +18,7 @@ async function begin(...args) {
 			const newName = file.replace(extname(file), '.html')
 			console.log(`Writing ${newName}`)
 			await writeFile(join(__dirname, '../../dist/content', newName), html, { encoding: 'utf8' })
-		}
-		catch (err) {
+		} catch (err) {
 			console.error(err)
 		}
 	}
