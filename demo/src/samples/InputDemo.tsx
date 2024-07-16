@@ -24,8 +24,7 @@ export const InputDemo = () => {
 	const handleButton = () => {
 		if (refForm.current.checkValidity()) {
 			setSuccess(true)
-		}
-		else refForm.current.reportValidity()
+		} else refForm.current.reportValidity()
 	}
 
 	const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {

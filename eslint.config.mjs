@@ -13,11 +13,18 @@ export default [
 		// all projects:
 		eslint.configs.recommended,
 		...tseslint.configs.recommended,
+		stylistic.configs.customize({
+			braceStyle: '1tbs',
+			commaDangle: 'never',
+			indent: 'tab',
+			jsx: true,
+			quotes: 'single',
+			semi: false
+		}),
 		{
 			plugins: {
-				'promise': promisePlugin,
-				'@stylistic': stylistic,
-				'react': reactPlugin
+				promise: promisePlugin,
+				react: reactPlugin
 			},
 			languageOptions: {
 				ecmaVersion: 2023,
@@ -29,12 +36,11 @@ export default [
 			},
 			rules: {
 				...promisePlugin.configs.recommended.rules,
-				...stylistic.configs['recommended-flat'].rules,
 				...reactPlugin.configs.recommended.rules,
 				...reactPlugin.configs['jsx-runtime'].rules,
 
 				// custom rules here
-				'@typescript-eslint/no-var-requires': 'off',
+				'promise/always-return': ['error', { ignoreLastCallback: true }],
 
 				'@typescript-eslint/no-explicit-any': 'off',
 				'@typescript-eslint/no-unused-vars': ['error', {
@@ -42,21 +48,22 @@ export default [
 					varsIgnorePattern: '^_',
 					destructuredArrayIgnorePattern: '^_',
 					caughtErrorsIgnorePattern: '^_'
-				}],
-				'@stylistic/indent-binary-ops': ['error', 'tab'],
-				'@stylistic/no-tabs': ['error', { allowIndentationTabs: true }],
-				'@stylistic/indent': ['error', 'tab'],
-				'@stylistic/jsx-indent': ['error', 'tab'],
-				'@stylistic/jsx-indent-props': ['error', 'tab'],
-				'@stylistic/comma-dangle': ['error', 'never'],
-
-				'@stylistic/max-statements-per-line': 'off'
+				}]
 			},
 
 			settings: {
 				react: {
 					version: 'detect' // You can add this if you get a warning about the React version when you lint
 				}
+			}
+		},
+		{
+			files: ['**/*.test.ts', '**/*.test.tsx', '**/*.test.mts', '**/*.test.cts', '**/*.test.js'],
+			plugins: {
+				'@stylistic': stylistic
+			},
+			rules: {
+				'@stylistic/max-statements-per-line': 'off'
 			}
 		}
 	)

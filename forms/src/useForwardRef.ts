@@ -13,8 +13,7 @@ export const useForwardRef = <T >(
 
 		if (typeof ref === 'function') {
 			ref(targetRef.current)
-		}
-		else {
+		} else {
 			ref.current = targetRef.current
 		}
 	}, [ref])

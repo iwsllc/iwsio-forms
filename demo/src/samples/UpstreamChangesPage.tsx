@@ -45,7 +45,17 @@ export const UpstreamChangesPage = () => {
 			<InputField placeholder="Director" name="director" type="text" className="input input-bordered" required />
 			<div className="flex gap-2">
 				<button type="reset" className="btn btn-info" onClick={() => refetch()}>Re-fetch</button>
-				<button type="reset" className="btn" onClick={() => { reset(); setSuccess(false) }}>Reset</button>
+				<button
+					type="reset"
+					className="btn"
+					onClick={() => {
+						reset()
+						setSuccess(false)
+					}}
+				>
+					Reset
+
+				</button>
 				{/*
 					NOTE: using holdBusyAfterSubmit on the FieldManager, which keeps the busy
 					status true until manually clearing it. This allows us to use the `isFormBusy` flag
