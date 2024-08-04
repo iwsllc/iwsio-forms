@@ -8,7 +8,9 @@ jobs:
     name: Deploy to Fly
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: git fetch && git pull origin main
       - run: flyctl deploy --build-arg PUBLIC_URL="/" --build-arg GITHUB_SHA="$GITHUB_SHA"

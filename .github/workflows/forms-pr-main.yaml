@@ -1,12 +1,15 @@
-name: PR to Main - @iwsio/forms
+name: "@iwsio/forms: PR to Main"
 
 on:
   pull_request:
     branches: [ main ]
     paths:
       - 'forms/**'
+
 jobs:
   tests:
-    if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: ./.github/workflows/forms-test.yaml
-    secrets: inherit
+    if: ${{github.event.pull_request.draft == false && !contains(github.event.head_commit.message, '#skip') }}
+    uses: iwsllc/workflows/.github/workflows/test.yaml@main
+    with:
+      node_version: 22
+      build_command: npm run build -w forms

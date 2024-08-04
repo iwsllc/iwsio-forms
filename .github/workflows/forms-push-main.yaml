@@ -9,20 +9,35 @@ on:
 jobs:
   tests:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: ./.github/workflows/forms-test.yaml
-    secrets: inherit
+    uses: iwsllc/workflows/.github/workflows/test.yaml@main
+    with:
+      node_version: 22
+      build_command: npm run build -w forms
   version:
-    if: ${{ !contains(github.event.head_commit.message, '#skip') }}
     needs: tests
-    uses: ./.github/workflows/forms-version.yaml
-    secrets: inherit
-  publish:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
+    uses: iwsllc/workflows/.github/workflows/version.yaml@main
+    with:
+      git_ref_name: main
+      node_version: 22
+      version_command: npm version patch -ws --include-workspace-root
+      tag_include_name: false
+  publish:
     needs: version
-    uses: ./.github/workflows/forms-publish.yaml
-    secrets: inherit
+    if: ${{ !contains(github.event.head_commit.message, '#skip') }}
+    uses: iwsllc/workflows/.github/workflows/publish.yaml@main
+    with:
+      git_ref_name: main
+      node_version: 22
+      install_command: npm ci -w forms
+      build_command: npm run build -w forms
+      publish_command: npm publish -w forms --access public
+    secrets:
+      # This token is used for reading npm packages; use when private packages are used
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   deploy_demo:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
     needs: version
     uses: ./.github/workflows/demo-deploy.yaml
-    secrets: inherit
+    secrets:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

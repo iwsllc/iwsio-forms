@@ -1,7 +1,7 @@
 import { FormEventHandler, FormHTMLAttributes, PropsWithChildren, forwardRef, useMemo, useState } from 'react'
 import { useForwardRef } from './useForwardRef'
 
-export type ValidatedFormProps = {
+export type ValidatedFormProps = PropsWithChildren<{
 	/**
 	 * Invokes when submit event triggered and form has been validated and is valid.
 	 * @param fields Current values stored in field state.
@@ -15,7 +15,7 @@ export type ValidatedFormProps = {
 	 * When true, relies on native browser validation. In other words: it toggles `noValidate` on the `<form/>`. When false, `noValidate` is true.
 	 */
 	nativeValidation?: boolean
-} & FormHTMLAttributes<HTMLFormElement> & PropsWithChildren
+}> & FormHTMLAttributes<HTMLFormElement>
 
 export const ValidatedForm = forwardRef<HTMLFormElement, ValidatedFormProps>(({ children, onValidSubmit, onSubmit, onReset, reportValidity = false, nativeValidation = false, className = '', ...props }, ref) => {
 	const refForm = useForwardRef<HTMLFormElement>(ref)

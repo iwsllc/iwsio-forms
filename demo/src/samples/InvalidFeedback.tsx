@@ -1,4 +1,4 @@
-import { ErrorMapping, FieldChangeEventHandler, FieldManager, InputField, InvalidFeedbackForField, useFieldManager } from '@iwsio/forms'
+import { ControlledFieldManager, ErrorMapping, FieldChangeEventHandler, FieldManager, InputField, InvalidFeedbackForField, useFieldManager, useFieldState } from '@iwsio/forms'
 import { FC, useState } from 'react'
 
 // NOTE: leaving customError excluded so they report directly as-is.
@@ -113,6 +113,13 @@ export const ResetButton = () => {
 
 export const InvalidFeedbackDemo = () => {
 	const [success, setSuccess] = useState(false)
+
+	const fieldState = useFieldState(
+		{ field: '', field2: '' },
+		{
+			errorMapping: mapping
+		}
+	)
 	const handleSubmit = () => {
 		// happens before validation
 		setSuccess(false)
@@ -122,12 +129,11 @@ export const InvalidFeedbackDemo = () => {
 		setSuccess(true)
 	}
 	return (
-		<FieldManager
-			fields={{ field: '', field2: '' }}
+		<ControlledFieldManager
+			fieldState={fieldState}
 			onValidSubmit={handleValidSubmit}
 			onSubmit={handleSubmit}
 			onReset={() => setSuccess(false)}
-			errorMapping={mapping}
 			className="group/form" /** NOTE: this simplifies the selector to indicate and error; see line 86 */
 		>
 			<fieldset className="border p-5">
@@ -142,6 +148,6 @@ export const InvalidFeedbackDemo = () => {
 					<p><em>Submit with empty or any non-alpha character for error.</em></p>
 				</div>
 			</fieldset>
-		</FieldManager>
+		</ControlledFieldManager>
 	)
 }
