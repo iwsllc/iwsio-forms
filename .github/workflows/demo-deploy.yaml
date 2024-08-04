@@ -2,6 +2,9 @@ name: Deploy @iwsio/forms-demo
 
 on:
   workflow_call:
+    secrets:
+      - FLY_API_TOKEN:
+          required: true
 
 jobs:
   deploy:
