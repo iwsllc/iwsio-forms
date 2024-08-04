@@ -28,6 +28,9 @@ jobs:
     uses: iwsllc/workflows/.github/workflows/publish.yaml@main
     with:
       git_ref_name: main
+      node_registry_url: https://registry.npmjs.org
+      node_version: 22
+      node_scope: '@iwsio'
       node_version: 22
       install_command: npm ci -w forms
       build_command: npm run build -w forms
