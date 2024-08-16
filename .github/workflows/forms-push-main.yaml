@@ -9,14 +9,14 @@ on:
 jobs:
   tests:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/test.yaml@main
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v1
     with:
       node_version: 22
       build_command: npm run build -w forms
   version:
     needs: tests
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/version.yaml@main
+    uses: iwsllc/workflows/.github/workflows/version.yaml@v1
     with:
       git_ref_name: main
       node_version: 22
@@ -25,7 +25,7 @@ jobs:
   publish:
     needs: version
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/publish.yaml@main
+    uses: iwsllc/workflows/.github/workflows/publish.yaml@v1
     with:
       git_ref_name: main
       node_registry_url: https://registry.npmjs.org

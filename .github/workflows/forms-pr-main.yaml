@@ -9,7 +9,7 @@ on:
 jobs:
   tests:
     if: ${{github.event.pull_request.draft == false && !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/test.yaml@main
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v1
     with:
       node_version: 22
       build_command: npm run build -w forms
