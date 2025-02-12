@@ -1,40 +1,32 @@
-import { ChangeEventHandler, useRef, useState } from 'react'
-import { FieldError, Input } from '@iwsio/forms'
+import { FieldErrorHandler, Input, ValidatedForm } from '@iwsio/forms'
+import classNames from 'classnames'
+import { ChangeEventHandler, Dispatch, FormEventHandler, SetStateAction, useState } from 'react'
 
-export const InputDemo = () => {
-	const refForm = useRef<HTMLFormElement>(null)
-	const [success, setSuccess] = useState(false)
-	const [text, setText] = useState('')
-	// Keep track of validation state. (This will be the first error, if any, encountered in browser validation)
-	const [fieldError, setFieldError] = useState<FieldError | undefined>(undefined)
-
-	const reset = () => {
-		setSuccess(false)
-		setFieldError(undefined)
-		setText('')
-	}
-
-	// validation is handled automatically with form submit event.
-	const handleSubmit = (e) => {
-		e.preventDefault()
-		setSuccess(true)
-	}
-
-	// Handle the form validation manually
-	const handleButton = () => {
-		if (refForm.current.checkValidity()) {
-			setSuccess(true)
-		} else refForm.current.reportValidity()
-	}
+const Form = ({ setSuccess, success }: { success: boolean, setSuccess: Dispatch<SetStateAction<boolean>> }) => {
+	const [value, setValue] = useState('')
+	const [fieldError, setFieldError] = useState<{ message: string | undefined, validity: ValidityState } | undefined>()
 
 	const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+		setValue(e.target.value)
+		setFieldError(undefined)
 		setSuccess(false)
-		setText(e.target.value)
-		if (e.target.value === 'abc') setFieldError({ message: 'cannot use abc', validity: { customError: true, valid: false } as any })
+		if (e.target.value === 'abc') {
+			e.target.setCustomValidity('Cannot use abc.')
+		}
+	}
+
+	const handleFieldError: FieldErrorHandler = (key, validity, message) => {
+		setFieldError({ message, validity })
+	}
+
+	const reset = () => {
+		setValue('')
+		setFieldError(undefined)
+		setSuccess(false)
 	}
 
 	return (
-		<form className="flex flex-col gap-4 not-prose" onSubmit={handleSubmit} ref={refForm}>
+		<>
 			<div className="flex flex-row">
 				<table className="table">
 					<thead>
@@ -50,36 +42,52 @@ export const InputDemo = () => {
 				</table>
 			</div>
 			<Input
+				name="field"
+				value={value}
+				onFieldError={handleFieldError}
 				className="input input-bordered"
 				onChange={handleChange}
-				value={text}
-				name="field"
 				required
 				pattern="^[a-zA-Z]+$"
-				fieldError={fieldError}
-				onFieldError={(key, validity, message) => { setFieldError({ message, validity }) }}
 			/>
 			<p className="text-sm">
 				<em>
 					Try
+					{' '}
 					<code>abc</code>
 					{' '}
 					for custom error,
+					{' '}
 					<strong>blank</strong>
 					{' '}
 					for required, or any
+					{' '}
 					<strong>non-alpha</strong>
 					{' '}
 					for pattern check.
 				</em>
 			</p>
 			<p className="flex flex-row justify-end gap-2">
-				<button type="button" className="btn btn-secondary" onClick={reset}>Reset</button>
-				<button type="submit" className={`btn ${success ? 'btn-success' : 'btn-primary'}`}>Submit</button>
-
-				{/* Intentionally hidden; just an example of using button click handler to validate the form. */}
-				<button type="button" onClick={handleButton} className={`hidden btn ${success ? 'btn-success' : 'btn-primary'}`}>Manual check</button>
+				<button type="reset" className="btn btn-secondary" onClick={reset}>Reset</button>
+				<button type="submit" className={classNames('btn', { 'btn-primary': !success }, { 'btn-success': success })}>Submit</button>
 			</p>
-		</form>
+		</>
+	)
+}
+export const InputDemo = () => {
+	const [success, setSuccess] = useState(false)
+	const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+		setSuccess(false)
+	}
+
+	const handleValidSubmit = () => {
+		setSuccess(true)
+	}
+
+	// Handle the form validation manually
+	return (
+		<ValidatedForm className="not-prose flex flex-col gap-4" onValidSubmit={handleValidSubmit} onSubmit={onSubmit} nativeValidation>
+			<Form setSuccess={setSuccess} success={success} />
+		</ValidatedForm>
 	)
 }

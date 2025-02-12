@@ -1,15 +1,17 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react'
 
-export type FieldError = { message: string | undefined, validity?: ValidityState | undefined }
+export interface FieldError { message: string | undefined, validity?: ValidityState | undefined }
 
-export type ValidationProps = {
+export type FieldErrorHandler = (key: string, validity: ValidityState, message?: string) => void
+
+export interface ValidationProps {
 	fieldError?: FieldError
-	onFieldError?: (key: string, validity: ValidityState, message?: string) => void
+	onFieldError?: FieldErrorHandler
 }
 
 export type FieldValues = Record<string, string>
 
-export type FieldChangeResult<Element extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = {
+export interface FieldChangeResult<Element extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> {
 	/**
 	* The updated field values after the change event.
 	*/
@@ -20,11 +22,11 @@ export type FieldChangeResult<Element extends HTMLInputElement | HTMLTextAreaEle
 	target: EventTarget & Element
 }
 
-export type FieldChangeEventHandler = <Element extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(e: FieldChangeResult<Element>) => void
+export type FieldChangeEventHandler = <Element extends (HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement)>(e: FieldChangeResult<Element>) => void
 
-export type FieldStateChangeEventHandler = <Element extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(e: ChangeEvent<Element>) => FieldChangeResult<Element>
+export type FieldStateChangeEventHandler = <Element extends (HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement)>(e: ChangeEvent<Element>) => FieldChangeResult<Element>
 
-export type UseFieldStateResult = {
+export interface UseFieldStateResult {
 	/**
 	 * Indicates whether InputFields within should render validation errors based on the fieldError state. This is unrelated to the native browser `reportValidity()` function.
 	 */
@@ -109,4 +111,14 @@ export type UseFieldStateResult = {
 	 * Toggles the form's `isFormBusy` state. If no value is provided, it will toggle the current state.
 	 */
 	toggleFormBusy: (value?: boolean) => void
+}
+
+export const isHTMLInput = (target: EventTarget): target is HTMLInputElement => {
+	return target instanceof HTMLElement && target.tagName === 'INPUT'
+}
+export const isHTMLSelect = (target: EventTarget): target is HTMLSelectElement => {
+	return target instanceof HTMLElement && target.tagName === 'SELECT'
+}
+export const isHTMLTextArea = (target: EventTarget): target is HTMLTextAreaElement => {
+	return target instanceof HTMLElement && target.tagName === 'TEXTAREA'
 }

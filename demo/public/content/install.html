@@ -1,0 +1,23 @@
+<h1>Install</h1>
+<p><a href="https://www.npmjs.com/package/@iwsio/forms">@iwsio/forms on npmjs.com</a></p>
+<pre><code class="language-bash">npm install @iwsio/forms
+yarn install @iwsio/forms
+pnpm install @iwsio/forms
+</code></pre>
+<h2>Setup</h2>
+<div class="not-prose">
+<pre><code class="language-jsx">import { FieldManager, InputField } from '@iwsio/forms'
+
+export const SimpleForm = () =&gt; {
+	const handleSubmit = (fieldsWithValues) =&gt; {
+		/* submit event when form is valid: fields with values provided */
+	}
+
+	return (
+		&lt;FieldManager fields={{field: ''}} onValidSubmit={handleSubmit} nativeValidation&gt;
+			&lt;InputField type=&quot;text&quot; name=&quot;field&quot; required pattern=&quot;^\w{3,5}$&quot;/&gt;
+		&lt;/FieldManager&gt;
+	)
+}
+</code></pre>
+</div>

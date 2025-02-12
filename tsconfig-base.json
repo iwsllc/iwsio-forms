@@ -1,23 +1,7 @@
 
 {
+	"extends": "@iwsio/tsconfig/react",
 	"compilerOptions": {
-		"allowJs": true,
-		"composite": true,
-		"declaration": true,
-		"declarationMap": true,
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"incremental": true,
-		"inlineSourceMap": false,
-		"jsx": "react-jsx",
-		"lib": ["dom", "dom.iterable", "esnext"],
-		"module": "CommonJS",
-		"moduleResolution": "Node",
-		"resolveJsonModule": true,
-		"skipDefaultLibCheck": true,
-		"skipLibCheck": true,
-		"sourceMap": true,
-		"target": "es2022",
-		"types": ["vitest/globals"]
+		"types": [ "vitest/globals", "@testing-library/jest-dom/vitest"	]
 	}
 }

@@ -1,53 +1,46 @@
-import { ChangeEventHandler, InputHTMLAttributes, forwardRef, useEffect } from 'react'
-import { ValidationProps } from './types'
-import { useForwardRef } from './useForwardRef'
+import { ChangeEventHandler, ComponentProps, FormEventHandler, useEffect, useImperativeHandle, useRef } from 'react'
 
-export type InputProps = ValidationProps & InputHTMLAttributes<HTMLInputElement>
+import { ValidationProps } from './types.js'
 
-export type Ref = HTMLInputElement
+export interface InputProps extends ValidationProps, Omit<ComponentProps<'input'>, 'name'> {
+	name: string
+}
 
-export const Input = forwardRef<Ref, InputProps>(({ onFieldError, fieldError, name, type = 'text', onChange, value, checked, onInvalid, ...other }, ref) => {
-	const localRef = useForwardRef<Ref>(ref)
+export const Input = ({ onFieldError, fieldError, name, type = 'text', onChange, value, checked, onInvalid, ref, ...other }: InputProps) => {
+	const localRef = useRef<HTMLInputElement>(null)
+	// @ts-expect-error -- returning whole ref object
+	useImperativeHandle(ref, () => localRef.current, [localRef])
 
-	const localSetError = (message?: string) => {
-		if (onFieldError != null) onFieldError(name, localRef.current.validity, message)
-	}
-
-	const localOnChange: ChangeEventHandler<Ref> = (e) => {
-		localSetError(undefined)
+	const localOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
 		e.target.setCustomValidity('')
-		if (onChange != null) onChange(e)
-		if (!localRef.current.validity.valid) localSetError(localRef.current.validationMessage)
+		onChange?.(e)
+		if (!e.target.validity.valid) onFieldError?.(name, e.target.validity, e.target.validationMessage)
 	}
 
-	const handleInvalid = (e) => {
-		localSetError(e.target.validationMessage)
-		if (onInvalid != null) onInvalid(e)
+	const handleInvalid: FormEventHandler<HTMLInputElement> = (e) => {
+		const target = e.target as HTMLInputElement
+		onFieldError?.(name, target.validity, target.validationMessage)
+		onInvalid?.(e)
 	}
 
 	useEffect(() => {
-		if (!localRef.current.validity.valid) localSetError(localRef.current.validationMessage)
-	}, [])
+		if (fieldError == null) return localRef.current?.setCustomValidity('') // clear it.
 
-	useEffect(() => {
-		if (fieldError == null) return localRef.current.setCustomValidity('')
-		if (fieldError.message == null) return localRef.current.setCustomValidity('')
-
-		if (fieldError.validity?.customError && fieldError.message !== localRef.current.validationMessage) {
-			localRef.current.setCustomValidity(fieldError.message)
+		// intended to track upstream errors.
+		if (fieldError.validity?.customError && fieldError.message !== localRef.current?.validationMessage) {
+			localRef.current?.setCustomValidity(fieldError.message ?? '')
 		}
 	}, [fieldError])
 
 	return (
 		<input
+			{...other}
 			ref={localRef}
 			name={name}
 			type={type}
 			onInvalid={handleInvalid}
 			{...(/checkbox|radio/i.test(type) ? { value, checked } : { value })}
 			onChange={localOnChange}
-			{...other}
 		/>
 	)
-})
-Input.displayName = 'Input'
+}

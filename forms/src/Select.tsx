@@ -1,38 +1,34 @@
-import { ChangeEventHandler, PropsWithChildren, SelectHTMLAttributes, forwardRef, useEffect } from 'react'
-import { ValidationProps } from './types'
-import { useForwardRef } from './useForwardRef'
+import { ChangeEventHandler, ComponentProps, FormEventHandler, useEffect, useImperativeHandle, useRef } from 'react'
 
-export type SelectProps = PropsWithChildren<SelectHTMLAttributes<HTMLSelectElement>> & ValidationProps
+import { ValidationProps } from './types.js'
 
-export type Ref = HTMLSelectElement
+export interface SelectProps extends ValidationProps, Omit<ComponentProps<'select'>, 'name'> {
+	name: string // name required
+}
 
-export const Select = forwardRef<Ref, SelectProps>(({ onFieldError, onInvalid, fieldError, name, onChange, value, children, ...other }, ref) => {
-	const localRef = useForwardRef<Ref>(ref)
+export const Select = ({ onFieldError, onInvalid, fieldError, name, onChange, value, children, ref, ...other }: SelectProps) => {
+	const localRef = useRef<HTMLSelectElement>(null)
+	// @ts-expect-error -- returning whole ref object
+	useImperativeHandle(ref, () => localRef.current, [localRef])
 
-	const localSetError = (message?: string) => {
-		if (onFieldError != null) onFieldError(name, localRef.current.validity, message)
-	}
-
-	const localOnChange: ChangeEventHandler<Ref> = (e) => {
-		localSetError(undefined)
+	const localOnChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
 		e.target.setCustomValidity('')
-		if (onChange != null) onChange(e)
-		if (!localRef.current.validity.valid) localSetError(localRef.current.validationMessage)
+		onChange?.(e)
+		if (!e.target.validity.valid) onFieldError?.(name, e.target.validity, e.target.validationMessage)
 	}
 
-	const handleInvalid = (e) => {
-		localSetError(e.target.validationMessage)
-		if (onInvalid != null) onInvalid(e)
+	const handleInvalid: FormEventHandler<HTMLSelectElement> = (e) => {
+		const target = e.target as HTMLSelectElement
+		onInvalid?.(e)
+		onFieldError?.(name, target.validity, target.validationMessage)
 	}
 
 	useEffect(() => {
-		if (!localRef.current.validity.valid) localSetError(localRef.current.validationMessage)
-	}, [])
+		if (fieldError == null) return localRef.current?.setCustomValidity('') // clear it.
 
-	useEffect(() => {
-		if (fieldError == null) return localRef.current.setCustomValidity('')
-		if (fieldError.validity?.customError && fieldError.message !== localRef.current.validationMessage) {
-			localRef.current.setCustomValidity(fieldError.message || '')
+		// intended to track upstream errors.
+		if (fieldError.validity?.customError && fieldError.message !== localRef.current?.validationMessage) {
+			localRef.current?.setCustomValidity(fieldError.message ?? '')
 		}
 	}, [fieldError])
 
@@ -48,5 +44,4 @@ export const Select = forwardRef<Ref, SelectProps>(({ onFieldError, onInvalid, f
 			{children}
 		</select>
 	)
-})
-Select.displayName = 'Select'
+}

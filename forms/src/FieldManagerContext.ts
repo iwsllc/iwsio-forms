@@ -1,3 +1,5 @@
 import { createContext } from 'react'
 
-export const FieldManagerContext = createContext(undefined)
+import { UseFieldStateResult } from './types.js'
+
+export const FieldManagerContext = createContext<UseFieldStateResult | undefined>(undefined)

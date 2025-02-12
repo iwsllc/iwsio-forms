@@ -1,7 +1,7 @@
 /**
  * Overrides input validation message with custom message. When undefined, the default message will be used.
  */
-export type ErrorMapping = {
+export interface ErrorMapping {
 	badInput?: string
 	/**
 		 * Override custom error to display. If not provided, the default message will be used.

@@ -1,17 +1,14 @@
-import { FC, ReactNode, useRef, useEffect, useMemo, useState } from 'react'
-import { Busy } from './common/Busy'
-import { useLocation, useParams } from 'react-router-dom'
+import parser from 'html-react-parser'
 import Prism from 'prismjs'
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { useParams } from 'react-router'
 
-type PageData = { html?: string, name: string, loaded: Date }
+import { Busy } from './common/Busy.js'
+import { useGetPage } from './services.js'
 
-export const FetchPage: FC<{ demo?: ReactNode, page?: string }> = ({ demo, page }) => {
-	const location = useLocation()
-	const refLocation = useRef('')
-	const [pages, setPages] = useState<PageData[]>([])
+export const FetchPage = ({ demo, page }: { demo?: ReactNode, page?: string }) => {
 	const [html, setHtml] = useState<string | undefined>()
-	const [loading, setLoading] = useState(false)
-	const refContent = useRef(null)
+	const refContent = useRef<HTMLDivElement>(null)
 
 	const { page: paramsPage } = useParams()
 
@@ -20,26 +17,13 @@ export const FetchPage: FC<{ demo?: ReactNode, page?: string }> = ({ demo, page 
 		return paramsPage
 	}, [page, paramsPage])
 
-	const fetchContent = async (name: string) => {
-		if (!name?.trim().length) return // skip load
-		let cached = pages.find(p => p.name === name)
-		if (cached == null) {
-			setLoading(true)
-			const response = await fetch(`/content/${name}.html`)
-			const text = await response.text()
-			cached = { name: name, html: text, loaded: new Date() }
-			setPages((old) => {
-				if (!old.find(o => o.name === cached.name)) {
-					return [...old, cached]
-				}
-				return [...old]
-			})
-		} else {
-			cached.loaded = new Date()
-		}
-		setHtml(cached.html)
-		setLoading(() => false)
-	}
+	const { data, isSuccess, isError, isPending } = useGetPage(`/content/${pageName}.html`, pageName != null)
+
+	useEffect(() => {
+		if (isError) return
+		if (!isSuccess) return
+		setHtml(data)
+	}, [isSuccess, isError, data])
 
 	useEffect(() => {
 		if (!html?.length) return
@@ -48,29 +32,15 @@ export const FetchPage: FC<{ demo?: ReactNode, page?: string }> = ({ demo, page 
 		})
 	}, [html])
 
-	useEffect(() => {
-		// debounce the fetch
-		const timeoutId = setTimeout(() => {
-			fetchContent(pageName).catch(console.error)
-		}, 200)
-		return () => {
-			clearTimeout(timeoutId)
-		}
-	}, [pageName])
-
-	// NOTE: since we're re-using this component for multiple routes, we want to reset it when a new route is incoming. This prevents the flicker render of the last demo before loading the new page.
-	useEffect(() => {
-		if (refLocation.current !== location.pathname) {
-			setLoading(() => true)
-			setHtml(undefined)
-		}
-		refLocation.current = location.pathname
-	}, [location])
-
-	if (loading) return <Busy />
+	if (isPending) return <Busy />
 	return (
 		<>
-			<div ref={refContent} dangerouslySetInnerHTML={{ __html: html }} />
+			<div ref={refContent}>
+				{
+				// @ts-expect-error typing on default export is not detected
+					html && html.length && parser(html)
+				}
+			</div>
 			<div className="mt-5">
 				{demo}
 			</div>

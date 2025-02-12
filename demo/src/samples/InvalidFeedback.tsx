@@ -1,5 +1,6 @@
-import { ControlledFieldManager, ErrorMapping, FieldChangeEventHandler, FieldManager, InputField, InvalidFeedbackForField, useFieldManager, useFieldState } from '@iwsio/forms'
-import { FC, useState } from 'react'
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import { ControlledFieldManager, ErrorMapping, FieldChangeEventHandler, FieldValues, InputField, InvalidFeedbackForField, useFieldManager, useFieldState } from '@iwsio/forms'
+import { useState } from 'react'
 
 // NOTE: leaving customError excluded so they report directly as-is.
 const mapping: ErrorMapping = {
@@ -17,7 +18,7 @@ const mapping: ErrorMapping = {
 /**
  * In this example, we render a text input field and apply custom onChange validation rules to treat it like a number.
  */
-export const Field: FC<{ name: string }> = ({ name }) => {
+export const Field = ({ name }: { name: string }) => {
 	const { setFieldError } = useFieldManager()
 
 	// this change event invokes AFTER the field manager change handler; so the state should be updated with a value along with any validity state from the base input
@@ -49,7 +50,7 @@ export const Field: FC<{ name: string }> = ({ name }) => {
 				</div>
 				<label className="label">
 					<span className="label-text-alt">
-						Text input with onChange custom valdiation; Required value:
+						Text input with onChange custom validation; Required value:
 						<code>number &gt; 1 and &lt; 100, step: 1</code>
 					</span>
 				</label>
@@ -83,7 +84,7 @@ export const Field: FC<{ name: string }> = ({ name }) => {
 /**
  * This example shows a simple input type="number" with min, max, and step validation
  */
-export const Field2: FC<{ name: string }> = ({ name }) => (
+export const Field2 = ({ name }: { name: string }) => (
 	<div className="form-control w-1/2">
 		<div className="indicator w-full">
 			<InputField
@@ -124,7 +125,7 @@ export const InvalidFeedbackDemo = () => {
 		// happens before validation
 		setSuccess(false)
 	}
-	const handleValidSubmit = (_fields: any) => {
+	const handleValidSubmit = (_fields: FieldValues) => {
 		// happens after validation and when valid
 		setSuccess(true)
 	}

@@ -1,15 +1,16 @@
-/* eslint-disable promise/always-return */
-/* eslint-disable promise/catch-or-return */
+import type { CLSMetric, FCPMetric, LCPMetric, TTFBMetric } from 'web-vitals'
+import { onCLS, onFCP, onLCP, onTTFB } from 'web-vitals'
 
-const reportWebVitals = (onPerfEntry?: any) => {
+type PerfEntryFunction = (
+	metric: CLSMetric | FCPMetric | LCPMetric | TTFBMetric,
+) => void
+
+const reportWebVitals = (onPerfEntry?: PerfEntryFunction): void => {
 	if (onPerfEntry && onPerfEntry instanceof Function) {
-		import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
-			onCLS(onPerfEntry)
-			onFID(onPerfEntry)
-			onFCP(onPerfEntry)
-			onLCP(onPerfEntry)
-			onTTFB(onPerfEntry)
-		})
+		onCLS(onPerfEntry)
+		onFCP(onPerfEntry)
+		onLCP(onPerfEntry)
+		onTTFB(onPerfEntry)
 	}
 }
 

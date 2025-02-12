@@ -1,7 +1,8 @@
 import { act, render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { FieldManager } from './FieldManager'
-import { Input } from './Input'
+import { userEvent } from '@testing-library/user-event'
+
+import { FieldManager } from './FieldManager.js'
+import { Input } from './Input.js'
 
 describe('FieldManager', () => {
 	test('When rendering field manager with fields; happy path', async () => {

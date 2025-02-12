@@ -1,8 +1,9 @@
-import { render, act, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper'
-import { TextAreaField } from './TextAreaField'
-import { useFieldManager } from './useFieldManager'
+import { act, render, screen } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
+
+import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper.js'
+import { TextAreaField } from './TextAreaField.js'
+import { useFieldManager } from './useFieldManager.js'
 
 describe('TextAreaField', () => {
 	it('should work as an controlled input and handle custom errors', async () => {

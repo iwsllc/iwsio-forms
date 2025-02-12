@@ -1,9 +1,11 @@
-import { act, render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { useState } from 'react'
-import { FieldError, useFieldState } from '.'
-import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper'
-import { Input } from './Input'
+import React, { act, render, screen } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
+import { ChangeEventHandler, useState } from 'react'
+
+import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper.js'
+import { Input } from './Input.js'
+import { FieldError, FieldErrorHandler } from './types.js'
+import { useFieldState } from './useFieldState.js'
 
 const ControlledInput = () => {
 	const [value, setValue] = useState('')
@@ -16,7 +18,7 @@ const ControlledInput = () => {
 const ControlledInputWithErrors = () => {
 	const [value, setValue] = useState('')
 	const [error, setError] = useState<FieldError | undefined>()
-	const handleChange = (e) => {
+	const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
 		setValue(e.target.value)
 		if (e.target.value === 'abc') {
 			setError({
@@ -37,18 +39,18 @@ const ControlledInputWithErrors = () => {
 			})
 		}
 	}
-	const handleFieldError = (_key, validity, message) => {
+	const handleFieldError: FieldErrorHandler = (_key, validity, message) => {
 		setError({ message, validity })
 	}
 	return (
 		<>
 			<Input name="field" value={value} onChange={handleChange} required data-testid="field" fieldError={error} onFieldError={handleFieldError} />
-			<span data-testid="error">{error?.message}</span>
+			{error && <span data-testid="error">{error?.message}</span>}
 		</>
 	)
 }
 
-describe('Input', function () {
+describe('Input', () => {
 	it('should work as an uncontrolled input', async () => {
 		render(<Input name="field" required data-testid="field" />)
 
@@ -57,6 +59,7 @@ describe('Input', function () {
 		const input = screen.getByTestId('field') as HTMLInputElement
 		act(() => { input.checkValidity() })
 		expect(input.validity.valid).to.be.false
+		expect(input.validity.valueMissing).to.be.true
 
 		await userEvent.clear(input)
 		await userEvent.type(input, 'abc')

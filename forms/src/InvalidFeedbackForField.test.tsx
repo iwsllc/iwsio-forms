@@ -1,19 +1,20 @@
 import { render, screen } from '@testing-library/react'
-import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper'
-import { InputField } from './InputField'
-import { InvalidFeedbackForField } from './InvalidFeedbackForField'
-import userEvent from '@testing-library/user-event'
+import { userEvent } from '@testing-library/user-event'
+
+import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper.js'
+import { InputField } from './InputField.js'
+import { InvalidFeedbackForField } from './InvalidFeedbackForField.js'
 
 describe('InvalidFeedbackForField', () => {
 	it('should render nothing without an error and with report validation off', async () => {
-		render((
+		const Test = () => (
 			<>
 				<InputField name="field" required pattern="^\D+$" data-testid="input" />
 				<InvalidFeedbackForField name="field" data-testid="error" className="frogs" />
 				<button type="submit" data-testid="submit">submit</button>
 			</>
-		), { wrapper: FieldManagerWrapper }
 		)
+		render(<Test />, { wrapper: FieldManagerWrapper })
 
 		expect(screen.queryByTestId('error')).to.not.be.ok // doesn't show yet
 
@@ -27,7 +28,8 @@ describe('InvalidFeedbackForField', () => {
 		expect(screen.getByTestId('error').className).to.eq('frogs')
 
 		// clear the invalid '2' and type 'abc'
-		await userEvent.type(screen.getByTestId('input'), '{Backspace}abc')
+		await userEvent.clear(screen.getByTestId('input'))
+		await userEvent.type(screen.getByTestId('input'), 'abc')
 
 		// error is gone again
 		expect(screen.queryByTestId('error')).to.not.be.ok

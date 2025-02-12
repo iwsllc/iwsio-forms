@@ -1,11 +1,12 @@
-import { Route, Routes as ReactRoutes } from 'react-router-dom'
-import { Layout } from './Layout'
-import { FetchPage } from './FetchPage'
-import { InputDemo } from './samples/InputDemo'
-import { InputCheckDemo } from './samples/InputCheckDemo'
-import { RawExamples } from './samples/RawExamples'
-import { InvalidFeedbackDemo } from './samples/InvalidFeedback'
-import { UpstreamChangesPage } from './samples/UpstreamChangesPage'
+import { Route, Routes as ReactRoutes } from 'react-router'
+
+import { FetchPage } from './FetchPage.js'
+import { Layout } from './Layout.js'
+import { InputCheckDemo } from './samples/InputCheckDemo.js'
+import { InputDemo } from './samples/InputDemo.js'
+import { InvalidFeedbackDemo } from './samples/InvalidFeedback.js'
+import { RawExamples } from './samples/RawExamples.js'
+import { UpstreamChangesPage } from './samples/UpstreamChangesPage.js'
 
 export const Routes = () => {
 	return (

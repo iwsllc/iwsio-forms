@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 export const Nav = () => (
 	<ul className="menu p-2 text-sm">

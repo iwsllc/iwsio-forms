@@ -1,8 +1,9 @@
 import { act, render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { userEvent } from '@testing-library/user-event'
 import { useState } from 'react'
-import { TextArea } from './TextArea'
-import { FieldError } from './types'
+
+import { TextArea } from './TextArea.js'
+import { FieldError } from './types.js'
 
 export const ControlledTextArea = () => {
 	const [value, setValue] = useState('')

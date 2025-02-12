@@ -1,8 +1,9 @@
 import { act, render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { useState } from 'react'
-import { Select } from './Select'
-import { FieldError } from './types'
+import { userEvent } from '@testing-library/user-event'
+import { ChangeEventHandler, useState } from 'react'
+
+import { Select } from './Select.js'
+import { FieldError, FieldErrorHandler } from './types.js'
 
 const ControlledSelect = () => {
 	const [value, setValue] = useState('')
@@ -21,11 +22,11 @@ const ControlledSelect = () => {
 const ControlledSelectWithErrors = () => {
 	const [value, setValue] = useState('')
 	const [error, setError] = useState<FieldError | undefined>()
-	const handleChange = (e) => {
+	const handleChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
 		setValue(e.target.value)
-		if (e.target.value === '1') setError({ message: 'Cannot select \'1\'.', validity: { valid: false, customError: true } as any })
+		if (e.target.value === '1') e.target.setCustomValidity('Cannot select \'1\'.')
 	}
-	const handleFieldError = (_key, validity, message) => {
+	const handleFieldError: FieldErrorHandler = (_key, validity, message) => {
 		setError({ message, validity })
 	}
 	return (

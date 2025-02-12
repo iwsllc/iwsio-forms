@@ -1,6 +1,6 @@
 {
   "name": "@iwsio/forms-root",
-  "version": "4.3.3",
+  "version": "5.0.0-alpha.2",
   "description": "Simple library with useful React forms components and browser validation.",
   "files": [],
   "engines": {
@@ -40,12 +40,8 @@
     "demo"
   ],
   "devDependencies": {
-    "@eslint/js": "^9.9.0",
-    "@stylistic/eslint-plugin": "^2.6.4",
-    "eslint": "^8.57.0",
-    "eslint-plugin-promise": "^6.6.0",
-    "eslint-plugin-react": "^7.35.0",
-    "globals": "^15.9.0",
-    "typescript-eslint": "^7.18.0"
+    "@iwsio/eslint-config": "^1.0.1",
+    "@iwsio/tsconfig": "^1.0.1",
+    "typescript": "^5.7.3"
   }
 }

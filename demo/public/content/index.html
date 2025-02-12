@@ -1,0 +1,231 @@
+<h1>Why @iwsio/forms?</h1>
+<p><a href="https://github.com/iwsllc/iwsio-forms/actions/workflows/forms-push-main.yaml"><img src="https://github.com/iwsllc/iwsio-forms/actions/workflows/forms-push-main.yaml/badge.svg" alt="@iwsio/forms: PUSH to main"></a></p>
+<p>This package combines browser form validation with React so you can more easily manage errors and input values in forms. More specifically, it tracks input validation in state making it available to React AND allows you to set input errors in state that in turn trigger <code>setCustomValidity</code> on DOM inputs enabling more control over how you render form errors in your applications.</p>
+<h2>5.0 Now with React 19 support!</h2>
+<p>I applied all the changes recommended for React 19 like using refs as props, dropping Provider from contexts, etc.</p>
+<h2>Install</h2>
+<pre><code class="language-bash">npm install @iwsio/forms
+yarn install @iwsio/forms
+pnpm install @iwsio/forms
+</code></pre>
+<h2>Controlled/Uncontrolled inputs: <code>&lt;Input /&gt;</code>, <code>&lt;Select /&gt;</code>, and <code>&lt;TextArea /&gt;</code></h2>
+<p>These controlled inputs allow you to track error state with a controlled component value. They are identical to (and pass along) all the props from their counterparts <code>input</code>, <code>select</code> and <code>textarea</code>. These means you can use regular HTML 5 browser validation AND you can set custom errors easily with React state and let browser validation do the work of reporting or checking for invalid fields. These components include: <code>Input</code>, <code>Select</code>, and <code>TextArea</code> and work exactly how native elements work, the key difference being: you can include a <code>fieldError</code> and <code>onFieldError</code> props to manage error state.</p>
+<h2><code>&lt;ValidatedForm&gt;</code></h2>
+<p>Complimenting the inputs, I've included a form component to simplify styling and validated submit handling. It includes some CSS sugar <code>needs-validation</code> and <code>was-validated</code> for pre and post first submission. (This is kind of a throwback to Bootstrap, but you can use it however you like). You also still have access to the pseudo classes <code>:valid</code> or <code>:invalid</code> as usual with these input components.</p>
+<p><code>onValidSubmit</code> invokes when form submit happens with all valid inputs. It's the same as using a regular <code>&lt;form/&gt;</code> <code>onSubmit</code> but with a built-in <code>form.checkValidity()</code> call to ensure field inputs are valid. <code>className</code> provided here will style the underlying HTML form.</p>
+<p>Also, it should be mentioned that <code>ValidatedForm</code> works with controlled and uncontrolled inputs. It simply serves as a utility for the browser validation happening under the covers.</p>
+<pre><code class="language-jsx">const Sample = () =&gt; {
+  const handleValidSubmit = () =&gt; {
+    // Form is valid; form inputs are safe to consume here.
+  };
+
+  return (
+    &lt;ValidatedForm onValidSubmit={handleValidSubmit}&gt;
+      &lt;Input type=&quot;text&quot; name=&quot;field1&quot; required pattern=&quot;^\w+$&quot; /&gt;
+    &lt;/ValidatedForm&gt;
+  );
+};
+</code></pre>
+<h3>Renders:</h3>
+<h4>Before submit</h4>
+<pre><code class="language-html">&lt;form class=&quot;needs-validation&quot;&gt;
+  &lt;input type=&quot;text&quot; name=&quot;field1&quot; required pattern=&quot;^\w+$&quot; value=&quot;&quot; /&gt;
+&lt;/form&gt;
+</code></pre>
+<h4>After submit</h4>
+<pre><code class="language-html">&lt;form class=&quot;was-validated&quot;&gt;
+  &lt;input type=&quot;text&quot; name=&quot;field1&quot; required pattern=&quot;^\w+$&quot; value=&quot;&quot; /&gt;
+&lt;/form&gt;
+</code></pre>
+<h2><code>useFieldState</code></h2>
+<p>Next there is <code>useFieldState</code>, which manages all the field values and error states for a form. This can be used independent of all the other components. The idea is to simply use a <code>Record&lt;string, string&gt;</code> type of state where the keys are the field names and they hold the current text value of the inputs. <code>useFieldState</code> manages both <code>values</code> and <code>fieldErrors</code> and provides methods to hook into that and make custom updates.</p>
+<table>
+<thead>
+<tr>
+<th>hook props</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>checkFieldError</code></td>
+<td>helper function to check error state in combination with <code>reportValidation</code>; returns true when fieldError exists and reportValidation is <code>true</code></td>
+</tr>
+<tr>
+<td><code>fieldErrors</code></td>
+<td>current field errors; <code>Record&lt;string, FieldError&gt;</code> where keys match input names.</td>
+</tr>
+<tr>
+<td><code>handleChange</code></td>
+<td><code>ChangeEventHandler&lt;*&gt;</code> used to control the input.</td>
+</tr>
+<tr>
+<td><code>onChange</code></td>
+<td>alias to <code>handleChange</code></td>
+</tr>
+<tr>
+<td><code>reportValidation</code></td>
+<td>boolean field that indicates if errors should be shown. Sets to true when using <code>FieldManager</code> after first form submit.</td>
+</tr>
+<tr>
+<td><code>reset</code></td>
+<td>resets the fields back to <code>defaultValues</code> or <code>initValues</code> and resets fieldError state.</td>
+</tr>
+<tr>
+<td><code>setField</code></td>
+<td>manually set a single field's value by name.</td>
+</tr>
+<tr>
+<td><code>setFields</code></td>
+<td>manually set many values with a Record&lt;string, string&gt;. Undefined values are ignored.</td>
+</tr>
+<tr>
+<td><code>setDefaultValues</code></td>
+<td>manually reset the default values.</td>
+</tr>
+<tr>
+<td><code>setFieldError</code></td>
+<td>Sets a single field error. Useful when needing to set errors outside of browser validation.</td>
+</tr>
+<tr>
+<td><code>setFieldErrors</code></td>
+<td>Sets ALL field errors. This is useful when you want to set more than one error at once. Like for example handling an HTTP 400 response with specific input errors.</td>
+</tr>
+<tr>
+<td><code>setReportValidation</code></td>
+<td>sets reportValidation toggle for manual implementation.</td>
+</tr>
+<tr>
+<td><code>isFormBusy</code></td>
+<td>Can be used to indicate the form has been submitted and is busy. This can be used to toggle disabled and styling state on DOM within the FieldManager.</td>
+</tr>
+<tr>
+<td><code>toggleFormBusy</code></td>
+<td>Manages the <code>isFormBusy</code> state. During long-running async submit handlers, use this in combination with FieldManager prop: <code>holdBusyAfterSubmit</code> to hold the busy status after the initial onValidSubmit executes. Then clear the busy state with this method after the async process finishes.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-jsx">const Sample = () =&gt; {
+  const { fields, onChange, fieldErrors } = useFieldState({ field1: &quot;&quot; });
+
+  return (
+    &lt;form&gt;
+      &lt;input
+        type=&quot;text&quot;
+        name=&quot;field1&quot;
+        required
+        pattern=&quot;^\w+$&quot;
+        onChange={onChange}
+        value={fields.field1}
+      /&gt;
+      {fieldErrors.field1 &amp;&amp; &lt;span&gt;{fieldErrors.field1}&lt;/span&gt;}
+    &lt;/form&gt;
+  );
+};
+</code></pre>
+<h2><code>&lt;FieldManager&gt;</code></h2>
+<p>Finally, <code>FieldManager</code> brings it all together and automatically wires up field state and form validation. Rather than using the default <code>Input</code>, <code>Select</code> and <code>TextArea</code> components, you'll use extensions of those: <code>InputField</code>, <code>SelectField</code>, and <code>TextAreaField</code> respectively. The only prop (outside validation attributes) you need to provide is the <code>name</code> so <code>FieldManager</code> knows how to connect it to field state.</p>
+<p>The props on <code>FieldManager</code> passthrough to the underlying <code>&lt;form/&gt;</code>. You can provide <code>className</code> and other HTML attributes commonly used on <code>&lt;form/&gt;</code>. For this to work however, you will need to provide at least an initial field state as <code>fields</code>. Use <code>onValidSubmit</code> to know when the form submit occurred with valid fields.</p>
+<p>This can be manually styled as well. Use <code>useFieldManager()</code> to get a check function <code>checkFieldError(fieldName: string)</code>. The result of this function will indicate whether there is an error and it is &quot;reportable&quot; (meaning the form has been submitted at least once). The real-time error is accessible using the <code>fieldErrors</code> state from the hook as well.</p>
+<p>Here is a quick example:</p>
+<pre><code class="language-tsx">const Sample = () =&gt; {
+  const handleValidSubmit = (fields: Record&lt;string, any&gt;) =&gt; {
+    // Do whatever you want with fields.
+  }
+  return (
+    &lt;FieldManager fields={{ field1: &quot;&quot;, field2: &quot;&quot;, field3: &quot;&quot; }} onValidSubmit={handleValidSubmit} className=&quot;custom-form-css&quot; nativeValidation&gt;
+      &lt;InputField type=&quot;text&quot; name=&quot;field1&quot; required pattern=&quot;^\w+$&quot; /&gt;
+      &lt;InputField
+        type=&quot;number&quot;
+        name=&quot;field2&quot;
+        required
+        min={0}
+        max={10}
+        step={1}
+      /&gt;
+    
+      &lt;InputField type=&quot;phone&quot; name=&quot;field3&quot; required /&gt;
+      &lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt;
+    &lt;/FieldManager&gt;
+  )
+}
+</code></pre>
+<h2><code>&lt;ControlledFieldManager&gt;</code></h2>
+<p>You might be wondering, how do I manage field state outside of the FieldManager? Imagine a scenario where these field values may be managed upstream in your application. Maybe they're being pulled in from an asynchronous request and loaded after the form renders. In this case, you'll want to manage the field state outside of the FieldManager component. For this, there is another component you can use. <code>&lt;ControlledFieldManager/&gt;</code> where you provide the fieldState yourself. See this in action <a href="https://forms.iws.io/upstream-test">in the docs</a>.</p>
+<pre><code class="language-tsx">export const UpstreamChangesPage = () =&gt; {
+	const { data, refetch, isFetching, isSuccess } = useQuery({ queryKey: ['/movies.json'], queryFn: () =&gt; fetchMovies() })
+	const [success, setSuccess] = useState(false)
+
+	const fieldState = useFieldState({ title: '', year: '', director: '' })
+	const { setFields, reset, isFormBusy, toggleFormBusy } = fieldState
+
+	const handleValidSubmit = useCallback((_values: FieldValues) =&gt; {
+		setTimeout(() =&gt; { // NOTE: I added a quick half second delay to show how `isFormBusy` can be used.
+			setSuccess(_old =&gt; true)
+			toggleFormBusy(false)
+		}, 500)
+	}, [toggleFormBusy, setSuccess])
+
+	useEffect(() =&gt; {
+		if (!isSuccess || isFetching) return
+		if (data == null || data.length === 0) return
+		const { title, year, director } = data[0]
+		setFields({ title, year, director })
+	}, [isFetching, isSuccess])
+
+	return (
+		&lt;ControlledFieldManager fieldState={fieldState} onValidSubmit={handleValidSubmit} holdBusyAfterSubmit className=&quot;flex flex-col gap-2 w-1/2&quot; nativeValidation&gt;
+			&lt;InputField placeholder=&quot;Title&quot; name=&quot;title&quot; type=&quot;text&quot; className=&quot;input input-bordered&quot; required /&gt;
+			&lt;InputField placeholder=&quot;Year&quot; name=&quot;year&quot; type=&quot;number&quot; pattern=&quot;^\d+$&quot; className=&quot;input input-bordered&quot; required /&gt;
+			&lt;InputField placeholder=&quot;Director&quot; name=&quot;director&quot; type=&quot;text&quot; className=&quot;input input-bordered&quot; required /&gt;
+			&lt;div className=&quot;flex gap-2&quot;&gt;
+				&lt;button type=&quot;reset&quot; className=&quot;btn btn-info&quot; onClick={() =&gt; refetch()}&gt;Re-fetch&lt;/button&gt;
+				&lt;button type=&quot;reset&quot; className=&quot;btn&quot; onClick={() =&gt; { reset(); setSuccess(false) }}&gt;Reset&lt;/button&gt;
+				{/*
+					NOTE: using holdBusyAfterSubmit on the FieldManager, which keeps the busy 
+					status true until manually clearing it. This allows us to use the `isFormBusy` flag
+					to style the form and disable the submission button while an async process is busy.
+				*/}
+				&lt;button type=&quot;submit&quot; disabled={isFormBusy} className={`btn ${success ? 'btn-success' : 'btn-primary'} ${isFormBusy ? 'btn-disabled' : ''}`}&gt;
+					Submit
+				&lt;/button&gt;
+			&lt;/div&gt;
+			&lt;p&gt;
+				Try clicking &lt;strong&gt;Reset&lt;/strong&gt; to reset the form. Then &lt;strong&gt;Submit&lt;/strong&gt; will show validation errors. Then try clicking the &lt;strong&gt;Re-fetch&lt;/strong&gt; button to fetch new data from the server and reset the field validation.
+			&lt;/p&gt;
+		&lt;/ControlledFieldManager&gt;
+	)
+}
+</code></pre>
+<h2><code>&lt;InvalidFeedbackForField /&gt;</code></h2>
+<p>One last component: this is just a helper component to display errors using the <code>useFieldState</code> properties mentioned above. Feel free to use this an example to make your own or consume it as-is. It currently returns a <code>&lt;span/&gt;</code> containing the error with any additional span attributes you provide as props. It consumes <code>checkFieldError(name)</code> to determine when to render and will return <code>null</code> when no error exists. You'll likely want to disable native validation reporting if you use this. Set <code>nativeValidation={false}</code> on the <code>ValidatedForm</code> or <code>FieldManager</code>, whichever one you use.</p>
+<h3>Source:</h3>
+<pre><code class="language-tsx">&lt;InvalidFeedbackForField name=&quot;field1&quot; className=&quot;text-[red] font-bold text-2xl&quot; /&gt;
+</code></pre>
+<h3>Renders with error:</h3>
+<pre><code class="language-html">&lt;span className=&quot;text-[red] font-bold text-2xl&quot;&gt;This field is required.&lt;/span&gt;
+</code></pre>
+<h2>Mapping Errors</h2>
+<p>When disabling browser validation and customizing styling around error reporting, you might want to change the text for each error. Well, you can by providing an <code>errorMapping</code> prop to the <code>useFieldState</code> hook or to the <code>&lt;FieldManager&gt;</code> component. You can see <a href="https://forms.iws.io/invalid-feedback">an example of customized error styling</a>.</p>
+<p>The basic idea is to create a <code>ValidityState</code> map assigning each type of error to a message.</p>
+<pre><code class="language-typescript">// Note: These are intentionally vague for brevity.
+const mapping: ErrorMapping = {
+	badInput: 'Invalid',
+	customError: 'Invalid',
+	patternMismatch: 'Invalid',
+	rangeOverflow: 'Too high',
+	rangeUnderflow: 'Too low',
+	stepMismatch: 'Invalid',
+	tooLong: 'Too long',
+	tooShort: 'Too short',
+	typeMismatch: 'Invalid',
+	valueMissing: 'Required'
+}
+const { setFieldError, checkFieldError } = useFieldState(fields, defaultValues, onSubmit, mapping)
+</code></pre>
+<p>Or with FieldManager:</p>
+<pre><code class="language-jsx">&lt;FieldManager errorMapping={mapping} fields={fields}&gt;
+</code></pre>
+<h2>References:</h2>
+<h3>MDN Forms validation</h3>
+<p>https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation</p>
