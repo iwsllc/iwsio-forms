@@ -47,6 +47,7 @@
     "start": "VITE_GITHUB_SHA=`git rev-parse HEAD` vite dev",
     "prebuild": "npm run generate",
     "build": "vite build --mode production",
+    "clean": "rimraf dist",
     "typecheck": "tsc --build",
     "lint": "eslint src",
     "test": "VITEST_SEGFAULT_RETRY=3 vitest --run --passWithNoTests",
