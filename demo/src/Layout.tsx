@@ -1,10 +1,12 @@
-import { useEffect } from 'react'
+import { DateTime } from 'luxon'
+import { useEffect, useMemo } from 'react'
 import { Link, Outlet, useLocation } from 'react-router'
 
 import { Nav } from './common/Nav.js'
 
 export function Layout() {
 	const location = useLocation()
+	const now = useMemo(() => DateTime.local(), [])
 	useEffect(() => {
 		const input = document.querySelector('.drawer-toggle') as HTMLInputElement
 		input.checked = false
@@ -27,7 +29,11 @@ export function Layout() {
 					</main>
 					<footer className="flex-0 footer footer-center bg-base-300 text-base-content p-4">
 						<div>
-							<p>Created by the Integrated Web Systems, LLC &middot; &copy; 2023</p>
+							<p>
+								Created by the Integrated Web Systems, LLC &middot; &copy;
+								{' '}
+								{now.year}
+							</p>
 						</div>
 					</footer>
 				</div>

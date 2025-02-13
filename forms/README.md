@@ -6,11 +6,6 @@
 
 This package combines browser form validation with React so you can more easily manage errors and input values in forms. More specifically, it tracks input validation in state making it available to React AND allows you to set input errors in state that in turn trigger `setCustomValidity` on DOM inputs enabling more control over how you render form errors in your applications.
 
-## Breaking Changes in 4.0
-I've been continuing to make improvements while I use it myself in projects. This time, the breaking change is the signature on `useFieldState(fields, defaults, onValidSubmit, errorMapping)`, which seems to be getting pretty long and ambiguious. The first two arguments are even the same type. So I've turned this into an object to more clearly define the options. This signature now looks like: `useFieldState(fields, options)` with options being nearly the same definition, just as an object: `{ defaults, errorMapping }`.
-
-I removed `onValidSubmit` from the `fieldState` altogether. This seemed oddly placed to me, and I started twisting myself trying dealing with chicken and egg problems: (like passing it into `useFieldState` while still using the output of this function within the `onValidSubmit` function). To clean this up, now `onValidSubmit` is solely a prop on the components: `FieldManager` and `ControlledFieldManager`.
-
 ## Install
 
 ```bash
@@ -25,7 +20,7 @@ These controlled inputs allow you to track error state with a controlled compone
 
 ## `<ValidatedForm>`
 
-Complimenting the inputs, I've included a form component to simplify styling and validated submit handling. It includes some CSS sugar `needs-validation` and `was-validated` for pre and post first submission. (This is kind of a throwback to Bootstrap, but you can use it however you like). You also still have acess to the psuedo classes `:valid` or `:invalid` as usual with these input components.
+Complimenting the inputs, I've included a form component to simplify styling and validated submit handling. It includes some CSS sugar `needs-validation` and `was-validated` for pre and post first submission. (This is kind of a throwback to Bootstrap, but you can use it however you like). You also still have access to the pseudo classes `:valid` or `:invalid` as usual with these input components.
 
 `onValidSubmit` invokes when form submit happens with all valid inputs. It's the same as using a regular `<form/>` `onSubmit` but with a built-in `form.checkValidity()` call to ensure field inputs are valid. `className` provided here will style the underlying HTML form.
 

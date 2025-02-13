@@ -16,6 +16,7 @@
     "test": "vitest --run --passWithNoTests",
     "prebuild": "tsc --build tsconfig.build.json --clean && rimraf dist",
     "build": "tsc --build tsconfig.build.json",
+    "clean": "tsc --build tsconfig.build.json --clean",
     "lint": "eslint src"
   },
   "repository": {
