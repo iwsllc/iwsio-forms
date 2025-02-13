@@ -5,7 +5,7 @@ export const GoogleTag = () => {
 		if (import.meta.env.MODE === 'development') return
 
 		const script = document.createElement('script')
-		script.src = `(function (w, d, s, l, i) {
+		script.innerHTML = `(function (w, d, s, l, i) {
 w[l] = w[l] || []; w[l].push({
 'gtm.start':
 new Date().getTime(), event: 'gtm.js'

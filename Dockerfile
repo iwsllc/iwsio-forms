@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 ARG GITHUB_SHA
 ARG PUBLIC_URL
 RUN mkdir -p /home/node/app
@@ -20,7 +20,7 @@ ARG GITHUB_SHA
 ARG PUBLIC_URL
 WORKDIR /home/node/app
 USER node:node
-RUN npm i --loglevel warn
+RUN npm ci
 ENV PUBLIC_URL=$PUBLIC_URL
 ENV GITHUB_SHA=$GITHUB_SHA
 RUN npm run build
