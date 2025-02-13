@@ -1,7 +1,8 @@
 import { ControlledFieldManager, FieldValues, InputField, useFieldState } from '@iwsio/forms'
 import { useQuery } from '@tanstack/react-query'
-import { useCallback, useEffect, useState } from 'react'
-import { fetchMovies } from './fetchSample'
+import { useEffect, useState } from 'react'
+
+import { fetchMovies } from './fetchSample.js'
 
 export const UpstreamChangesPage = () => {
 	const { data, refetch, isFetching, isSuccess } = useQuery({ queryKey: ['/movies.json'], queryFn: () => fetchMovies() })
@@ -11,16 +12,16 @@ export const UpstreamChangesPage = () => {
 	const fieldState = useFieldState({ title: '', year: '', director: '' })
 	const { setFields, reset, isFormBusy, toggleFormBusy } = fieldState
 
-	const handleValidSubmit = useCallback((_values: FieldValues) => {
-		setDoingSomething(true) // kick off async process
-	}, [toggleFormBusy, setSuccess])
+	const handleValidSubmit = (_values: FieldValues) => {
+		setDoingSomething(_old => true) // kick off async process
+	}
 
 	useEffect(() => {
 		if (!isSuccess || isFetching) return
 		if (data == null || data.length === 0) return
 		const { title, year, director } = data[0]
 		setFields({ title, year, director })
-	}, [isFetching, isSuccess])
+	}, [data, isFetching, isSuccess, setFields])
 
 	useEffect(() => {
 		if (!doingSomething) return
@@ -36,10 +37,10 @@ export const UpstreamChangesPage = () => {
 		return () => {
 			clearTimeout(id)
 		}
-	}, [doingSomething])
+	}, [doingSomething, toggleFormBusy])
 
 	return (
-		<ControlledFieldManager fieldState={fieldState} onValidSubmit={handleValidSubmit} holdBusyAfterSubmit className="flex flex-col gap-2 w-1/2" nativeValidation>
+		<ControlledFieldManager fieldState={fieldState} onValidSubmit={handleValidSubmit} holdBusyAfterSubmit className="flex w-1/2 flex-col gap-2" nativeValidation>
 			<InputField placeholder="Title" name="title" type="text" className="input input-bordered" required />
 			<InputField placeholder="Year" name="year" type="number" pattern="^\d+$" className="input input-bordered" required />
 			<InputField placeholder="Director" name="director" type="text" className="input input-bordered" required />

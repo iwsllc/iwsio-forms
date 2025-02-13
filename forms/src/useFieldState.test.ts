@@ -1,7 +1,9 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
-import { useFieldState } from './useFieldState'
 
-const _validity = { valid: true, badInput: false, customError: false, patternMismatch: false, rangeOverflow: false, rangeUnderflow: false, stepMismatch: false, tooLong: false, tooShort: false, typeMismatch: false, valueMissing: false }
+import { FieldChangeResult } from './types.js'
+import { useFieldState } from './useFieldState.js'
+
+const _validity: ValidityState = { valid: true, badInput: false, customError: false, patternMismatch: false, rangeOverflow: false, rangeUnderflow: false, stepMismatch: false, tooLong: false, tooShort: false, typeMismatch: false, valueMissing: false }
 
 describe('useFieldState', () => {
 	test('When initializing, getting, and setting fields', async () => {
@@ -15,13 +17,13 @@ describe('useFieldState', () => {
 		expect(fields.lastName).toEqual('')
 		expect(Object.keys(fieldErrors).length).toEqual(0)
 
-		let updates
+		let updates: FieldChangeResult<HTMLInputElement> | undefined
 		await act(() => {
 			updates = handleChange({ target: { name: 'firstName', value: '123' } } as any)
 		})
 
-		expect(updates.fields.firstName).toEqual('123')
-		expect(updates.fields.lastName).toEqual('')
+		expect(updates?.fields.firstName).toEqual('123')
+		expect(updates?.fields.lastName).toEqual('')
 
 		expect(result.current.fields.firstName).toEqual('123')
 
@@ -218,9 +220,8 @@ describe('useFieldState', () => {
 			const fieldValues = { firstName: '', lastName: '' }
 			const defaultValues = { firstName: 'fred', lastName: 'flintstone' }
 
-			const hook = renderHook(() => useFieldState(fieldValues, { defaultValues }))
+			const { result } = renderHook(() => useFieldState(fieldValues, { defaultValues }))
 
-			const { result } = hook
 			expect(result.current.fields.firstName).toEqual('')
 			expect(result.current.fields.lastName).toEqual('')
 

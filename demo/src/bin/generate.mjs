@@ -1,13 +1,13 @@
-import { readFile, writeFile, readdir } from 'node:fs/promises'
-import { join, extname } from 'node:path'
-import { fileURLToPath } from 'url'
+import { readdir, readFile, writeFile } from 'node:fs/promises'
+import { extname, join } from 'node:path'
+
 import MarkdownIt from 'markdown-it'
+import { fileURLToPath } from 'url'
 
 const md = new MarkdownIt({ html: true })
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function begin(...args) {
+async function begin(..._args) {
 	const baseDir = join(__dirname, '../content')
 	const files = await readdir(baseDir)
 	console.log(`Found ${files.length} files...`)
@@ -17,7 +17,7 @@ async function begin(...args) {
 			const html = md.render(fileContent)
 			const newName = file.replace(extname(file), '.html')
 			console.log(`Writing ${newName}`)
-			await writeFile(join(__dirname, '../../dist/content', newName), html, { encoding: 'utf8' })
+			await writeFile(join(__dirname, '../../public/content', newName), html, { encoding: 'utf8' })
 		} catch (err) {
 			console.error(err)
 		}

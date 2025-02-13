@@ -1,15 +1,18 @@
-import { forwardRef } from 'react'
-import { FieldManagerProps } from './FieldManager'
-import { FieldManagerContext } from './FieldManagerContext'
-import { FieldManagerForm } from './FieldManagerForm'
-import { useFieldState } from './useFieldState'
+import { ComponentProps } from 'react'
 
-export type ControlledFieldManagerProps = Omit<FieldManagerProps, 'fields' | 'defaultValues'> & { fieldState: ReturnType<typeof useFieldState> }
+import { FieldManagerProps } from './FieldManager.js'
+import { FieldManagerContext } from './FieldManagerContext.js'
+import { FieldManagerForm } from './FieldManagerForm.js'
+import { UseFieldStateResult } from './types.js'
+
+export interface ControlledFieldManagerProps extends ComponentProps<'form'>, Omit<FieldManagerProps, 'fields' | 'defaultValues'> {
+	fieldState: UseFieldStateResult
+}
 
 /**
- * Use this component if you want to manage field state remotely. This is useful when you're setting up form context elswhere and want the field values to change from outside input interactions.
+ * Use this component if you want to manage field state remotely. This is useful when you're setting up form context elsewhere and want the field values to change from outside input interactions.
  */
-export const ControlledFieldManager = forwardRef<HTMLFormElement, ControlledFieldManagerProps>(({ children, fieldState, ...props }, ref) => {
+export const ControlledFieldManager = ({ children, fieldState, ref, ...props }: ControlledFieldManagerProps) => {
 	return (
 		<FieldManagerContext.Provider value={fieldState}>
 			<FieldManagerForm ref={ref} {...props}>
@@ -17,6 +20,4 @@ export const ControlledFieldManager = forwardRef<HTMLFormElement, ControlledFiel
 			</FieldManagerForm>
 		</FieldManagerContext.Provider>
 	)
-})
-
-ControlledFieldManager.displayName = 'ControlledFieldManager'
+}

@@ -1,0 +1,50 @@
+<h1>Input, Select, or TextArea</h1>
+<p>These components can be used with regular <code>&lt;form&gt;</code> or with <code>&lt;ValidatedForm&gt;</code>.</p>
+<p>Like all controlled inputs, you need to connect a value and a change handler to the input. Additionally, you can set a <code>fieldError</code> property and connecting an <code>onFieldError</code> handler. Not only will the input report back validation errors as they occur, you can set your own <code>fieldError</code> in state to propagate a <code>setCustomValidationMessage</code> on the input for custom errors.</p>
+<div class="not-prose">
+<pre><code class="language-tsx">const [value, setValue] = useState('')
+const [fieldError, setFieldError] = useState&lt;{ message: string | undefined, validity: ValidityState } | undefined&gt;()
+
+const handleChange: ChangeEventHandler&lt;HTMLInputElement&gt; = (e) =&gt; {
+	// reset success state because something changed.
+	setSuccess(false)
+	// clear errors
+	setFieldError(undefined)
+
+	// always update input value
+	setValue(e.target.value)
+
+	// custom validation check
+	if (e.target.value === 'abc') {
+		// using browser validation; this will trigger onFieldError where we update state.
+		e.target.setCustomValidity('Cannot use abc.')
+	}
+}
+
+
+const handleFieldError: FieldErrorHandler = (key, validity, message) =&gt; {
+	setFieldError({ message, validity })
+}
+
+return (
+	{/* ... */}
+		&lt;Input
+			name=&quot;field&quot;
+			value={value}
+			onFieldError={handleFieldError}
+			className=&quot;input input-bordered&quot;
+			onChange={handleChange}
+			required
+			pattern=&quot;^[a-zA-Z]+$&quot;
+		/&gt;
+)
+</code></pre>
+</div>
+<h2>Try it out.</h2>
+<p>This example form includes a couple validations: required, and regex pattern matching any alpha character. However, during <code>onChange</code>, I've added a custom validation to flag <code>abc</code> as invalid.</p>
+<ul>
+<li>The error state is shown below</li>
+<li>Clicking submit with a valid state will allow the form to submit (showing a green button).</li>
+<li>Clicking submit with an invalid state will report the validity.</li>
+</ul>
+<p>You can find <a href="https://github.com/iwsllc/iwsio-forms/tree/main/demo/src/samples/InputDemo.tsx">the source</a> of this demo</p>

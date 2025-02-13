@@ -1,12 +1,13 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { FC, PropsWithChildren } from 'react'
-import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper'
-import { FieldManager } from './FieldManager'
-import { InputField } from './InputField'
-import { InvalidFeedbackForField } from './InvalidFeedbackForField'
-import { ErrorMapping } from './useErrorMapping'
-import { useFieldManager } from './useFieldManager'
+import { userEvent } from '@testing-library/user-event'
+import { PropsWithChildren } from 'react'
+
+import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper.js'
+import { FieldManager } from './FieldManager.js'
+import { InputField } from './InputField.js'
+import { InvalidFeedbackForField } from './InvalidFeedbackForField.js'
+import { ErrorMapping } from './useErrorMapping.js'
+import { useFieldManager } from './useFieldManager.js'
 
 describe('InputField', () => {
 	it('should work as an controlled input and handle custom errors', async () => {
@@ -136,7 +137,7 @@ describe('InputField', () => {
 				valueMissing: 'Invalid0'
 			}
 
-			const Wrapper: FC<PropsWithChildren> = ({ children }) => (
+			const Wrapper = ({ children }: PropsWithChildren) => (
 				<FieldManager action="/" fields={fieldValues} errorMapping={mapping}>
 					{children}
 				</FieldManager>

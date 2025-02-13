@@ -1,7 +1,7 @@
-import { FormEventHandler, FormHTMLAttributes, PropsWithChildren, forwardRef, useMemo, useState } from 'react'
-import { useForwardRef } from './useForwardRef'
+import classNames from 'classnames'
+import { ComponentProps, FormEventHandler, useState } from 'react'
 
-export type ValidatedFormProps = PropsWithChildren<{
+export interface ValidatedFormProps extends Omit<ComponentProps<'form'>, 'noValidate'> {
 	/**
 	 * Invokes when submit event triggered and form has been validated and is valid.
 	 * @param fields Current values stored in field state.
@@ -15,38 +15,30 @@ export type ValidatedFormProps = PropsWithChildren<{
 	 * When true, relies on native browser validation. In other words: it toggles `noValidate` on the `<form/>`. When false, `noValidate` is true.
 	 */
 	nativeValidation?: boolean
-}> & FormHTMLAttributes<HTMLFormElement>
+}
 
-export const ValidatedForm = forwardRef<HTMLFormElement, ValidatedFormProps>(({ children, onValidSubmit, onSubmit, onReset, reportValidity = false, nativeValidation = false, className = '', ...props }, ref) => {
-	const refForm = useForwardRef<HTMLFormElement>(ref)
-	const [validatedClassName, setValidatedClassName] = useState('needs-validation')
-	// TODO: setup context API to track THIS form's validation state. This allows consumers elsewhere to report it.
-
-	/**
-	 * Bootstrappiness: needs-validation, was-validated
-	 */
-	const consolidatedClassName = useMemo(() => `${validatedClassName}${className != null ? ' ' + className : ''}`, [className, validatedClassName])
+export const ValidatedForm = ({ children, onValidSubmit, onReset, reportValidity = false, onSubmit, nativeValidation = false, className = '', ...props }: ValidatedFormProps) => {
+	const [submitted, setSubmitted] = useState(false)
 
 	const onLocalSubmit: FormEventHandler<HTMLFormElement> = (event) => {
 		event.preventDefault()
-		const form = refForm.current
-		setValidatedClassName(() => 'was-validated')
-		if (onSubmit != null) onSubmit(event)
+		onSubmit?.(event)
+		const form = event.target as HTMLFormElement
+		setSubmitted(true)
 		if (form.checkValidity()) {
-			if (onValidSubmit != null) onValidSubmit()
+			onValidSubmit?.()
 		}
 		if (reportValidity) form.reportValidity()
 	}
 
 	const handleReset: FormEventHandler<HTMLFormElement> = (e) => {
-		setValidatedClassName('needs-validation')
+		setSubmitted(false)
 		if (onReset != null) onReset(e)
 	}
 
 	return (
-		<form ref={refForm} onSubmit={onLocalSubmit} onReset={handleReset} className={consolidatedClassName} noValidate={!nativeValidation} {...props}>
+		<form {...props} onSubmit={onLocalSubmit} onReset={handleReset} className={classNames(className, { 'was-validated': submitted }, { 'needs-validation': !submitted })} noValidate={!nativeValidation}>
 			{children}
 		</form>
 	)
-})
-ValidatedForm.displayName = 'ValidatedForm'
+}

@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react'
-import { defaults } from './defaults'
-import { omitBy } from './omitBy'
-import { FieldError, FieldStateChangeEventHandler, FieldValues, UseFieldStateResult } from './types'
-import { ErrorMapping, useErrorMapping } from './useErrorMapping'
-import { emptyValidity } from './validityState'
+
+import { defaults } from './defaults.js'
+import { FieldError, FieldStateChangeEventHandler, FieldValues, isHTMLInput, UseFieldStateResult } from './types.js'
+import { ErrorMapping, useErrorMapping } from './useErrorMapping.js'
+import { emptyValidity } from './validityState.js'
 
 export type UseFieldStateMethod = (
 	/**
@@ -27,7 +27,7 @@ export type UseFieldStateMethod = (
  */
 export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 	const { defaultValues, errorMapping } = options
-	const initDefaultFieldValues = defaultValues != null ? defaults(omitBy(fields, v => v == null || v === ''), defaultValues) : fields
+	const initDefaultFieldValues = defaults({}, defaultValues, fields)
 
 	const [reportValidation, setReportValidation] = useState(false)
 	const [fieldValues, setFieldValues] = useState<FieldValues>(fields)
@@ -41,10 +41,27 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 		setIsFormBusy(_old => value)
 	}, [])
 
+	const setFieldError = useCallback((key: string, message?: string, validity?: ValidityState) => {
+		let _validity: ValidityState
+		const hasMessage = message != null && message.trim().length > 0
+
+		if (hasMessage) {
+			_validity = validity ?? { ...emptyValidity, customError: true }
+		}
+		setFieldErrors((old) => {
+			const result = { ...old }
+			delete result[key] // clear this error
+			if (!hasMessage) return result
+
+			result[key] = { message, validity: _validity }
+			return result
+		})
+	}, [])
+
 	const setField = useCallback((key: string, value: string) => {
 		setFieldValues(oldFields => ({ ...oldFields, [key]: value }))
-		setFieldError(key, undefined) // clear this error if one exists.
-	}, [])
+		setFieldError(key) // clear this error if one exists.
+	}, [setFieldError])
 
 	const setFields = useCallback((values: Partial<FieldValues>) => {
 		setFieldValues((oldFields) => {
@@ -64,23 +81,13 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 		})
 	}, [])
 
-	const setFieldError = useCallback((key: string, message?: string, validity?: ValidityState) => {
-		let _validity: ValidityState
-		const hasMessage = message != null && message.trim().length > 0
-
-		if (hasMessage) {
-			_validity = validity ?? { ...emptyValidity, customError: true }
-		}
-		setFieldErrors(old => ({ ...old, [key]: !hasMessage ? undefined : { message, validity: _validity } }))
-	}, [errorMapping])
-
 	const checkFieldError = useCallback((key: string): string | undefined => {
 		let fieldError: FieldError | undefined = undefined
 		if (reportValidation && fieldErrors[key] != null && fieldErrors[key].message !== '') fieldError = fieldErrors[key]
 
 		if (fieldError == null) return undefined
-		return mapError(fieldError.validity, fieldError.message)
-	}, [fieldErrors, reportValidation, mapError, fieldValues])
+		return mapError(fieldError.validity!, fieldError.message)
+	}, [fieldErrors, reportValidation, mapError])
 
 	const reset = useCallback(() => {
 		setFieldErrors(_old => ({}))
@@ -89,22 +96,23 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 	}, [defaultFieldValues])
 
 	const handleChange: FieldStateChangeEventHandler = useCallback((e) => {
+		setFieldError(e.target.name) // clear this error if one exists.
 		let value = e.target.value
 		const name = e.target.name
 		const updatedFields = { ...fieldValues, [name]: value }
 
-		if (e.target.type === 'checkbox' || e.target.type === 'radiobutton') {
-			value = (e.target as HTMLInputElement).checked ? value : ''
+		if (isHTMLInput(e.target) && (e.target.type === 'checkbox' || e.target.type === 'radiobutton')) {
+			value = e.target.checked ? value : ''
 		}
 
 		setFieldValues((old) => {
-			const newValues = { ...old } as FieldValues
+			const newValues = { ...old }
 			newValues[name] = value
 			return newValues
 		})
 
 		return { fields: updatedFields, target: e.target }
-	}, [fieldValues])
+	}, [fieldValues, setFieldError])
 
 	return {
 		fieldErrors,

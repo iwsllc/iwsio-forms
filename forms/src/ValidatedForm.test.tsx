@@ -1,6 +1,8 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { ValidatedForm } from './ValidatedForm'
+import { userEvent } from '@testing-library/user-event'
+
+// import userEventDefault from '@testing-library/user-event'
+import { ValidatedForm } from './ValidatedForm.js'
 
 describe('ValidatedForm', () => {
 	it('should call onSubmit always and onValidSubmit when valid; should set proper css classes', async () => {
@@ -8,7 +10,7 @@ describe('ValidatedForm', () => {
 		const spyOnSubmit = vi.fn()
 
 		render(
-			<ValidatedForm data-testid="form" nativeValidation={false} onValidSubmit={spyOnValidSubmit} onSubmit={spyOnSubmit}>
+			<ValidatedForm data-testid="form" nativeValidation={false} onValidSubmit={spyOnValidSubmit} onSubmit={() => { spyOnSubmit() }}>
 				<input data-testid="field" type="text" name="field" required />
 				<button type="reset" data-testid="reset">reset</button>
 				<button data-testid="submit" type="submit">submit</button>
@@ -25,10 +27,8 @@ describe('ValidatedForm', () => {
 		expect(form.className).not.to.match(/was-validated/i)
 
 		// submit an invalid form
-		await act(async () => {
-			await userEvent.clear(field)
-			await userEvent.click(submit)
-		})
+		await userEvent.clear(field)
+		await userEvent.click(submit)
 
 		await waitFor(() => {
 			expect(spyOnSubmit).toHaveBeenCalled()

@@ -1,7 +1,8 @@
-import { FC, PropsWithChildren } from 'react'
-import { FieldManager } from '../FieldManager'
+import { PropsWithChildren } from 'react'
 
-export const FieldManagerWrapper: FC<PropsWithChildren> = ({ children }) => (
+import { FieldManager } from '../FieldManager.js'
+
+export const FieldManagerWrapper = ({ children }: PropsWithChildren) => (
 	<FieldManager fields={{ field: '' }}>
 		{children}
 	</FieldManager>

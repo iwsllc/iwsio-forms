@@ -1,5 +1,7 @@
-import { RawSampleField } from './RawSampleField'
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import { InputField, SelectField, TextAreaField } from '@iwsio/forms'
+
+import { RawSampleField } from './RawSampleField.js'
 
 export function RawExamples() {
 	return (
@@ -60,15 +62,15 @@ export function RawExamples() {
 				help={<>Try unchecked</>}
 			>
 				<div className="flex flex-col gap-3">
-					<label className="label-text cursor-pointer flex flex-row items-center gap-2">
+					<label className="label-text flex cursor-pointer flex-row items-center gap-2">
 						A:
 						<InputField type="radio" required className="radio" value="A" radioGroup="field" name="field" />
 					</label>
-					<label className="label-text cursor-pointer flex flex-row items-center gap-2">
+					<label className="label-text flex cursor-pointer flex-row items-center gap-2">
 						B:
 						<InputField type="radio" required className="radio" value="B" radioGroup="field" name="field" />
 					</label>
-					<label className="label-text cursor-pointer flex flex-row items-center gap-2">
+					<label className="label-text flex cursor-pointer flex-row items-center gap-2">
 						C:
 						<InputField type="radio" required className="radio" value="C" radioGroup="field" name="field" />
 					</label>

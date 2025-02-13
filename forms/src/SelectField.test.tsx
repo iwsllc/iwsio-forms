@@ -1,8 +1,9 @@
-import { render, act, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper'
-import { SelectField } from './SelectField'
-import { useFieldManager } from './useFieldManager'
+import { act, render, screen } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
+
+import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper.js'
+import { SelectField } from './SelectField.js'
+import { useFieldManager } from './useFieldManager.js'
 
 describe('SelectField', () => {
 	it('should work as an controlled input and handle custom errors', async () => {

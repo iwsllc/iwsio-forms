@@ -1,9 +1,10 @@
 import { act, render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { ControlledFieldManager } from './ControlledFieldManager'
-import { Input } from './Input'
-import { InputField } from './InputField'
-import { useFieldState } from './useFieldState'
+import { userEvent } from '@testing-library/user-event'
+
+import { ControlledFieldManager } from './ControlledFieldManager.js'
+import { Input } from './Input.js'
+import { InputField } from './InputField.js'
+import { useFieldState } from './useFieldState.js'
 
 describe('ControlledFieldManager', () => {
 	test('When rendering field manager with fields; happy path', async () => {

@@ -1,7 +1,6 @@
 {
 	"extends": "./tsconfig",
 	"compilerOptions": {
-		"sourceMap": true,
 		"declarationMap": false,
 		"inlineSources": true
 	},

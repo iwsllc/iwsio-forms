@@ -1,28 +1,28 @@
-import { ChangeEventHandler, forwardRef } from 'react'
-import { Ref, TextArea, TextAreaProps } from './TextArea'
-import { FieldChangeEventHandler } from './types'
-import { useFieldManager } from './useFieldManager'
-import { useForwardRef } from './useForwardRef'
+import { ChangeEventHandler } from 'react'
 
-export type TextAreaFieldProps = Omit<TextAreaProps, 'DefaultValue' | 'onChange'> & { onChange?: FieldChangeEventHandler }
+import { TextArea, TextAreaProps } from './TextArea.js'
+import { FieldChangeEventHandler, FieldErrorHandler } from './types.js'
+import { useFieldManager } from './useFieldManager.js'
 
-export const TextAreaField = forwardRef<Ref, Omit<TextAreaFieldProps, 'DefaultValue'>>(({ name, onChange, ...other }, ref) => {
-	const localRef = useForwardRef<Ref>(ref)
+export interface TextAreaFieldProps extends Omit<TextAreaProps, 'onChange'> {
+	onChange?: FieldChangeEventHandler
+}
 
+export const TextAreaField = ({ name, onChange, ref, ...other }: TextAreaFieldProps) => {
 	const { handleChange: managerOnChange, fields, setFieldError, fieldErrors, mapError } = useFieldManager()
 
-	const handleOnChange: ChangeEventHandler<Ref> = (e) => {
+	const handleOnChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
 		const result = managerOnChange(e)
 		if (onChange != null) onChange(result)
 	}
-	const handleFieldError = (key, validity, message) => {
+	const handleFieldError: FieldErrorHandler = (key, validity, message) => {
 		const mappedError = mapError(validity, message)
 		setFieldError(key, mappedError, validity)
 	}
 
 	return (
 		<TextArea
-			ref={localRef}
+			ref={ref}
 			onChange={handleOnChange}
 			onFieldError={handleFieldError}
 			name={name}
@@ -31,6 +31,4 @@ export const TextAreaField = forwardRef<Ref, Omit<TextAreaFieldProps, 'DefaultVa
 			{...other}
 		/>
 	)
-})
-
-TextAreaField.displayName = 'TextAreaField'
+}

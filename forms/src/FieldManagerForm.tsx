@@ -1,9 +1,10 @@
-import { forwardRef } from 'react'
-import { useFieldManager } from './useFieldManager'
-import { ValidatedForm, ValidatedFormProps } from './ValidatedForm'
-import { FieldValues } from './types'
+import { FormEventHandler, forwardRef, useCallback } from 'react'
 
-export type FieldManagerFormProps = Omit<ValidatedFormProps, 'onValidSubmit' | 'noValidate'> & {
+import { FieldValues } from './types.js'
+import { useFieldManager } from './useFieldManager.js'
+import { ValidatedForm, ValidatedFormProps } from './ValidatedForm.js'
+
+export interface FieldManagerFormProps extends Omit<ValidatedFormProps, 'onValidSubmit'> {
 	/**
 	 * Callback to be called when form is valid and submitted. Provides current field values.
 	 */
@@ -18,18 +19,17 @@ export type FieldManagerFormProps = Omit<ValidatedFormProps, 'onValidSubmit' | '
 
 export const FieldManagerForm = forwardRef<HTMLFormElement, FieldManagerFormProps>(({ children, onValidSubmit, holdBusyAfterSubmit, reportValidity = false, nativeValidation = false, className = '', ...props }, ref) => {
 	const { fields, setReportValidation, toggleFormBusy } = useFieldManager()
-	const handleLocalSubmit = () => {
+	const handleLocalSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+		e.preventDefault()
 		setReportValidation(true)
 	}
-	// no args; this comes from ValidatedForm
-	const handleLocalValidSubmit = () => {
+
+	const handleLocalValidSubmit = useCallback(() => {
 		toggleFormBusy(true)
-		if (onValidSubmit != null) {
-			onValidSubmit(fields)
-		}
+		onValidSubmit?.(fields)
 		if (holdBusyAfterSubmit) return
 		toggleFormBusy(false)
-	}
+	}, [fields, holdBusyAfterSubmit, onValidSubmit, toggleFormBusy])
 	return <ValidatedForm ref={ref} {...props} nativeValidation={nativeValidation} reportValidity={reportValidity} className={className} onValidSubmit={handleLocalValidSubmit} onSubmit={handleLocalSubmit}>{children}</ValidatedForm>
 })
 

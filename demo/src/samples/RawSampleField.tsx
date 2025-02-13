@@ -1,10 +1,10 @@
-import { FC, FormEventHandler, ReactNode, useState } from 'react'
-import { FieldManager } from '@iwsio/forms'
+import { FieldManager, FieldValues } from '@iwsio/forms'
+import { FormEventHandler, PropsWithChildren, ReactNode, useState } from 'react'
 
-export const RawSampleField: FC<{ children?: ReactNode, title?: string, label?: string, help?: ReactNode }> = ({ children, title, label, help }) => {
+export const RawSampleField = ({ children, title, label, help }: PropsWithChildren<{ title?: string, label?: string, help?: ReactNode }>) => {
 	const [success, setSuccess] = useState(false)
 
-	const handleSubmit = (_fields: Record<string, any>) => {
+	const handleSubmit = (_fields: FieldValues) => {
 		setSuccess(true)
 		// do something with fields
 	}
@@ -15,10 +15,10 @@ export const RawSampleField: FC<{ children?: ReactNode, title?: string, label?: 
 
 	return (
 		<FieldManager fields={{ field: '', field2: '', field3: '' }} onValidSubmit={handleSubmit} className="flex flex-col" nativeValidation onReset={handleReset}>
-			<fieldset className="border-2 p-5 flex flex-col gap-2">
+			<fieldset className="flex flex-col gap-2 border-2 p-5">
 				<legend>{title}</legend>
 
-				<label className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+				<label className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
 					<span className="label-text">{label}</span>
 					{children}
 				</label>

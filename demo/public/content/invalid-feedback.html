@@ -1,0 +1,7 @@
+<h1>Styling Invalid Feedback</h1>
+<p>Using <code>&lt;FieldManager&gt;</code>, the value and error state is shared via context API. We can now more easily render error and value status.</p>
+<p>To do this, use <code>useFieldManager()</code> to get a check function <code>checkFieldError(fieldName: string)</code>. The result of this function will indicate whether there is an error and it is &quot;reportable&quot; (meaning the form has been submitted at least once). You may also access the real-time error any time through <code>fieldErrors</code> state from the hook.</p>
+<p>One additional note: <code>&lt;FieldManager&gt;</code> is now declared with an <code>errorMapping</code> property that allows us to override the different kinds of messaging used in <a href="https://developer.mozilla.org/en-US/docs/Web/API/ValidityState"><code>ValidityState</code></a></p>
+<p><a href="https://github.com/iwsllc/iwsio-forms/blob/main/demo/src/samples/InvalidFeedback.tsx">Example source code</a></p>
+</div>
+<h2>Try it out!</h2>

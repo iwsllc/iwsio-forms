@@ -6,19 +6,42 @@ Like all controlled inputs, you need to connect a value and a change handler to 
 
 <div class="not-prose">
 
-```jsx
+```tsx
 const [value, setValue] = useState('')
-const [error, setError] = useState<string | undefined>()
+const [fieldError, setFieldError] = useState<{ message: string | undefined, validity: ValidityState } | undefined>()
+
+const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+	// reset success state because something changed.
+	setSuccess(false)
+	// clear errors
+	setFieldError(undefined)
+
+	// always update input value
+	setValue(e.target.value)
+
+	// custom validation check
+	if (e.target.value === 'abc') {
+		// using browser validation; this will trigger onFieldError where we update state.
+		e.target.setCustomValidity('Cannot use abc.')
+	}
+}
+
+
+const handleFieldError: FieldErrorHandler = (key, validity, message) => {
+	setFieldError({ message, validity })
+}
 
 return (
-	<Input
-		onChange={(e) => setValue(e.target.value)}
-		value={value}
-		name="field"
-		fieldError={error}
-		onFieldError={(key, message) => { setError(message) }}
-		{/* HTML5 validation attibutes */}
-	/>
+	{/* ... */}
+		<Input
+			name="field"
+			value={value}
+			onFieldError={handleFieldError}
+			className="input input-bordered"
+			onChange={handleChange}
+			required
+			pattern="^[a-zA-Z]+$"
+		/>
 )
 ```
 

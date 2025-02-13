@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react'
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import { FieldError, Input } from '@iwsio/forms'
+import { FormEventHandler, useRef, useState } from 'react'
 
 export const InputCheckDemo = () => {
 	const refForm = useRef<HTMLFormElement>(null)
@@ -20,7 +21,7 @@ export const InputCheckDemo = () => {
 	}
 
 	// validation is handled automatically with form submit event.
-	const handleSubmit = (e) => {
+	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault()
 		setSuccess(true)
 	}
