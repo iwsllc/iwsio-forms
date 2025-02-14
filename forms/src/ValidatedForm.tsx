@@ -1,5 +1,4 @@
-import classNames from 'classnames'
-import { ComponentProps, FormEventHandler, useState } from 'react'
+import { ComponentProps, FormEventHandler, useMemo, useState } from 'react'
 
 export interface ValidatedFormProps extends Omit<ComponentProps<'form'>, 'noValidate'> {
 	/**
@@ -36,8 +35,12 @@ export const ValidatedForm = ({ children, onValidSubmit, onReset, reportValidity
 		if (onReset != null) onReset(e)
 	}
 
+	const classNames = useMemo(() => {
+		return `${className} ${submitted ? 'was-validated' : ''} ${!submitted ? 'needs-validation' : ''}`
+	}, [className, submitted])
+
 	return (
-		<form {...props} onSubmit={onLocalSubmit} onReset={handleReset} className={classNames(className, { 'was-validated': submitted }, { 'needs-validation': !submitted })} noValidate={!nativeValidation}>
+		<form {...props} onSubmit={onLocalSubmit} onReset={handleReset} className={classNames} noValidate={!nativeValidation}>
 			{children}
 		</form>
 	)
