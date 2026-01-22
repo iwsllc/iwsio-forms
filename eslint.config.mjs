@@ -1,10 +1,17 @@
+import { fileURLToPath } from 'node:url'
+
 import { configure } from '@iwsio/eslint-config'
 
-// package names of packages in this monorepo
-const monoRepoPackages = []
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
-// paths of node projects in this monorepo
-const monoRepoNodeProjects = []
+// Browser only projects here
+const excludeWorkspacesFromNodeRules = ['forms', 'demo']
 
 // NOTE: default style linter is stylistic with tabs.
-export default configure({ monoRepoPackages, monoRepoNodeProjects })
+export default configure({
+	includeReact: true,
+	includeTailwind: true,
+	autoFindMonorepoPackages: true,
+	excludeWorkspacesFromNodeRules,
+	rootDir: __dirname
+})

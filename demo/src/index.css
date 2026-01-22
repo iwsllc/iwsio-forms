@@ -1,7 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@tailwind typography;
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+
+@source "../forms/**/*.{ts,tsx}";
 
 * {
   outline-width: 0px;
