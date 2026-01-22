@@ -22,6 +22,7 @@ export const FetchPage = ({ demo, page }: { demo?: ReactNode, page?: string }) =
 	useEffect(() => {
 		if (isError) return
 		if (!isSuccess) return
+		// eslint-disable-next-line react-hooks/set-state-in-effect -- not dependent on state being set
 		setHtml(data)
 	}, [isSuccess, isError, data])
 

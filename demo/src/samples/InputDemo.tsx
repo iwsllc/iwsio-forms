@@ -76,7 +76,7 @@ const Form = ({ setSuccess, success }: { success: boolean, setSuccess: Dispatch<
 }
 export const InputDemo = () => {
 	const [success, setSuccess] = useState(false)
-	const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+	const onSubmit: FormEventHandler<HTMLFormElement> = () => {
 		setSuccess(false)
 	}
 

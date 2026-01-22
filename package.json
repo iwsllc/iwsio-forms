@@ -4,12 +4,9 @@
   "description": "Simple library with useful React forms components and browser validation.",
   "files": [],
   "engines": {
-    "node": "22"
+    "node": ">=22"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/iwsllc/iwsio-forms.git"
-  },
+  "repository": "github:iwsllc/iwsio-forms",
   "keywords": [
     "forms",
     "validation",
@@ -38,8 +35,11 @@
     "demo"
   ],
   "devDependencies": {
-    "@iwsio/eslint-config": "^1.0.1",
-    "@iwsio/tsconfig": "^1.0.1",
-    "typescript": "^5.7.3"
+    "@iwsio/eslint-config": "^2.0.4",
+    "@iwsio/tsconfig": "^1.0.3",
+    "eslint": "^9.39.2",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
   }
 }

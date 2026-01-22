@@ -7,34 +7,45 @@ on:
       - 'forms/**'
       - 'demo/**'
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   tests:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/test.yaml@v2
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v5
     with:
       node-version-file: '.nvmrc'
-      install-command: npm ci
-      build-command: npm run build -w forms
-      test-command: npm test
+      install-command: pnpm install
+      build-command: pnpm -F forms build
+      test-command: pnpm -F forms test
+      use-pnpm: true
+      cache: pnpm
   version:
     needs: tests
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/version.yaml@v2
+    uses: iwsllc/workflows/.github/workflows/version.yaml@v5
     with:
       ref: main
+      use-pnpm: true
+      cache: pnpm
       node-version-file: '.nvmrc'
-      version-command: npm version patch -ws --include-workspace-root
+      version-command: pnpm -r version patch --include-workspace-root || true
   publish:
     needs: version
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/publish.yaml@v2
+    uses: iwsllc/workflows/.github/workflows/publish.yaml@v5
     with:
       ref: main
       registry-url: https://registry.npmjs.org
+      use-pnpm: true
+      cache: pnpm
       node-version-file: '.nvmrc'
-      install-command: npm ci -w forms
-      build-command: npm run build -w forms
-      publish-command: npm publish -w forms --access public
+      skip-node-auth: true
+      install-command: pnpm install
+      build-command: pnpm -F forms build
+      publish-command: pnpm -F forms publish --access public
     secrets:
       # This token is used for reading npm packages; use when private packages are used
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

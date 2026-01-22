@@ -1,18 +1,26 @@
-FROM node:22-alpine AS base
+FROM node:24-alpine AS base
 ARG GITHUB_SHA
 ARG PUBLIC_URL
 RUN mkdir -p /home/node/app
 RUN chown -R node:node /home/node && chmod -R 770 /home/node
+RUN chown -R node:node /usr/local
+USER node:node
 WORKDIR /home/node/app
+COPY ./package.json ./package.json
+COPY ./demo/package.json ./demo/package.json
 
 FROM base AS builder-server
 ARG GITHUB_SHA
 ARG PUBLIC_URL
+USER root
 RUN apk add --no-cache --virtual .build-deps git make python3 g++
-WORKDIR /home/node/app
 USER node:node
+WORKDIR /home/node/app
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable pnpm
 COPY --chown=node:node ./ ./
-RUN npm ci --omit=dev -w demo
+ENV CI=true
+RUN pnpm -F demo install --prod
 
 # builds production client-side
 FROM builder-server AS builder-dev
@@ -20,22 +28,21 @@ ARG GITHUB_SHA
 ARG PUBLIC_URL
 WORKDIR /home/node/app
 USER node:node
-RUN npm ci
+ENV CI=true
+RUN pnpm install
 ENV PUBLIC_URL=$PUBLIC_URL
 ENV GITHUB_SHA=$GITHUB_SHA
-RUN npm run build
+RUN pnpm build
 EXPOSE 3000
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "dev"]
 
 # production runtime; excludes build tools
 FROM base AS production
 WORKDIR /home/node/app
 USER node:node
-COPY --chown=node:node ./package.json ./package.json
-COPY --chown=node:node ./package-lock.json ./package-lock.json
 COPY --chown=node:node --from=builder-server /home/node/app/node_modules ./node_modules
-COPY --chown=node:node ./demo/package.json ./demo/package.json
+COPY --chown=node:node --from=builder-server /home/node/app/demo/node_modules ./demo/node_modules
 COPY --chown=node:node ./demo/serve.json ./demo/serve.json
 COPY --chown=node:node --from=builder-dev /home/node/app/demo/dist ./demo/dist
 EXPOSE 3000
-CMD npm run serve -w demo
+CMD ["npm", "run", "serve", "-w", "demo"]
