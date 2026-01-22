@@ -31,7 +31,7 @@ jobs:
       use-pnpm: true
       cache: pnpm
       node-version-file: '.nvmrc'
-      version-command: pnpm -r version patch --include-workspace-root || true
+      version-command: npm version patch --workspaces --include-workspace-root --no-git-tag-version || true
   publish:
     needs: version
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
