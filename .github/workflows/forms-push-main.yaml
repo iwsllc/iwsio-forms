@@ -14,12 +14,12 @@ permissions:
 jobs:
   tests:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/test.yaml@v5
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v7
     with:
       node-version-file: '.nvmrc'
       install-command: pnpm install
-      build-command: pnpm -F forms build
-      test-command: pnpm -F forms test
+      build-command: pnpm build
+      test-command: pnpm test
       use-pnpm: true
       cache: pnpm
   version:
@@ -28,21 +28,21 @@ jobs:
     concurrency:
       group: 'versioning-automation'
       cancel-in-progress: false
-    uses: iwsllc/workflows/.github/workflows/version-as-app.yaml@main
+    uses: iwsllc/workflows/.github/workflows/version-as-app.yaml@v7
     with:
       ref: main
       use-pnpm: true
       cache: pnpm
       node-version-file: '.nvmrc'
       scope: '@iwsio'
-      version-command: npm version patch --workspaces --include-workspace-root --no-git-tag-version || true
+      version-command: npm version patch --workspaces --include-workspace-root --no-git-tag-version
     secrets:
       IWS_VERSION_BOT_PK: ${{ secrets.IWS_VERSION_BOT_PK}}
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   publish:
     needs: version
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/publish.yaml@v5
+    uses: iwsllc/workflows/.github/workflows/publish.yaml@v7
     with:
       ref: main
       registry-url: https://registry.npmjs.org
@@ -51,7 +51,7 @@ jobs:
       node-version-file: '.nvmrc'
       skip-node-auth: true
       install-command: pnpm install
-      build-command: pnpm -F forms build
+      build-command: pnpm build
       publish-command: pnpm -F forms publish --access public
     secrets:
       # This token is used for reading npm packages; use when private packages are used

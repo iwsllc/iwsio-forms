@@ -9,11 +9,11 @@ on:
 jobs:
   tests:
     if: ${{github.event.pull_request.draft == false && !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/test.yaml@v5
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v7
     with:
       node-version-file: '.nvmrc'
       use-pnpm: true
       cache: pnpm
       install-command: pnpm install
-      build-command: pnpm -F forms build
-      test-command: pnpm -F forms test
+      build-command: pnpm build
+      test-command: pnpm test
