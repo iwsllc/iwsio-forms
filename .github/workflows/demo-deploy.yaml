@@ -11,11 +11,13 @@ jobs:
     name: Deploy to Fly
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - uses: actions/checkout@v6
         with:
           ref: main
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: git fetch && git pull origin main
-      - run: flyctl deploy --build-arg PUBLIC_URL="/" --build-arg GITHUB_SHA="$GITHUB_SHA"
+      - run: flyctl deploy --local-only --build-arg PUBLIC_URL="/" --build-arg GITHUB_SHA="$GITHUB_SHA"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
