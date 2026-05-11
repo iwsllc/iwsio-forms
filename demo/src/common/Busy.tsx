@@ -5,9 +5,12 @@ export const Busy = () => {
 
 	// delay the spinner for a second before showing it. If the content loads fast, the spinner won't flicker
 	useEffect(() => {
-		setTimeout(() => {
+		const id = setTimeout(() => {
 			setShow(true)
 		}, 1000)
+		return () => {
+			clearTimeout(id)
+		}
 	}, [])
 
 	if (!show) return null

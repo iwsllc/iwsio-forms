@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { use } from 'react'
 
 import { FieldManagerContext } from './FieldManagerContext.js'
 import { UseFieldStateResult } from './types.js'
@@ -7,7 +7,7 @@ import { UseFieldStateResult } from './types.js'
  * Retrieves the field manager context
  */
 export const useFieldManager = (): UseFieldStateResult => {
-	const context = useContext(FieldManagerContext)
+	const context = use(FieldManagerContext)
 	if (context == null) throw new Error('Must be used within a FieldManager')
 	return context
 }

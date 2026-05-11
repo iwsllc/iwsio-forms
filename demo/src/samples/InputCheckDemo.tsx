@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { FieldError, Input } from '@iwsio/forms'
-import { FormEventHandler, useRef, useState } from 'react'
+import { SubmitEventHandler, useRef, useState } from 'react'
 
 export const InputCheckDemo = () => {
-	const refForm = useRef<HTMLFormElement>(null)
+	const formRef = useRef<HTMLFormElement>(null)
 	const [success, setSuccess] = useState(false)
 
 	const [checked, setChecked] = useState(false)
@@ -21,13 +21,13 @@ export const InputCheckDemo = () => {
 	}
 
 	// validation is handled automatically with form submit event.
-	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+	const handleSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault()
 		setSuccess(true)
 	}
 
 	return (
-		<form className="not-prose" onSubmit={handleSubmit} ref={refForm}>
+		<form className="not-prose" onSubmit={handleSubmit} ref={formRef}>
 			<fieldset className="border-2 p-5">
 				<legend>Checkbox</legend>
 				<div className="flex flex-row">

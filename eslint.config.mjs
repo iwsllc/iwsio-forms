@@ -13,5 +13,13 @@ export default configure({
 	includeTailwind: true,
 	autoFindMonorepoPackages: true,
 	excludeWorkspacesFromNodeRules,
-	rootDir: __dirname
+	rootDir: __dirname,
+	appendConfigs: [
+		{
+			files: ['**/*.test.*', '**/*.spec.*'],
+			rules: {
+				'@eslint-react/component-hook-factories': 'off'
+			}
+		}
+	]
 })

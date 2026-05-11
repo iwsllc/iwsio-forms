@@ -1,4 +1,4 @@
-import { FormEventHandler, forwardRef, useCallback } from 'react'
+import { SubmitEventHandler, useCallback } from 'react'
 
 import { FieldValues } from './types.js'
 import { useFieldManager } from './useFieldManager.js'
@@ -17,9 +17,9 @@ export interface FieldManagerFormProps extends Omit<ValidatedFormProps, 'onValid
 	holdBusyAfterSubmit?: boolean
 }
 
-export const FieldManagerForm = forwardRef<HTMLFormElement, FieldManagerFormProps>(({ children, onValidSubmit, holdBusyAfterSubmit, reportValidity = false, nativeValidation = false, className = '', ...props }, ref) => {
+export const FieldManagerForm = ({ ref, children, onValidSubmit, holdBusyAfterSubmit, reportValidity = false, nativeValidation = false, className = '', ...props }: FieldManagerFormProps) => {
 	const { fields, setReportValidation, toggleFormBusy } = useFieldManager()
-	const handleLocalSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+	const handleLocalSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault()
 		setReportValidation(true)
 	}
@@ -31,6 +31,4 @@ export const FieldManagerForm = forwardRef<HTMLFormElement, FieldManagerFormProp
 		toggleFormBusy(false)
 	}, [fields, holdBusyAfterSubmit, onValidSubmit, toggleFormBusy])
 	return <ValidatedForm ref={ref} {...props} nativeValidation={nativeValidation} reportValidity={reportValidity} className={className} onValidSubmit={handleLocalValidSubmit} onSubmit={handleLocalSubmit}>{children}</ValidatedForm>
-})
-
-FieldManagerForm.displayName = 'FieldManagerForm'
+}

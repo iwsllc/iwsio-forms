@@ -6,8 +6,12 @@ RUN chown -R node:node /home/node && chmod -R 770 /home/node
 RUN chown -R node:node /usr/local
 USER node:node
 WORKDIR /home/node/app
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 COPY ./package.json ./package.json
+COPY ./pnpm-lock.yaml ./
+COPY ./pnpm-workspace.yaml ./
 COPY ./demo/package.json ./demo/package.json
+RUN corepack enable && corepack install
 
 FROM base AS builder-server
 ARG GITHUB_SHA
@@ -32,7 +36,7 @@ ENV CI=true
 RUN pnpm install
 ENV PUBLIC_URL=$PUBLIC_URL
 ENV GITHUB_SHA=$GITHUB_SHA
-RUN pnpm build
+RUN pnpm build:demo
 EXPOSE 3000
 CMD ["pnpm", "dev"]
 
@@ -45,4 +49,4 @@ COPY --chown=node:node --from=builder-server /home/node/app/demo/node_modules ./
 COPY --chown=node:node ./demo/serve.json ./demo/serve.json
 COPY --chown=node:node --from=builder-dev /home/node/app/demo/dist ./demo/dist
 EXPOSE 3000
-CMD ["npm", "run", "serve", "-w", "demo"]
+CMD ["pnpm", "-F", "demo", "serve"]

@@ -14,10 +14,10 @@ export interface ControlledFieldManagerProps extends ComponentProps<'form'>, Omi
  */
 export const ControlledFieldManager = ({ children, fieldState, ref, ...props }: ControlledFieldManagerProps) => {
 	return (
-		<FieldManagerContext.Provider value={fieldState}>
+		<FieldManagerContext value={fieldState}>
 			<FieldManagerForm ref={ref} {...props}>
 				{children}
 			</FieldManagerForm>
-		</FieldManagerContext.Provider>
+		</FieldManagerContext>
 	)
 }

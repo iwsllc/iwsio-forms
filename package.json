@@ -6,7 +6,7 @@
   "engines": {
     "node": ">=22"
   },
-  "packageManager": "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316",
+  "packageManager": "pnpm@10.33.4+sha512.1c67b3b359b2d408119ba1ed289f34b8fc3c6873412bec6fd264fbdc82489e510fcbecb9ce9d22dae7f3b76269d8441046014bdca53b9979cd7a561ad631b800",
   "repository": "github:iwsllc/iwsio-forms",
   "keywords": [
     "forms",
@@ -22,13 +22,11 @@
     "url": "https://github.com/iwsllc/iws-forms/issues"
   },
   "scripts": {
-    "test": "npm run test -ws",
-    "dev": "npm start -w demo",
-    "prebuild:ts": "tsc --build --clean",
-    "build": "npm-run-all -s build:ts build:demo",
-    "clean": "npm run clean -ws --if-present",
-    "build:ts": "tsc --build",
-    "build:demo": "CI=true npm run build -w demo"
+    "test": "vitest --run --passWithNoTests",
+    "dev": "pnpm -F demo start",
+    "build": "tsc --build",
+    "clean": "del-cli '**/dist' '**/*.tsbuildinfo'",
+    "build:demo": "pnpm -F demo build"
   },
   "homepage": "https://github.com/iwsllc/iws-forms#readme",
   "workspaces": [
@@ -36,11 +34,12 @@
     "demo"
   ],
   "devDependencies": {
-    "@iwsio/eslint-config": "^2.0.4",
+    "@iwsio/eslint-config": "^3.0.0",
     "@iwsio/tsconfig": "^1.0.3",
-    "eslint": "^9.39.2",
+    "del-cli": "^7.0.0",
+    "eslint": "^10.3.0",
     "npm-run-all": "^4.1.5",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.17"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.6"
   }
 }
