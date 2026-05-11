@@ -36,6 +36,7 @@ ENV CI=true
 RUN pnpm install
 ENV PUBLIC_URL=$PUBLIC_URL
 ENV GITHUB_SHA=$GITHUB_SHA
+RUN pnpm build
 RUN pnpm build:demo
 EXPOSE 3000
 CMD ["pnpm", "dev"]
