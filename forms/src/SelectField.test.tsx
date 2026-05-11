@@ -3,6 +3,7 @@ import { userEvent } from '@testing-library/user-event'
 
 import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper.js'
 import { SelectField } from './SelectField.js'
+import { FieldChangeEventHandler } from './types.js'
 import { useFieldManager } from './useFieldManager.js'
 
 describe('SelectField', () => {
@@ -66,7 +67,7 @@ describe('SelectField', () => {
 	it('should work as an controlled input and handle custom errors via field results', async () => {
 		const CustomErrorSelect = () => {
 			const { setFieldError } = useFieldManager()
-			const handleChange = (e) => {
+			const handleChange: FieldChangeEventHandler = (e) => {
 				if (e.fields.field === '2') setFieldError('field', 'Cannot select \'2\'.')
 			}
 			return (

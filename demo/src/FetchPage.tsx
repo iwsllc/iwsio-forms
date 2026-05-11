@@ -1,14 +1,13 @@
 import parser from 'html-react-parser'
 import Prism from 'prismjs'
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router'
 
 import { Busy } from './common/Busy.js'
 import { useGetPage } from './services.js'
 
 export const FetchPage = ({ demo, page }: { demo?: ReactNode, page?: string }) => {
-	const [html, setHtml] = useState<string | undefined>()
-	const refContent = useRef<HTMLDivElement>(null)
+	const contentRef = useRef<HTMLDivElement>(null)
 
 	const { page: paramsPage } = useParams()
 
@@ -19,16 +18,15 @@ export const FetchPage = ({ demo, page }: { demo?: ReactNode, page?: string }) =
 
 	const { data, isSuccess, isError, isPending } = useGetPage(`/content/${pageName}.html`, pageName != null)
 
-	useEffect(() => {
-		if (isError) return
-		if (!isSuccess) return
-		// eslint-disable-next-line react-hooks/set-state-in-effect -- not dependent on state being set
-		setHtml(data)
-	}, [isSuccess, isError, data])
+	const html = useMemo(() => {
+		if (isError) return undefined
+		if (!isSuccess) return undefined
+		return data
+	}, [data, isError, isSuccess])
 
 	useEffect(() => {
 		if (!html?.length) return
-		refContent.current?.querySelectorAll('pre code').forEach((dom) => {
+		contentRef.current?.querySelectorAll('pre code').forEach((dom) => {
 			Prism.highlightElement(dom)
 		})
 	}, [html])
@@ -36,7 +34,7 @@ export const FetchPage = ({ demo, page }: { demo?: ReactNode, page?: string }) =
 	if (isPending) return <Busy />
 	return (
 		<>
-			<div ref={refContent}>
+			<div ref={contentRef}>
 				{
 				// @ts-expect-error typing on default export is not detected
 					html && html.length && parser(html)

@@ -1,3 +1,5 @@
+import { useCallback } from 'react'
+
 /**
  * Overrides input validation message with custom message. When undefined, the default message will be used.
  */
@@ -18,7 +20,7 @@ export interface ErrorMapping {
 }
 
 export const useErrorMapping = (mapping?: ErrorMapping | undefined) => {
-	const mapError = (validity: ValidityState, message: string | undefined) => {
+	const mapError = useCallback((validity: ValidityState, message: string | undefined) => {
 		if (mapping == null) return message
 		if (validity.valid) return undefined
 		if (validity.badInput) return mapping.badInput ?? message
@@ -32,6 +34,6 @@ export const useErrorMapping = (mapping?: ErrorMapping | undefined) => {
 		if (validity.typeMismatch) return mapping.typeMismatch ?? message
 		if (validity.valueMissing) return mapping.valueMissing ?? message
 		return undefined
-	}
+	}, [mapping])
 	return mapError
 }
