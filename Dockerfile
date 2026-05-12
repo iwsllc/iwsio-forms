@@ -7,11 +7,13 @@ RUN chown -R node:node /usr/local
 USER node:node
 WORKDIR /home/node/app
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-COPY ./package.json ./package.json
+COPY --parents --chown=node:node ./packages/*/package.json .
+COPY --parents --chown=node:node ./apps/*/package.json .
+COPY --chown=node:node ./package.json ./
 COPY ./pnpm-lock.yaml ./
 COPY ./pnpm-workspace.yaml ./
-COPY ./demo/package.json ./demo/package.json
-RUN corepack enable && corepack install
+RUN corepack enable
+RUN corepack install
 
 FROM base AS builder-server
 ARG GITHUB_SHA
