@@ -1,3 +1,5 @@
+# check=skip=CopyIgnoredFile
+# syntax=docker/dockerfile:1-labs
 FROM node:26-alpine AS base
 ARG GITHUB_SHA
 ARG PUBLIC_URL
