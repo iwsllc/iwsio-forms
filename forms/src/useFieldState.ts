@@ -19,6 +19,20 @@ export type UseFieldStateMethod = (
 		 * Optional error mapping function to map custom error messages to validity state.
 		*/
 		errorMapping?: ErrorMapping
+		/**
+		 * Reseed `fields` (and `defaultValues`) whenever this value changes.
+		 *
+		 * `fields` is otherwise read ONCE, when the hook is first constructed, so a form editing
+		 * data that arrives or changes later keeps showing what it was built with. The usual
+		 * workaround is remounting the form with a React `key`, which throws away everything else
+		 * in the subtree along with it: focus, scroll position, and any transition mid-flight.
+		 *
+		 * Pass something that identifies the data instead — a record id, a `dataUpdatedAt`
+		 * timestamp — and the values are re-applied in place. Field errors are cleared with them,
+		 * since they describe values that no longer exist. Leave undefined for the original
+		 * construct-once behaviour.
+		 */
+		resetKey?: string | number
 	}
 ) => UseFieldStateResult
 
@@ -26,7 +40,7 @@ export type UseFieldStateMethod = (
  * Manages field state via change handler, values and error state.
  */
 export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
-	const { defaultValues, errorMapping } = options
+	const { defaultValues, errorMapping, resetKey } = options
 	const initDefaultFieldValues = defaults({}, defaultValues, fields)
 
 	const [reportValidation, setReportValidation] = useState(false)
@@ -34,7 +48,20 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 	const [fieldErrors, setFieldErrors] = useState<Record<string, FieldError>>({})
 	const [defaultFieldValues, setDefaultFieldValues] = useState<FieldValues>(initDefaultFieldValues)
 	const [isFormBusy, setIsFormBusy] = useState(false)
+	const [appliedResetKey, setAppliedResetKey] = useState(resetKey)
 	const mapError = useErrorMapping(errorMapping)
+
+	// Reseed DURING render rather than in an effect: an effect would let one paint through with the
+	// previous values first, which reads as a flash of stale data. React re-runs this render before
+	// committing anything, so the reseeded values are what actually reach the DOM.
+	if (resetKey !== appliedResetKey) {
+		setAppliedResetKey(resetKey)
+		setFieldValues(fields)
+		setDefaultFieldValues(initDefaultFieldValues)
+		// The errors described the values being replaced, so they no longer apply.
+		setFieldErrors({})
+		setReportValidation(false)
+	}
 
 	const toggleFormBusy = useCallback((value?: boolean) => {
 		if (value == null) return setIsFormBusy(_old => !_old)

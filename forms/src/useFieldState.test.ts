@@ -300,4 +300,99 @@ describe('useFieldState', () => {
 			})
 		})
 	})
+
+	describe('resetKey', () => {
+		test('When omitted, later field values are ignored (construct-once)', async () => {
+			const hook = renderHook(({ fields }) => useFieldState(fields), {
+				initialProps: { fields: { firstName: 'fred' } }
+			})
+
+			expect(hook.result.current.fields.firstName).toEqual('fred')
+
+			hook.rerender({ fields: { firstName: 'barney' } })
+
+			expect(hook.result.current.fields.firstName).toEqual('fred')
+		})
+
+		test('When unchanged, later field values are ignored', async () => {
+			const hook = renderHook(({ fields }) => useFieldState(fields, { resetKey: 'a' }), {
+				initialProps: { fields: { firstName: 'fred' } }
+			})
+
+			hook.rerender({ fields: { firstName: 'barney' } })
+
+			expect(hook.result.current.fields.firstName).toEqual('fred')
+		})
+
+		test('When changed, values are reseeded', async () => {
+			const hook = renderHook(({ fields, resetKey }) => useFieldState(fields, { resetKey }), {
+				initialProps: { fields: { firstName: 'fred' }, resetKey: 'a' }
+			})
+
+			expect(hook.result.current.fields.firstName).toEqual('fred')
+
+			hook.rerender({ fields: { firstName: 'barney' }, resetKey: 'b' })
+
+			await waitFor(() => {
+				expect(hook.result.current.fields.firstName).toEqual('barney')
+			})
+		})
+
+		test('When changed, user edits are discarded in favour of the new values', async () => {
+			const hook = renderHook(({ fields, resetKey }) => useFieldState(fields, { resetKey }), {
+				initialProps: { fields: { firstName: 'fred' }, resetKey: 'a' }
+			})
+
+			act(() => {
+				hook.result.current.setField('firstName', 'typed-by-user')
+			})
+			expect(hook.result.current.fields.firstName).toEqual('typed-by-user')
+
+			hook.rerender({ fields: { firstName: 'barney' }, resetKey: 'b' })
+
+			await waitFor(() => {
+				expect(hook.result.current.fields.firstName).toEqual('barney')
+			})
+		})
+
+		test('When changed, errors and reported validation are cleared', async () => {
+			const hook = renderHook(({ fields, resetKey }) => useFieldState(fields, { resetKey }), {
+				initialProps: { fields: { firstName: 'fred' }, resetKey: 'a' }
+			})
+
+			act(() => {
+				hook.result.current.setFieldError('firstName', 'This field is required')
+				hook.result.current.setReportValidation(true)
+			})
+			expect(hook.result.current.fieldErrors.firstName).to.be.ok
+			expect(hook.result.current.reportValidation).toEqual(true)
+
+			hook.rerender({ fields: { firstName: 'barney' }, resetKey: 'b' })
+
+			await waitFor(() => {
+				expect(hook.result.current.fieldErrors.firstName).not.to.be.ok
+				expect(hook.result.current.reportValidation).toEqual(false)
+			})
+		})
+
+		test('When changed, reset() falls back to the reseeded values', async () => {
+			const hook = renderHook(({ fields, resetKey }) => useFieldState(fields, { resetKey }), {
+				initialProps: { fields: { firstName: 'fred' }, resetKey: 'a' }
+			})
+
+			hook.rerender({ fields: { firstName: 'barney' }, resetKey: 'b' })
+
+			act(() => {
+				hook.result.current.setField('firstName', 'typed-by-user')
+			})
+
+			act(() => {
+				hook.result.current.reset()
+			})
+
+			await waitFor(() => {
+				expect(hook.result.current.fields.firstName).toEqual('barney')
+			})
+		})
+	})
 })
