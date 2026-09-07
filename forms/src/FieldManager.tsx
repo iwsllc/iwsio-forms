@@ -20,6 +20,11 @@ export interface FieldManagerProps extends Omit<ValidatedFormProps, 'onValidSubm
 		 */
 	errorMapping?: ErrorMapping
 	/**
+		 * Reseed `fields` and `defaultValues` whenever this value changes. Without it they are read
+		 * once, when the form is first constructed. See `useFieldState` for the full rationale.
+		 */
+	resetKey?: string | number
+	/**
 		 * Callback to be called when form is valid and submitted. Provides current field values.
 		 */
 	onValidSubmit?: (fields: FieldValues) => void
@@ -37,8 +42,8 @@ export interface FieldManagerProps extends Omit<ValidatedFormProps, 'onValidSubm
  * `onValidSubmit`: provides calls on submit when form is valid and provides current fields with values.
  * `ref` here will give access to the HTML Form element rendered.
  */
-export const FieldManager = ({ children, fields, defaultValues, errorMapping, ...props }: FieldManagerProps) => {
-	const fieldState = useFieldState(fields, { defaultValues, errorMapping })
+export const FieldManager = ({ children, fields, defaultValues, errorMapping, resetKey, ...props }: FieldManagerProps) => {
+	const fieldState = useFieldState(fields, { defaultValues, errorMapping, resetKey })
 
 	return (
 		<FieldManagerContext value={fieldState}>
