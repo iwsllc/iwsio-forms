@@ -1,12 +1,12 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { PropsWithChildren } from 'react'
+import type { PropsWithChildren } from 'react'
 
 import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper.js'
 import { FieldManager } from './FieldManager.js'
 import { InputField } from './InputField.js'
 import { InvalidFeedbackForField } from './InvalidFeedbackForField.js'
-import { ErrorMapping } from './useErrorMapping.js'
+import type { ErrorMapping } from './useErrorMapping.js'
 import { useFieldManager } from './useFieldManager.js'
 
 describe('InputField', () => {
@@ -14,7 +14,7 @@ describe('InputField', () => {
 		const CustomErrorField = () => {
 			const { setFieldError } = useFieldManager()
 			const handleChange = (results) => {
-				if (results.target.value === 'abc') setFieldError(results.target.name, 'Cannot enter \'abc\'.')
+				if (results.target.value === 'abc') setFieldError(results.target.name, "Cannot enter 'abc'.")
 			}
 			return <InputField name="field" onChange={handleChange} required data-testid="field" />
 		}
@@ -36,23 +36,29 @@ describe('InputField', () => {
 		// basic validation pass
 		expect(input.value).to.eq('ab')
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		await userEvent.type(input, 'c')
 
 		// validation fail (from controlled state error)
 		expect(input.value).to.eq('abc')
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.validity.customError).to.be.true
-		expect(input.validationMessage).to.eq('Cannot enter \'abc\'.')
+		expect(input.validationMessage).to.eq("Cannot enter 'abc'.")
 
 		await userEvent.type(input, 'c')
 
 		expect(input.value).to.eq('abcc')
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.validity.valid).to.be.true
 	})
@@ -60,7 +66,7 @@ describe('InputField', () => {
 		const CustomErrorField = () => {
 			const { setFieldError } = useFieldManager()
 			const handleChange = (results) => {
-				if (results.fields.field === 'abc') setFieldError('field', 'Cannot enter \'abc\'.')
+				if (results.fields.field === 'abc') setFieldError('field', "Cannot enter 'abc'.")
 			}
 			return <InputField name="field" onChange={handleChange} required data-testid="field" />
 		}
@@ -82,33 +88,43 @@ describe('InputField', () => {
 		// basic validation pass
 		expect(input.value).to.eq('ab')
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		await userEvent.type(input, 'c')
 
 		// validation fail (from controlled state error)
 		expect(input.value).to.eq('abc')
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.validity.customError).to.be.true
-		expect(input.validationMessage).to.eq('Cannot enter \'abc\'.')
+		expect(input.validationMessage).to.eq("Cannot enter 'abc'.")
 
 		await userEvent.type(input, 'c')
 
 		expect(input.value).to.eq('abcc')
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.validity.valid).to.be.true
 	})
 	it('should work as an controlled checkbox input', async () => {
-		render(<InputField name="field" type="checkbox" value="123" required data-testid="field" />, { wrapper: FieldManagerWrapper })
+		render(<InputField name="field" type="checkbox" value="123" required data-testid="field" />, {
+			wrapper: FieldManagerWrapper
+		})
 
 		expect(screen.getByTestId('field')).to.be.ok
 		const input = screen.getByTestId('field') as HTMLInputElement
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.validity.valueMissing).to.be.true
 
@@ -116,14 +132,27 @@ describe('InputField', () => {
 
 		expect(input.value).to.eq('123')
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.validity.valid).to.be.true
 	})
 
 	describe('ErrorMapping', () => {
 		test('When using errorMapper with invalid fields', async () => {
-			const fieldValues = { field1: '', field2: '', field3: '', field4: '', field5: '', field6: '', field7: '', field8: '', field9: '', field0: '' }
+			const fieldValues = {
+				field1: '',
+				field2: '',
+				field3: '',
+				field4: '',
+				field5: '',
+				field6: '',
+				field7: '',
+				field8: '',
+				field9: '',
+				field0: ''
+			}
 			const mapping: ErrorMapping = {
 				badInput: 'Invalid1',
 				customError: 'Invalid2',
@@ -169,7 +198,9 @@ describe('InputField', () => {
 						<InvalidFeedbackForField name="field8" data-testid="error-field8" />
 						<InvalidFeedbackForField name="field9" data-testid="error-field9" />
 						<InvalidFeedbackForField name="field0" data-testid="error-field0" />
-						<button type="submit" data-testid="submit">submit</button>
+						<button type="submit" data-testid="submit">
+							submit
+						</button>
 					</>
 				)
 			}
@@ -190,7 +221,7 @@ describe('InputField', () => {
 			await userEvent.click(screen.getByTestId('submit'))
 
 			await waitFor(() => {
-			// expect(screen.getByTestId('error-field1').textContent).toEqual('Invalid1') // jsdom isn't setting badInput
+				// expect(screen.getByTestId('error-field1').textContent).toEqual('Invalid1') // jsdom isn't setting badInput
 				expect(screen.getByTestId('error-field2').textContent).toEqual('Invalid2')
 				expect(screen.getByTestId('error-field3').textContent).toEqual('Invalid3')
 				expect(screen.getByTestId('error-field4').textContent).toEqual('Invalid4')

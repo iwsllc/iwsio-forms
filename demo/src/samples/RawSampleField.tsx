@@ -1,7 +1,12 @@
-import { FieldManager, FieldValues } from '@iwsio/forms'
-import { FormEventHandler, PropsWithChildren, ReactNode, useState } from 'react'
+import { FieldManager, type FieldValues } from '@iwsio/forms'
+import { type FormEventHandler, type PropsWithChildren, type ReactNode, useState } from 'react'
 
-export const RawSampleField = ({ children, title, label, help }: PropsWithChildren<{ title?: string, label?: string, help?: ReactNode }>) => {
+export const RawSampleField = ({
+	children,
+	title,
+	label,
+	help
+}: PropsWithChildren<{ title?: string; label?: string; help?: ReactNode }>) => {
 	const [success, setSuccess] = useState(false)
 
 	const handleSubmit = (_fields: FieldValues) => {
@@ -14,7 +19,13 @@ export const RawSampleField = ({ children, title, label, help }: PropsWithChildr
 	}
 
 	return (
-		<FieldManager fields={{ field: '', field2: '', field3: '' }} onValidSubmit={handleSubmit} className="flex flex-col" nativeValidation onReset={handleReset}>
+		<FieldManager
+			fields={{ field: '', field2: '', field3: '' }}
+			onValidSubmit={handleSubmit}
+			className="flex flex-col"
+			nativeValidation
+			onReset={handleReset}
+		>
 			<fieldset className="flex flex-col gap-2 border-2 p-5">
 				<legend>{title}</legend>
 
@@ -25,7 +36,9 @@ export const RawSampleField = ({ children, title, label, help }: PropsWithChildr
 				{help && <small className="flex flex-row justify-end">{help}</small>}
 
 				<div className="flex flex-row justify-end gap-3">
-					<button className="btn" type="reset">Reset</button>
+					<button className="btn" type="reset">
+						Reset
+					</button>
 					<button className={`btn ${success ? 'btn-success' : ''}`} type="submit" onClick={() => setSuccess(false)}>
 						{success && 'Success!!'}
 						{!success && 'Submit'}

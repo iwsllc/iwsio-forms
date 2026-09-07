@@ -1,10 +1,10 @@
-import React, { act, render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { ChangeEventHandler, useState } from 'react'
+import { type ChangeEventHandler, useState } from 'react'
 
 import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper.js'
 import { Input } from './Input.js'
-import { FieldError, FieldErrorHandler } from './types.js'
+import type { FieldError, FieldErrorHandler } from './types.js'
 import { useFieldState } from './useFieldState.js'
 
 const ControlledInput = () => {
@@ -22,7 +22,7 @@ const ControlledInputWithErrors = () => {
 		setValue(e.target.value)
 		if (e.target.value === 'abc') {
 			setError({
-				message: 'Cannot enter \'abc\'.',
+				message: "Cannot enter 'abc'.",
 				validity: {
 					valid: false,
 					customError: true,
@@ -44,7 +44,15 @@ const ControlledInputWithErrors = () => {
 	}
 	return (
 		<>
-			<Input name="field" value={value} onChange={handleChange} required data-testid="field" fieldError={error} onFieldError={handleFieldError} />
+			<Input
+				name="field"
+				value={value}
+				onChange={handleChange}
+				required
+				data-testid="field"
+				fieldError={error}
+				onFieldError={handleFieldError}
+			/>
 			{error && <span data-testid="error">{error?.message}</span>}
 		</>
 	)
@@ -57,7 +65,9 @@ describe('Input', () => {
 		expect(screen.getByTestId('field')).to.be.ok
 
 		const input = screen.getByTestId('field') as HTMLInputElement
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 		expect(input.validity.valid).to.be.false
 		expect(input.validity.valueMissing).to.be.true
 
@@ -65,7 +75,9 @@ describe('Input', () => {
 		await userEvent.type(input, 'abc')
 
 		expect(input.value).to.eq('abc')
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 		expect(input.validity.valid).to.be.true
 	})
 
@@ -75,14 +87,18 @@ describe('Input', () => {
 		expect(screen.getByTestId('field')).to.be.ok
 		const input = screen.getByTestId('field') as HTMLInputElement
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 		expect(input.validity.valid).to.be.false
 
 		await userEvent.clear(input)
 		await userEvent.type(input, 'abc')
 
 		expect(input.value).to.eq('abc')
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 		expect(input.validity.valid).to.be.true
 	})
 
@@ -93,7 +109,9 @@ describe('Input', () => {
 		const input = screen.getByTestId('field') as HTMLInputElement
 
 		// basic validation fail
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 		expect(input.validity.valueMissing).to.be.true
 
 		await userEvent.clear(input)
@@ -101,7 +119,9 @@ describe('Input', () => {
 
 		// basic validation pass
 		expect(input.value).to.eq('ab')
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 		expect(input.validity.valid).to.be.true
 
 		await userEvent.type(input, 'c')
@@ -109,14 +129,18 @@ describe('Input', () => {
 		// validation fail (from controlled state error)
 		expect(input.value).to.eq('abc')
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.validity.customError).to.be.true
-		expect(input.validationMessage).to.eq('Cannot enter \'abc\'.')
+		expect(input.validationMessage).to.eq("Cannot enter 'abc'.")
 
 		await userEvent.type(input, 'c')
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.value).to.eq('abcc')
 	})
@@ -152,7 +176,9 @@ describe('Input', () => {
 		expect(input.validity.valid).to.be.false
 
 		await userEvent.click(input)
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.value).to.eq('123')
 
@@ -165,7 +191,9 @@ describe('Input', () => {
 				<Input name="field" value="1" type="radio" required data-testid="field1" />
 				<Input name="field" value="2" type="radio" required data-testid="field2" />
 				<Input name="field" value="3" type="radio" required data-testid="field3" />
-			</>, { wrapper: FieldManagerWrapper })
+			</>,
+			{ wrapper: FieldManagerWrapper }
+		)
 
 		expect(screen.getByTestId('field1')).to.be.ok
 		expect(screen.getByTestId('field2')).to.be.ok
@@ -173,7 +201,9 @@ describe('Input', () => {
 
 		const input = screen.getByTestId('field1') as HTMLInputElement
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.validity.valueMissing).to.be.true
 
@@ -181,7 +211,9 @@ describe('Input', () => {
 
 		expect(input.value).to.eq('1')
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.validity.valid).to.be.true
 	})
@@ -191,9 +223,39 @@ describe('Input', () => {
 			const { handleChange: onChange, fields, fieldErrors, setFieldError } = useFieldState({ field: '' })
 			return (
 				<>
-					<Input name="field" value="1" checked={fields.field === '1'} type="radio" onChange={onChange} required data-testid="field1" fieldError={fieldErrors.field} onFieldError={(key, _validity, message) => setFieldError(key, message)} />
-					<Input name="field" value="2" checked={fields.field === '2'} type="radio" onChange={onChange} required data-testid="field2" fieldError={fieldErrors.field} onFieldError={(key, _validity, message) => setFieldError(key, message)} />
-					<Input name="field" value="3" checked={fields.field === '3'} type="radio" onChange={onChange} required data-testid="field3" fieldError={fieldErrors.field} onFieldError={(key, _validity, message) => setFieldError(key, message)} />
+					<Input
+						name="field"
+						value="1"
+						checked={fields.field === '1'}
+						type="radio"
+						onChange={onChange}
+						required
+						data-testid="field1"
+						fieldError={fieldErrors.field}
+						onFieldError={(key, _validity, message) => setFieldError(key, message)}
+					/>
+					<Input
+						name="field"
+						value="2"
+						checked={fields.field === '2'}
+						type="radio"
+						onChange={onChange}
+						required
+						data-testid="field2"
+						fieldError={fieldErrors.field}
+						onFieldError={(key, _validity, message) => setFieldError(key, message)}
+					/>
+					<Input
+						name="field"
+						value="3"
+						checked={fields.field === '3'}
+						type="radio"
+						onChange={onChange}
+						required
+						data-testid="field3"
+						fieldError={fieldErrors.field}
+						onFieldError={(key, _validity, message) => setFieldError(key, message)}
+					/>
 				</>
 			)
 		}
@@ -207,7 +269,9 @@ describe('Input', () => {
 		const input = screen.getByTestId('field1') as HTMLInputElement
 
 		// basic validation fail
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.validity.valid).to.be.false
 		expect(input.validity.valueMissing).to.be.true
@@ -216,7 +280,9 @@ describe('Input', () => {
 
 		expect(input.value).to.eq('1')
 
-		act(() => { input.checkValidity() })
+		act(() => {
+			input.checkValidity()
+		})
 
 		expect(input.validity.valid).to.be.true
 	})

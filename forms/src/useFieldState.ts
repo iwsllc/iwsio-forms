@@ -1,8 +1,14 @@
 import { useCallback, useState } from 'react'
 
 import { defaults } from './defaults.js'
-import { FieldError, FieldStateChangeEventHandler, FieldValues, isHTMLInput, UseFieldStateResult } from './types.js'
-import { ErrorMapping, useErrorMapping } from './useErrorMapping.js'
+import {
+	type FieldError,
+	type FieldStateChangeEventHandler,
+	type FieldValues,
+	isHTMLInput,
+	type UseFieldStateResult
+} from './types.js'
+import { type ErrorMapping, useErrorMapping } from './useErrorMapping.js'
 import { emptyValidity } from './validityState.js'
 
 export type UseFieldStateMethod = (
@@ -13,11 +19,11 @@ export type UseFieldStateMethod = (
 	options?: {
 		/**
 		 * Initial default values to be set when invoking `reset()`, which falls back to `fields` if undefined. Change these later with the setDefaultValues method returned from the hook.
-		*/
+		 */
 		defaultValues?: FieldValues
 		/**
 		 * Optional error mapping function to map custom error messages to validity state.
-		*/
+		 */
 		errorMapping?: ErrorMapping
 		/**
 		 * Reseed `fields` (and `defaultValues`) whenever this value changes.
@@ -64,8 +70,8 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 	}
 
 	const toggleFormBusy = useCallback((value?: boolean) => {
-		if (value == null) return setIsFormBusy(_old => !_old)
-		setIsFormBusy(_old => value)
+		if (value == null) return setIsFormBusy((_old) => !_old)
+		setIsFormBusy((_old) => value)
 	}, [])
 
 	const setFieldError = useCallback((key: string, message?: string, validity?: ValidityState) => {
@@ -85,10 +91,13 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 		})
 	}, [])
 
-	const setField = useCallback((key: string, value: string) => {
-		setFieldValues(oldFields => ({ ...oldFields, [key]: value }))
-		setFieldError(key) // clear this error if one exists.
-	}, [setFieldError])
+	const setField = useCallback(
+		(key: string, value: string) => {
+			setFieldValues((oldFields) => ({ ...oldFields, [key]: value }))
+			setFieldError(key) // clear this error if one exists.
+		},
+		[setFieldError]
+	)
 
 	const setFields = useCallback((values: Partial<FieldValues>) => {
 		setFieldValues((oldFields) => {
@@ -108,38 +117,45 @@ export const useFieldState: UseFieldStateMethod = (fields, options = {}) => {
 		})
 	}, [])
 
-	const checkFieldError = useCallback((key: string): string | undefined => {
-		let fieldError: FieldError | undefined = undefined
-		if (reportValidation && fieldErrors[key] != null && fieldErrors[key].message !== '') fieldError = fieldErrors[key]
+	const checkFieldError = useCallback(
+		(key: string): string | undefined => {
+			let fieldError: FieldError | undefined
+			if (reportValidation && fieldErrors[key] != null && fieldErrors[key].message !== '') fieldError = fieldErrors[key]
 
-		if (fieldError == null) return undefined
-		return mapError(fieldError.validity!, fieldError.message)
-	}, [fieldErrors, reportValidation, mapError])
+			if (fieldError == null) return undefined
+			// biome-ignore lint/style/noNonNullAssertion: validity is always set alongside a non-empty message
+			return mapError(fieldError.validity!, fieldError.message)
+		},
+		[fieldErrors, reportValidation, mapError]
+	)
 
 	const reset = useCallback(() => {
-		setFieldErrors(_old => ({}))
-		setFieldValues(_old => ({ ...defaultFieldValues }))
-		setReportValidation(_old => false)
+		setFieldErrors((_old) => ({}))
+		setFieldValues((_old) => ({ ...defaultFieldValues }))
+		setReportValidation((_old) => false)
 	}, [defaultFieldValues])
 
-	const handleChange: FieldStateChangeEventHandler = useCallback((e) => {
-		setFieldError(e.target.name) // clear this error if one exists.
-		let value = e.target.value
-		const name = e.target.name
-		const updatedFields = { ...fieldValues, [name]: value }
+	const handleChange: FieldStateChangeEventHandler = useCallback(
+		(e) => {
+			setFieldError(e.target.name) // clear this error if one exists.
+			let value = e.target.value
+			const name = e.target.name
+			const updatedFields = { ...fieldValues, [name]: value }
 
-		if (isHTMLInput(e.target) && (e.target.type === 'checkbox' || e.target.type === 'radiobutton')) {
-			value = e.target.checked ? value : ''
-		}
+			if (isHTMLInput(e.target) && (e.target.type === 'checkbox' || e.target.type === 'radiobutton')) {
+				value = e.target.checked ? value : ''
+			}
 
-		setFieldValues((old) => {
-			const newValues = { ...old }
-			newValues[name] = value
-			return newValues
-		})
+			setFieldValues((old) => {
+				const newValues = { ...old }
+				newValues[name] = value
+				return newValues
+			})
 
-		return { fields: updatedFields, target: e.target }
-	}, [fieldValues, setFieldError])
+			return { fields: updatedFields, target: e.target }
+		},
+		[fieldValues, setFieldError]
+	)
 
 	return {
 		fieldErrors,

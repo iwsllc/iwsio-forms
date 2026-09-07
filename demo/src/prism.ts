@@ -14,5 +14,3 @@ import 'prismjs/components/prism-java.min.js'
 import 'prismjs/components/prism-docker.min.js'
 import 'prismjs/components/prism-yaml.min.js'
 import 'prismjs/themes/prism-okaidia.min.css'
-
-export {}

@@ -1,9 +1,21 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
 
-import { FieldChangeResult } from './types.js'
+import type { FieldChangeResult } from './types.js'
 import { useFieldState } from './useFieldState.js'
 
-const _validity: ValidityState = { valid: true, badInput: false, customError: false, patternMismatch: false, rangeOverflow: false, rangeUnderflow: false, stepMismatch: false, tooLong: false, tooShort: false, typeMismatch: false, valueMissing: false }
+const _validity: ValidityState = {
+	valid: true,
+	badInput: false,
+	customError: false,
+	patternMismatch: false,
+	rangeOverflow: false,
+	rangeUnderflow: false,
+	stepMismatch: false,
+	tooLong: false,
+	tooShort: false,
+	typeMismatch: false,
+	valueMissing: false
+}
 
 describe('useFieldState', () => {
 	test('When initializing, getting, and setting fields', async () => {
@@ -31,7 +43,10 @@ describe('useFieldState', () => {
 			result.current.setFieldError('firstName', 'failed')
 		})
 
-		expect(result.current.fieldErrors?.firstName).toEqual({ message: 'failed', validity: { ..._validity, valid: false, customError: true } })
+		expect(result.current.fieldErrors?.firstName).toEqual({
+			message: 'failed',
+			validity: { ..._validity, valid: false, customError: true }
+		})
 
 		await act(() => {
 			result.current.reset()
@@ -57,7 +72,10 @@ describe('useFieldState', () => {
 			setFieldError('firstName', 'input is invalid.')
 		})
 
-		expect(result.current.fieldErrors.firstName).toEqual({ message: 'input is invalid.', validity: { ..._validity, valid: false, customError: true } })
+		expect(result.current.fieldErrors.firstName).toEqual({
+			message: 'input is invalid.',
+			validity: { ..._validity, valid: false, customError: true }
+		})
 
 		await act(() => {
 			setFieldErrors({ general: { message: 'test' } })
@@ -127,7 +145,9 @@ describe('useFieldState', () => {
 			result.current.setDefaultValues({ firstName: 'fred2', lastName: 'flintstone2' })
 		})
 
-		act(() => { result.current.reset() })
+		act(() => {
+			result.current.reset()
+		})
 
 		await waitFor(() => {
 			expect(result.current.fields.firstName).toEqual('fred2')
@@ -164,6 +184,7 @@ describe('useFieldState', () => {
 		expect(result.current.fields.firstName).toEqual('')
 		expect(result.current.fields.lastName).toEqual('')
 
+		// biome-ignore lint/suspicious/noImplicitAnyLet: type is inferred from the assignment below
 		let returnValue
 		act(() => {
 			returnValue = result.current.handleChange({ target: { name: 'firstName', value: 'fred2' } } as any)
@@ -171,7 +192,10 @@ describe('useFieldState', () => {
 
 		await waitFor(() => {
 			expect(result.current.fields.firstName).toEqual('fred2')
-			expect(returnValue).to.deep.equal({ fields: { firstName: 'fred2', lastName: '' }, target: { name: 'firstName', value: 'fred2' } })
+			expect(returnValue).to.deep.equal({
+				fields: { firstName: 'fred2', lastName: '' },
+				target: { name: 'firstName', value: 'fred2' }
+			})
 		})
 	})
 
@@ -228,7 +252,10 @@ describe('useFieldState', () => {
 			act(() => {
 				result.current.setFieldError('firstName', 'This field is required')
 			})
-			expect(result.current.fieldErrors.firstName).toEqual({ message: 'This field is required', validity: { ..._validity, valid: false, customError: true } })
+			expect(result.current.fieldErrors.firstName).toEqual({
+				message: 'This field is required',
+				validity: { ..._validity, valid: false, customError: true }
+			})
 
 			act(() => {
 				result.current.setField('firstName', 'fred2')
@@ -254,8 +281,14 @@ describe('useFieldState', () => {
 				result.current.setFieldError('firstName', 'This field is required')
 				result.current.setFieldError('lastName', 'This field is required')
 			})
-			expect(result.current.fieldErrors.firstName).toEqual({ message: 'This field is required', validity: { ..._validity, valid: false, customError: true } })
-			expect(result.current.fieldErrors.lastName).toEqual({ message: 'This field is required', validity: { ..._validity, valid: false, customError: true } })
+			expect(result.current.fieldErrors.firstName).toEqual({
+				message: 'This field is required',
+				validity: { ..._validity, valid: false, customError: true }
+			})
+			expect(result.current.fieldErrors.lastName).toEqual({
+				message: 'This field is required',
+				validity: { ..._validity, valid: false, customError: true }
+			})
 
 			act(() => {
 				result.current.setFields({ firstName: 'fred2', lastName: 'flintstone2' })
@@ -284,15 +317,24 @@ describe('useFieldState', () => {
 				result.current.setFieldError('firstName', 'This field is required')
 				result.current.setFieldError('lastName', 'This field is required')
 			})
-			expect(result.current.fieldErrors.firstName).toEqual({ message: 'This field is required', validity: { ..._validity, valid: false, customError: true } })
-			expect(result.current.fieldErrors.lastName).toEqual({ message: 'This field is required', validity: { ..._validity, valid: false, customError: true } })
+			expect(result.current.fieldErrors.firstName).toEqual({
+				message: 'This field is required',
+				validity: { ..._validity, valid: false, customError: true }
+			})
+			expect(result.current.fieldErrors.lastName).toEqual({
+				message: 'This field is required',
+				validity: { ..._validity, valid: false, customError: true }
+			})
 
 			act(() => {
 				result.current.setFields({ firstName: 'fred2' })
 			})
 
 			expect(result.current.fieldErrors.firstName).not.to.be.ok
-			expect(result.current.fieldErrors.lastName).toEqual({ message: 'This field is required', validity: { ..._validity, valid: false, customError: true } })
+			expect(result.current.fieldErrors.lastName).toEqual({
+				message: 'This field is required',
+				validity: { ..._validity, valid: false, customError: true }
+			})
 
 			await waitFor(() => {
 				expect(result.current.fields.firstName).toEqual('fred2')

@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event'
 import { useState } from 'react'
 
 import { TextArea } from './TextArea.js'
-import { FieldError } from './types.js'
+import type { FieldError } from './types.js'
 
 export const ControlledTextArea = () => {
 	const [value, setValue] = useState('')
@@ -18,21 +18,32 @@ export const ControlledTextAreaWithErrors = () => {
 	const [error, setError] = useState<FieldError | undefined>()
 	const handleChange = (e) => {
 		setValue(e.target.value)
-		if (e.target.value === 'abc') setError({ message: 'Cannot enter \'abc\'.', validity: { valid: false, customError: true } as any })
+		if (e.target.value === 'abc')
+			setError({ message: "Cannot enter 'abc'.", validity: { valid: false, customError: true } as any })
 	}
 	const handleFieldError = (_key, validity, message) => {
 		setError({ message, validity })
 	}
 	return (
 		<>
-			<TextArea name="field" value={value} onChange={handleChange} required data-testid="field" fieldError={error} onFieldError={handleFieldError} />
+			<TextArea
+				name="field"
+				value={value}
+				onChange={handleChange}
+				required
+				data-testid="field"
+				fieldError={error}
+				onFieldError={handleFieldError}
+			/>
 			<span data-testid="error">{error?.message}</span>
-			<button onClick={() => setError(undefined)} data-testid="clear">Clear</button>
+			<button onClick={() => setError(undefined)} data-testid="clear">
+				Clear
+			</button>
 		</>
 	)
 }
 
-describe('TextArea', function () {
+describe('TextArea', () => {
 	it('should work as an uncontrolled textarea', async () => {
 		render(<TextArea name="field" required data-testid="field" />)
 
@@ -40,7 +51,9 @@ describe('TextArea', function () {
 
 		const textarea = screen.getByTestId('field') as HTMLTextAreaElement
 
-		act(() => { textarea.checkValidity() })
+		act(() => {
+			textarea.checkValidity()
+		})
 
 		expect(textarea.validity.valid).to.be.false
 
@@ -48,7 +61,9 @@ describe('TextArea', function () {
 		await userEvent.type(textarea, 'abc')
 
 		expect(textarea.value).to.eq('abc')
-		act(() => { textarea.checkValidity() })
+		act(() => {
+			textarea.checkValidity()
+		})
 		expect(textarea.validity.valid).to.be.true
 	})
 
@@ -58,7 +73,9 @@ describe('TextArea', function () {
 		expect(screen.getByTestId('field')).to.be.ok
 		const textarea = screen.getByTestId('field') as HTMLTextAreaElement
 
-		act(() => { textarea.checkValidity() })
+		act(() => {
+			textarea.checkValidity()
+		})
 
 		expect(textarea.validity.valid).to.be.false
 
@@ -66,7 +83,9 @@ describe('TextArea', function () {
 		await userEvent.type(textarea, 'abc')
 
 		expect(textarea.value).to.eq('abc')
-		act(() => { textarea.checkValidity() })
+		act(() => {
+			textarea.checkValidity()
+		})
 		expect(textarea.validity.valid).to.be.true
 	})
 
@@ -76,7 +95,9 @@ describe('TextArea', function () {
 		expect(screen.getByTestId('field')).to.be.ok
 		const textarea = screen.getByTestId('field') as HTMLTextAreaElement
 
-		act(() => { textarea.checkValidity() })
+		act(() => {
+			textarea.checkValidity()
+		})
 		expect(textarea.validity.valid).to.be.false
 
 		expect(textarea.validity.valueMissing).to.be.true
@@ -85,18 +106,22 @@ describe('TextArea', function () {
 		await userEvent.type(textarea, 'ab')
 
 		expect(textarea.value).to.eq('ab')
-		act(() => { textarea.checkValidity() })
+		act(() => {
+			textarea.checkValidity()
+		})
 		expect(textarea.validity.valid).to.be.true
 
 		await userEvent.type(textarea, 'c')
 
 		expect(textarea.value).to.eq('abc')
 
-		act(() => { textarea.checkValidity() })
+		act(() => {
+			textarea.checkValidity()
+		})
 
 		expect(textarea.validity.valid).to.be.false
 		expect(textarea.validity.customError).to.be.true
-		expect(textarea.validationMessage).to.eq('Cannot enter \'abc\'.')
+		expect(textarea.validationMessage).to.eq("Cannot enter 'abc'.")
 	})
 	it('should clear custom validity when upstream fieldError changes to nothing', async () => {
 		render(<ControlledTextAreaWithErrors />)
@@ -105,16 +130,20 @@ describe('TextArea', function () {
 
 		await userEvent.type(textarea, 'abc')
 
-		act(() => { textarea.checkValidity() })
+		act(() => {
+			textarea.checkValidity()
+		})
 
 		expect(textarea.validity.valid).to.be.false
 		expect(textarea.validity.customError).to.be.true
-		expect(textarea.validationMessage).to.eq('Cannot enter \'abc\'.')
+		expect(textarea.validationMessage).to.eq("Cannot enter 'abc'.")
 
 		await userEvent.click(screen.getByTestId('clear'))
 
 		await userEvent.type(textarea, 'ab')
-		act(() => { textarea.checkValidity() })
+		act(() => {
+			textarea.checkValidity()
+		})
 
 		expect(textarea.validity.valid).to.be.true
 		expect(textarea.validity.customError).to.be.false

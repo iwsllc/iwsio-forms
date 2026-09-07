@@ -1,15 +1,31 @@
-import { ChangeEventHandler, ComponentProps, FormEventHandler, useEffect, useImperativeHandle, useRef } from 'react'
+import {
+	type ChangeEventHandler,
+	type ComponentProps,
+	type FormEventHandler,
+	useEffect,
+	useImperativeHandle,
+	useRef
+} from 'react'
 
-import { ValidationProps } from './types.js'
+import type { ValidationProps } from './types.js'
 
 export interface TextAreaProps extends ValidationProps, Omit<ComponentProps<'textarea'>, 'name'> {
 	name: string
 }
 
-export const TextArea = ({ onFieldError, onInvalid, fieldError, name, onChange, value, ref, ...other }: TextAreaProps) => {
+export const TextArea = ({
+	onFieldError,
+	onInvalid,
+	fieldError,
+	name,
+	onChange,
+	value,
+	ref,
+	...other
+}: TextAreaProps) => {
 	const localRef = useRef<HTMLTextAreaElement>(null)
 	// @ts-expect-error -- returning whole ref object
-	useImperativeHandle(ref, () => localRef.current, [localRef])
+	useImperativeHandle(ref, () => localRef.current, [])
 
 	const localOnChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
 		e.target.setCustomValidity('')
@@ -33,13 +49,6 @@ export const TextArea = ({ onFieldError, onInvalid, fieldError, name, onChange, 
 	}, [fieldError])
 
 	return (
-		<textarea
-			ref={localRef}
-			name={name}
-			value={value}
-			onInvalid={handleInvalid}
-			onChange={localOnChange}
-			{...other}
-		/>
+		<textarea ref={localRef} name={name} value={value} onInvalid={handleInvalid} onChange={localOnChange} {...other} />
 	)
 }

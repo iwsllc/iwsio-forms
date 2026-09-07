@@ -1,7 +1,7 @@
-import { ChangeEventHandler } from 'react'
+import type { ChangeEventHandler } from 'react'
 
-import { Input, InputProps } from './Input.js'
-import { FieldChangeEventHandler, FieldErrorHandler } from './types.js'
+import { Input, type InputProps } from './Input.js'
+import type { FieldChangeEventHandler, FieldErrorHandler } from './types.js'
 import { useFieldManager } from './useFieldManager.js'
 
 export interface InputFieldProps extends Omit<InputProps, 'onChange'> {

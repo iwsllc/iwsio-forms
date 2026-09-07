@@ -1,9 +1,9 @@
 import { act, render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { ChangeEventHandler, useState } from 'react'
+import { type ChangeEventHandler, useState } from 'react'
 
 import { Select } from './Select.js'
-import { FieldError, FieldErrorHandler } from './types.js'
+import type { FieldError, FieldErrorHandler } from './types.js'
 
 const ControlledSelect = () => {
 	const [value, setValue] = useState('')
@@ -24,25 +24,35 @@ const ControlledSelectWithErrors = () => {
 	const [error, setError] = useState<FieldError | undefined>()
 	const handleChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
 		setValue(e.target.value)
-		if (e.target.value === '1') e.target.setCustomValidity('Cannot select \'1\'.')
+		if (e.target.value === '1') e.target.setCustomValidity("Cannot select '1'.")
 	}
 	const handleFieldError: FieldErrorHandler = (_key, validity, message) => {
 		setError({ message, validity })
 	}
 	return (
 		<>
-			<Select name="field" value={value} onChange={handleChange} required data-testid="field" fieldError={error} onFieldError={handleFieldError}>
+			<Select
+				name="field"
+				value={value}
+				onChange={handleChange}
+				required
+				data-testid="field"
+				fieldError={error}
+				onFieldError={handleFieldError}
+			>
 				<option />
 				<option>1</option>
 				<option>2</option>
 			</Select>
 			<span data-testid="error">{error?.message}</span>
-			<button onClick={() => setError(undefined)} data-testid="clear">Clear</button>
+			<button onClick={() => setError(undefined)} data-testid="clear">
+				Clear
+			</button>
 		</>
 	)
 }
 
-describe('Select', function () {
+describe('Select', () => {
 	it('should work as an uncontrolled select', async () => {
 		render(
 			<Select name="field" required data-testid="field">
@@ -56,7 +66,9 @@ describe('Select', function () {
 
 		const select = screen.getByTestId('field') as HTMLSelectElement
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.false
 
@@ -64,7 +76,9 @@ describe('Select', function () {
 
 		expect(select.selectedOptions[0].value).to.eq('1')
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.true
 	})
@@ -76,7 +90,9 @@ describe('Select', function () {
 
 		const select = screen.getByTestId('field') as HTMLSelectElement
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.false
 
@@ -86,7 +102,9 @@ describe('Select', function () {
 
 		expect(select.selectedOptions[0].value).to.eq('1')
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.true
 	})
@@ -97,7 +115,9 @@ describe('Select', function () {
 		expect(screen.getByTestId('field')).to.be.ok
 		const select = screen.getByTestId('field') as HTMLSelectElement
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.false
 
@@ -107,7 +127,9 @@ describe('Select', function () {
 
 		expect(select.value).to.eq('2')
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.true
 
@@ -115,12 +137,14 @@ describe('Select', function () {
 
 		expect(select.value).to.eq('1')
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.false
 
 		expect(select.validity.customError).to.be.true
-		expect(select.validationMessage).to.eq('Cannot select \'1\'.')
+		expect(select.validationMessage).to.eq("Cannot select '1'.")
 	})
 
 	it('should clear custom validity when upstream fieldError changes to nothing', async () => {
@@ -130,18 +154,22 @@ describe('Select', function () {
 
 		await userEvent.selectOptions(field, '1')
 
-		act(() => { field.checkValidity() })
+		act(() => {
+			field.checkValidity()
+		})
 
 		expect(field.validity.valid).to.be.false
 		expect(field.validity.customError).to.be.true
-		expect(field.validationMessage).to.eq('Cannot select \'1\'.')
+		expect(field.validationMessage).to.eq("Cannot select '1'.")
 
 		await userEvent.click(screen.getByTestId('clear'))
 
 		expect(field.validity.customError).to.be.false
 
 		await userEvent.selectOptions(field, '2')
-		act(() => { field.checkValidity() })
+		act(() => {
+			field.checkValidity()
+		})
 
 		expect(field.validity.valid).to.be.true
 	})

@@ -5,7 +5,9 @@ import { BrowserRouter } from 'react-router'
 import { GoogleTag } from './common/GoogleTag.js'
 import { Routes } from './routes.js'
 
-const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnMount: false, refetchOnWindowFocus: false } } })
+const queryClient = new QueryClient({
+	defaultOptions: { queries: { refetchOnMount: false, refetchOnWindowFocus: false } }
+})
 export const DEV_MODE = import.meta.env.MODE !== 'production'
 
 export const App = () => (

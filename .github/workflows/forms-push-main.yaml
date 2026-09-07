@@ -14,7 +14,7 @@ permissions:
 jobs:
   tests:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/test.yaml@v7
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v8
     with:
       node-version-file: '.nvmrc'
       install-command: pnpm install
@@ -28,7 +28,7 @@ jobs:
     concurrency:
       group: 'versioning-automation'
       cancel-in-progress: false
-    uses: iwsllc/workflows/.github/workflows/version-as-app.yaml@v7
+    uses: iwsllc/workflows/.github/workflows/version-as-app.yaml@v8
     with:
       ref: main
       use-pnpm: true
@@ -42,7 +42,7 @@ jobs:
   publish:
     needs: version
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/publish.yaml@v7
+    uses: iwsllc/workflows/.github/workflows/publish.yaml@v8
     with:
       ref: main
       registry-url: https://registry.npmjs.org

@@ -1,15 +1,33 @@
-import { ChangeEventHandler, ComponentProps, FormEventHandler, useEffect, useImperativeHandle, useRef } from 'react'
+import {
+	type ChangeEventHandler,
+	type ComponentProps,
+	type FormEventHandler,
+	useEffect,
+	useImperativeHandle,
+	useRef
+} from 'react'
 
-import { ValidationProps } from './types.js'
+import type { ValidationProps } from './types.js'
 
 export interface InputProps extends ValidationProps, Omit<ComponentProps<'input'>, 'name'> {
 	name: string
 }
 
-export const Input = ({ onFieldError, fieldError, name, type = 'text', onChange, value, checked, onInvalid, ref, ...other }: InputProps) => {
+export const Input = ({
+	onFieldError,
+	fieldError,
+	name,
+	type = 'text',
+	onChange,
+	value,
+	checked,
+	onInvalid,
+	ref,
+	...other
+}: InputProps) => {
 	const localRef = useRef<HTMLInputElement>(null)
 	// @ts-expect-error -- returning whole ref object
-	useImperativeHandle(ref, () => localRef.current, [localRef])
+	useImperativeHandle(ref, () => localRef.current, [])
 
 	const localOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
 		e.target.setCustomValidity('')

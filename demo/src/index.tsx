@@ -9,9 +9,7 @@ import reportWebVitals from './reportWebVitals.js'
 
 export const DEV_MODE = import.meta.env.MODE !== 'production'
 
-const root = ReactDOM.createRoot(
-	document.getElementById('root') as HTMLElement
-)
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
 	<StrictMode>
 		<App />

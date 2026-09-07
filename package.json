@@ -1,45 +1,49 @@
 {
-  "name": "@iwsio/forms-root",
-  "version": "5.0.6",
-  "description": "Simple library with useful React forms components and browser validation.",
-  "files": [],
-  "engines": {
-    "node": ">=22"
-  },
-  "packageManager": "pnpm@10.33.4+sha512.1c67b3b359b2d408119ba1ed289f34b8fc3c6873412bec6fd264fbdc82489e510fcbecb9ce9d22dae7f3b76269d8441046014bdca53b9979cd7a561ad631b800",
-  "repository": "github:iwsllc/iwsio-forms",
-  "keywords": [
-    "forms",
-    "validation",
-    "react",
-    "ui",
-    "component",
-    "customValidity"
-  ],
-  "author": "Nathan Bridgewater",
-  "license": "BSD-3-Clause",
-  "bugs": {
-    "url": "https://github.com/iwsllc/iws-forms/issues"
-  },
-  "scripts": {
-    "test": "vitest --run --passWithNoTests",
-    "dev": "pnpm -F demo start",
-    "build": "tsc --build",
-    "clean": "del-cli '**/dist' '**/*.tsbuildinfo'",
-    "build:demo": "pnpm -F demo build"
-  },
-  "homepage": "https://github.com/iwsllc/iws-forms#readme",
-  "workspaces": [
-    "forms",
-    "demo"
-  ],
-  "devDependencies": {
-    "@iwsio/eslint-config": "^3.0.0",
-    "@iwsio/tsconfig": "^1.0.3",
-    "del-cli": "^7.0.0",
-    "eslint": "^10.3.0",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.6"
-  }
+	"name": "@iwsio/forms-root",
+	"version": "5.0.6",
+	"description": "Simple library with useful React forms components and browser validation.",
+	"files": [],
+	"engines": {
+		"node": ">=26"
+	},
+	"packageManager": "pnpm@10.33.4+sha512.1c67b3b359b2d408119ba1ed289f34b8fc3c6873412bec6fd264fbdc82489e510fcbecb9ce9d22dae7f3b76269d8441046014bdca53b9979cd7a561ad631b800",
+	"repository": "github:iwsllc/iwsio-forms",
+	"keywords": [
+		"forms",
+		"validation",
+		"react",
+		"ui",
+		"component",
+		"customValidity"
+	],
+	"author": "Nathan Bridgewater",
+	"license": "BSD-3-Clause",
+	"bugs": {
+		"url": "https://github.com/iwsllc/iws-forms/issues"
+	},
+	"scripts": {
+		"test": "vitest --run --passWithNoTests",
+		"format": "biome format .",
+		"format:fix": "biome format --write .",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"dev": "pnpm -F demo start",
+		"build": "tsc --build",
+		"clean": "del-cli '**/dist' '**/*.tsbuildinfo'",
+		"build:demo": "pnpm -F demo build"
+	},
+	"homepage": "https://github.com/iwsllc/iws-forms#readme",
+	"workspaces": [
+		"forms",
+		"demo"
+	],
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.12",
+		"@iwsio/biome-config": "^1.0.1",
+		"@iwsio/tsconfig": "^1.0.3",
+		"del-cli": "^7.0.0",
+		"npm-run-all": "^4.1.5",
+		"typescript": "^7.0.2",
+		"vitest": "^5.0.0"
+	}
 }

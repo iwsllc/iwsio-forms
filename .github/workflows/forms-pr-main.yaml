@@ -3,13 +3,22 @@ name: "@iwsio/forms: PR to Main"
 on:
   pull_request:
     branches: [ main ]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
     paths:
       - 'forms/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}-forms
+  cancel-in-progress: true
 
 jobs:
   tests:
     if: ${{github.event.pull_request.draft == false && !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/test.yaml@v7
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v8
     with:
       node-version-file: '.nvmrc'
       use-pnpm: true

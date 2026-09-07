@@ -1,11 +1,13 @@
-import { ComponentProps } from 'react'
+import type { ComponentProps } from 'react'
 
-import { FieldManagerProps } from './FieldManager.js'
+import type { FieldManagerProps } from './FieldManager.js'
 import { FieldManagerContext } from './FieldManagerContext.js'
 import { FieldManagerForm } from './FieldManagerForm.js'
-import { UseFieldStateResult } from './types.js'
+import type { UseFieldStateResult } from './types.js'
 
-export interface ControlledFieldManagerProps extends ComponentProps<'form'>, Omit<FieldManagerProps, 'fields' | 'defaultValues'> {
+export interface ControlledFieldManagerProps
+	extends ComponentProps<'form'>,
+		Omit<FieldManagerProps, 'fields' | 'defaultValues'> {
 	fieldState: UseFieldStateResult
 }
 

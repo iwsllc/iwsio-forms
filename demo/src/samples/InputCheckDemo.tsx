@@ -1,6 +1,5 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import { FieldError, Input } from '@iwsio/forms'
-import { SubmitEventHandler, useRef, useState } from 'react'
+import { type FieldError, Input } from '@iwsio/forms'
+import { type SubmitEventHandler, useRef, useState } from 'react'
 
 export const InputCheckDemo = () => {
 	const formRef = useRef<HTMLFormElement>(null)
@@ -34,13 +33,15 @@ export const InputCheckDemo = () => {
 					<label className="label gap-2">
 						<span className="label-text">Did you see the example?</span>
 						<Input
-							onChange={e => setChecked(e.target.checked)}
+							onChange={(e) => setChecked(e.target.checked)}
 							value="true"
 							type="checkbox"
 							checked={checked}
 							name="field"
 							fieldError={checkError}
-							onFieldError={(key, validity, message) => { setCheckError({ message, validity }) }}
+							onFieldError={(key, validity, message) => {
+								setCheckError({ message, validity })
+							}}
 							className="checkbox"
 							required
 						/>
@@ -53,26 +54,30 @@ export const InputCheckDemo = () => {
 					<label className="label gap-2">
 						<span className="label-text">Yes</span>
 						<Input
-							onChange={e => setSelectedRadio(e.target.value)}
+							onChange={(e) => setSelectedRadio(e.target.value)}
 							value="yes"
 							name="field2"
 							type="radio"
 							checked={selectedRadio === 'yes'}
 							fieldError={radioError}
-							onFieldError={(key, validity, message) => { setRadioError({ message, validity }) }}
+							onFieldError={(key, validity, message) => {
+								setRadioError({ message, validity })
+							}}
 							required
 						/>
 					</label>
 					<label className="label gap-2">
 						<span className="label-text">No</span>
 						<Input
-							onChange={e => setSelectedRadio(e.target.value)}
+							onChange={(e) => setSelectedRadio(e.target.value)}
 							value="no"
 							type="radio"
 							name="field2"
 							checked={selectedRadio === 'no'}
 							fieldError={radioError}
-							onFieldError={(key, validity, message) => { setRadioError({ message, validity }) }}
+							onFieldError={(key, validity, message) => {
+								setRadioError({ message, validity })
+							}}
 							required
 						/>
 					</label>
@@ -81,20 +86,18 @@ export const InputCheckDemo = () => {
 			<p className="text-sm">
 				<em>
 					Try
-					<code>abc</code>
-					{' '}
-					for custom error,
-					<strong>blank</strong>
-					{' '}
-					for required, or any
-					<strong>non-alpha</strong>
-					{' '}
-					for pattern check.
+					<code>abc</code> for custom error,
+					<strong>blank</strong> for required, or any
+					<strong>non-alpha</strong> for pattern check.
 				</em>
 			</p>
 			<p className="flex flex-row justify-end gap-2">
-				<button type="reset" className="btn btn-secondary" onClick={() => reset()}>Reset</button>
-				<button type="submit" className={`btn ${success ? 'btn-success' : 'btn-primary'}`}>Submit</button>
+				<button type="reset" className="btn btn-secondary" onClick={() => reset()}>
+					Reset
+				</button>
+				<button type="submit" className={`btn ${success ? 'btn-success' : 'btn-primary'}`}>
+					Submit
+				</button>
 			</p>
 		</form>
 	)
