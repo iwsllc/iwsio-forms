@@ -1,7 +1,6 @@
-
 {
 	"extends": "@iwsio/tsconfig/react",
 	"compilerOptions": {
-		"types": [ "vitest/globals", "@testing-library/jest-dom/vitest"	]
+		"types": ["vitest/globals"]
 	}
 }

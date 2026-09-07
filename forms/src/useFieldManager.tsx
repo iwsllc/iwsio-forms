@@ -1,7 +1,7 @@
 import { use } from 'react'
 
 import { FieldManagerContext } from './FieldManagerContext.js'
-import { UseFieldStateResult } from './types.js'
+import type { UseFieldStateResult } from './types.js'
 
 /**
  * Retrieves the field manager context

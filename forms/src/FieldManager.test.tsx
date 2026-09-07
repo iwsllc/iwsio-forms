@@ -7,7 +7,11 @@ import { Input } from './Input.js'
 describe('FieldManager', () => {
 	test('When rendering field manager with fields; happy path', async () => {
 		const Test = () => {
-			return <FieldManager fields={{ field: '' }}><Input data-testid="field" name="field" /></FieldManager>
+			return (
+				<FieldManager fields={{ field: '' }}>
+					<Input data-testid="field" name="field" />
+				</FieldManager>
+			)
 		}
 		const { container } = render(<Test />)
 
@@ -33,7 +37,11 @@ describe('FieldManager', () => {
 
 	test('When rendering field manager with mismatching field state', async () => {
 		const Test = () => {
-			return <FieldManager fields={{ field: '' }}><Input data-testid="field2" name="field2" /></FieldManager>
+			return (
+				<FieldManager fields={{ field: '' }}>
+					<Input data-testid="field2" name="field2" />
+				</FieldManager>
+			)
 		}
 		render(<Test />)
 

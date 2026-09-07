@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import { InputField, SelectField, TextAreaField } from '@iwsio/forms'
 
 import { RawSampleField } from './RawSampleField.js'
@@ -8,10 +7,7 @@ export function RawExamples() {
 		<div className="prose">
 			<h3>
 				Showing field types
-				<code>&lt;input&nbsp;/&gt;</code>
-				,
-				<code>&lt;select&nbsp;/&gt;</code>
-				, and
+				<code>&lt;input&nbsp;/&gt;</code>,<code>&lt;select&nbsp;/&gt;</code>, and
 				<code>&lt;textarea&nbsp;/&gt;</code>
 			</h3>
 			<hr className="my-5" />
@@ -19,48 +15,49 @@ export function RawExamples() {
 			<RawSampleField
 				title="Text and patterns"
 				label="Required, word chars:"
-				help={(
+				help={
 					<>
 						Try
-						<code>abc123</code>
-						,
-						<code>*</code>
-						, or blank
+						<code>abc123</code>,<code>*</code>, or blank
 					</>
-				)}
+				}
 			>
-				<InputField pattern="^\w+$" name="field" required placeholder="Type here" className="input input-bordered w-full sm:w-auto" />
+				<InputField
+					pattern="^\w+$"
+					name="field"
+					required
+					placeholder="Type here"
+					className="input input-bordered w-full sm:w-auto"
+				/>
 			</RawSampleField>
 
 			<RawSampleField
 				title="Numeric fields"
 				label="Step: 1, min: 1, max: 10"
-				help={(
+				help={
 					<>
 						Try
-						<code>1</code>
-						,
-						<code>11</code>
-						, or blank
+						<code>1</code>,<code>11</code>, or blank
 					</>
-				)}
+				}
 			>
-				<InputField type="number" required placeholder="Enter number" min={1} max={10} step={1} className="input input-bordered w-full sm:w-auto" name="field" />
+				<InputField
+					type="number"
+					required
+					placeholder="Enter number"
+					min={1}
+					max={10}
+					step={1}
+					className="input input-bordered w-full sm:w-auto"
+					name="field"
+				/>
 			</RawSampleField>
 
-			<RawSampleField
-				title="Checkbox"
-				label="On/Off"
-				help={<>Try unchecked</>}
-			>
+			<RawSampleField title="Checkbox" label="On/Off" help={<>Try unchecked</>}>
 				<InputField type="checkbox" required value="yes" className="checkbox" name="field" />
 			</RawSampleField>
 
-			<RawSampleField
-				title="Radios"
-				label="Select an option"
-				help={<>Try unchecked</>}
-			>
+			<RawSampleField title="Radios" label="Select an option" help={<>Try unchecked</>}>
 				<div className="flex flex-col gap-3">
 					<label className="label-text flex cursor-pointer flex-row items-center gap-2">
 						A:
@@ -77,11 +74,7 @@ export function RawExamples() {
 				</div>
 			</RawSampleField>
 
-			<RawSampleField
-				title="Select"
-				label="Options"
-				help={<>Try unselected</>}
-			>
+			<RawSampleField title="Select" label="Options" help={<>Try unselected</>}>
 				<SelectField required className="select select-bordered w-full sm:w-auto" name="field">
 					<option />
 					<option>A</option>
@@ -90,11 +83,7 @@ export function RawExamples() {
 				</SelectField>
 			</RawSampleField>
 
-			<RawSampleField
-				title="TextArea"
-				label="Memo"
-				help={<>Try blank</>}
-			>
+			<RawSampleField title="TextArea" label="Memo" help={<>Try blank</>}>
 				<TextAreaField required className="textarea textarea-bordered w-full sm:w-auto" name="field" maxLength={10} />
 			</RawSampleField>
 		</div>

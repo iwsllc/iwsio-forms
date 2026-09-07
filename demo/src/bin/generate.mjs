@@ -1,8 +1,7 @@
 import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { extname, join } from 'node:path'
-
+import { fileURLToPath } from 'node:url'
 import MarkdownIt from 'markdown-it'
-import { fileURLToPath } from 'url'
 
 const md = new MarkdownIt({ html: true })
 const __dirname = fileURLToPath(new URL('.', import.meta.url))

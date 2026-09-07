@@ -3,16 +3,8 @@
 		"title": "The Matrix",
 		"year": 1999,
 		"director": "The Wachowski Brothers",
-		"cast": [
-			"Keanu Reeves",
-			"Laurence Fishburne",
-			"Carrie-Anne Moss",
-			"Hugo Weaving"
-		],
-		"genres": [
-			"Action",
-			"Sci-Fi"
-		],
+		"cast": ["Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss", "Hugo Weaving"],
+		"genres": ["Action", "Sci-Fi"],
 		"rating": 8.7
 	}
 ]

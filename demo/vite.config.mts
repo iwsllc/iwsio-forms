@@ -1,5 +1,3 @@
-/// <reference types="vitest" />
-
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
@@ -32,7 +30,6 @@ export default defineConfig(({ mode }) => ({
 	test: {
 		globals: true,
 		mockReset: true,
-		environment: 'jsdom',
-		setupFiles: ['./setupTests.cts']
+		environment: 'happy-dom'
 	}
 }))

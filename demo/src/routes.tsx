@@ -1,4 +1,4 @@
-import { Route, Routes as ReactRoutes } from 'react-router'
+import { Routes as ReactRoutes, Route } from 'react-router'
 
 import { FetchPage } from './FetchPage.js'
 import { Layout } from './Layout.js'

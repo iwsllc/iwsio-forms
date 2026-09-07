@@ -6,8 +6,8 @@ import { useCallback } from 'react'
 export interface ErrorMapping {
 	badInput?: string
 	/**
-		 * Override custom error to display. If not provided, the default message will be used.
-		 */
+	 * Override custom error to display. If not provided, the default message will be used.
+	 */
 	customError?: string
 	patternMismatch?: string
 	rangeOverflow?: string
@@ -20,20 +20,23 @@ export interface ErrorMapping {
 }
 
 export const useErrorMapping = (mapping?: ErrorMapping | undefined) => {
-	const mapError = useCallback((validity: ValidityState, message: string | undefined) => {
-		if (mapping == null) return message
-		if (validity.valid) return undefined
-		if (validity.badInput) return mapping.badInput ?? message
-		if (validity.customError) return mapping.customError ?? message
-		if (validity.patternMismatch) return mapping.patternMismatch ?? message
-		if (validity.rangeOverflow) return mapping.rangeOverflow ?? message
-		if (validity.rangeUnderflow) return mapping.rangeUnderflow ?? message
-		if (validity.stepMismatch) return mapping.stepMismatch ?? message
-		if (validity.tooLong) return mapping.tooLong ?? message
-		if (validity.tooShort) return mapping.tooShort ?? message
-		if (validity.typeMismatch) return mapping.typeMismatch ?? message
-		if (validity.valueMissing) return mapping.valueMissing ?? message
-		return undefined
-	}, [mapping])
+	const mapError = useCallback(
+		(validity: ValidityState, message: string | undefined) => {
+			if (mapping == null) return message
+			if (validity.valid) return undefined
+			if (validity.badInput) return mapping.badInput ?? message
+			if (validity.customError) return mapping.customError ?? message
+			if (validity.patternMismatch) return mapping.patternMismatch ?? message
+			if (validity.rangeOverflow) return mapping.rangeOverflow ?? message
+			if (validity.rangeUnderflow) return mapping.rangeUnderflow ?? message
+			if (validity.stepMismatch) return mapping.stepMismatch ?? message
+			if (validity.tooLong) return mapping.tooLong ?? message
+			if (validity.tooShort) return mapping.tooShort ?? message
+			if (validity.typeMismatch) return mapping.typeMismatch ?? message
+			if (validity.valueMissing) return mapping.valueMissing ?? message
+			return undefined
+		},
+		[mapping]
+	)
 	return mapError
 }

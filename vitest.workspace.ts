@@ -1,4 +1,1 @@
-export default [
-	'forms',
-	'demo'
-]
+export default ['forms', 'demo']

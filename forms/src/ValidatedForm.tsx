@@ -1,4 +1,4 @@
-import { ComponentProps, FormEventHandler, SubmitEventHandler, useMemo, useState } from 'react'
+import { type ComponentProps, type SubmitEventHandler, useMemo, useState } from 'react'
 
 export interface ValidatedFormProps extends Omit<ComponentProps<'form'>, 'noValidate'> {
 	/**
@@ -16,7 +16,16 @@ export interface ValidatedFormProps extends Omit<ComponentProps<'form'>, 'noVali
 	nativeValidation?: boolean
 }
 
-export const ValidatedForm = ({ children, onValidSubmit, onReset, reportValidity = false, onSubmit, nativeValidation = false, className = '', ...props }: ValidatedFormProps) => {
+export const ValidatedForm = ({
+	children,
+	onValidSubmit,
+	onReset,
+	reportValidity = false,
+	onSubmit,
+	nativeValidation = false,
+	className = '',
+	...props
+}: ValidatedFormProps) => {
 	const [submitted, setSubmitted] = useState(false)
 
 	const onLocalSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
@@ -40,7 +49,13 @@ export const ValidatedForm = ({ children, onValidSubmit, onReset, reportValidity
 	}, [className, submitted])
 
 	return (
-		<form {...props} onSubmit={onLocalSubmit} onReset={handleReset} className={classNames} noValidate={!nativeValidation}>
+		<form
+			{...props}
+			onSubmit={onLocalSubmit}
+			onReset={handleReset}
+			className={classNames}
+			noValidate={!nativeValidation}
+		>
 			{children}
 		</form>
 	)

@@ -1,10 +1,10 @@
-import { FieldErrorHandler, Input, ValidatedForm } from '@iwsio/forms'
+import { type FieldErrorHandler, Input, ValidatedForm } from '@iwsio/forms'
 import classNames from 'classnames'
-import { ChangeEventHandler, Dispatch, FormEventHandler, SetStateAction, useState } from 'react'
+import { type ChangeEventHandler, type Dispatch, type FormEventHandler, type SetStateAction, useState } from 'react'
 
-const Form = ({ setSuccess, success }: { success: boolean, setSuccess: Dispatch<SetStateAction<boolean>> }) => {
+const Form = ({ setSuccess, success }: { success: boolean; setSuccess: Dispatch<SetStateAction<boolean>> }) => {
 	const [value, setValue] = useState('')
-	const [fieldError, setFieldError] = useState<{ message: string | undefined, validity: ValidityState } | undefined>()
+	const [fieldError, setFieldError] = useState<{ message: string | undefined; validity: ValidityState } | undefined>()
 
 	const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
 		setValue(e.target.value)
@@ -36,7 +36,9 @@ const Form = ({ setSuccess, success }: { success: boolean, setSuccess: Dispatch<
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>{fieldError?.message ?? 'undefined'}</code></td>
+							<td>
+								<code>{fieldError?.message ?? 'undefined'}</code>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -52,24 +54,17 @@ const Form = ({ setSuccess, success }: { success: boolean, setSuccess: Dispatch<
 			/>
 			<p className="text-sm">
 				<em>
-					Try
-					{' '}
-					<code>abc</code>
-					{' '}
-					for custom error,
-					{' '}
-					<strong>blank</strong>
-					{' '}
-					for required, or any
-					{' '}
-					<strong>non-alpha</strong>
-					{' '}
+					Try <code>abc</code> for custom error, <strong>blank</strong> for required, or any <strong>non-alpha</strong>{' '}
 					for pattern check.
 				</em>
 			</p>
 			<p className="flex flex-row justify-end gap-2">
-				<button type="reset" className="btn btn-secondary" onClick={reset}>Reset</button>
-				<button type="submit" className={classNames('btn', { 'btn-primary': !success }, { 'btn-success': success })}>Submit</button>
+				<button type="reset" className="btn btn-secondary" onClick={reset}>
+					Reset
+				</button>
+				<button type="submit" className={classNames('btn', { 'btn-primary': !success }, { 'btn-success': success })}>
+					Submit
+				</button>
 			</p>
 		</>
 	)
@@ -86,7 +81,12 @@ export const InputDemo = () => {
 
 	// Handle the form validation manually
 	return (
-		<ValidatedForm className="not-prose flex flex-col gap-4" onValidSubmit={handleValidSubmit} onSubmit={onSubmit} nativeValidation>
+		<ValidatedForm
+			className="not-prose flex flex-col gap-4"
+			onValidSubmit={handleValidSubmit}
+			onSubmit={onSubmit}
+			nativeValidation
+		>
 			<Form setSuccess={setSuccess} success={success} />
 		</ValidatedForm>
 	)

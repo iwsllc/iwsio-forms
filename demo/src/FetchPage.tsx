@@ -1,12 +1,12 @@
 import parser from 'html-react-parser'
 import Prism from 'prismjs'
-import { ReactNode, useEffect, useMemo, useRef } from 'react'
+import { type ReactNode, useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router'
 
 import { Busy } from './common/Busy.js'
 import { useGetPage } from './services.js'
 
-export const FetchPage = ({ demo, page }: { demo?: ReactNode, page?: string }) => {
+export const FetchPage = ({ demo, page }: { demo?: ReactNode; page?: string }) => {
 	const contentRef = useRef<HTMLDivElement>(null)
 
 	const { page: paramsPage } = useParams()
@@ -36,13 +36,11 @@ export const FetchPage = ({ demo, page }: { demo?: ReactNode, page?: string }) =
 		<>
 			<div ref={contentRef}>
 				{
-				// @ts-expect-error typing on default export is not detected
-					html && html.length && parser(html)
+					// @ts-expect-error typing on default export is not detected
+					html?.length && parser(html)
 				}
 			</div>
-			<div className="mt-5">
-				{demo}
-			</div>
+			<div className="mt-5">{demo}</div>
 		</>
 	)
 }

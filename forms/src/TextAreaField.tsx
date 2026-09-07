@@ -1,7 +1,7 @@
-import { ChangeEventHandler } from 'react'
+import type { ChangeEventHandler } from 'react'
 
-import { TextArea, TextAreaProps } from './TextArea.js'
-import { FieldChangeEventHandler, FieldErrorHandler } from './types.js'
+import { TextArea, type TextAreaProps } from './TextArea.js'
+import type { FieldChangeEventHandler, FieldErrorHandler } from './types.js'
 import { useFieldManager } from './useFieldManager.js'
 
 export interface TextAreaFieldProps extends Omit<TextAreaProps, 'onChange'> {

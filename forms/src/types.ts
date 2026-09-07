@@ -1,6 +1,9 @@
-import { ChangeEvent, Dispatch, SetStateAction } from 'react'
+import type { ChangeEvent, Dispatch, SetStateAction } from 'react'
 
-export interface FieldError { message: string | undefined, validity?: ValidityState | undefined }
+export interface FieldError {
+	message: string | undefined
+	validity?: ValidityState | undefined
+}
 
 export type FieldErrorHandler = (key: string, validity: ValidityState, message?: string) => void
 
@@ -13,18 +16,22 @@ export type FieldValues = Record<string, string>
 
 export interface FieldChangeResult<Element extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> {
 	/**
-	* The updated field values after the change event.
-	*/
+	 * The updated field values after the change event.
+	 */
 	fields: FieldValues
 	/**
-	* The target element that triggered the change event.
-	*/
+	 * The target element that triggered the change event.
+	 */
 	target: EventTarget & Element
 }
 
-export type FieldChangeEventHandler = <Element extends (HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement)>(e: FieldChangeResult<Element>) => void
+export type FieldChangeEventHandler = <Element extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(
+	e: FieldChangeResult<Element>
+) => void
 
-export type FieldStateChangeEventHandler = <Element extends (HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement)>(e: ChangeEvent<Element>) => FieldChangeResult<Element>
+export type FieldStateChangeEventHandler = <Element extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(
+	e: ChangeEvent<Element>
+) => FieldChangeResult<Element>
 
 export interface UseFieldStateResult {
 	/**

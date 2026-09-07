@@ -1,5 +1,13 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import { ControlledFieldManager, ErrorMapping, FieldChangeEventHandler, FieldValues, InputField, InvalidFeedbackForField, useFieldManager, useFieldState } from '@iwsio/forms'
+import {
+	ControlledFieldManager,
+	type ErrorMapping,
+	type FieldChangeEventHandler,
+	type FieldValues,
+	InputField,
+	InvalidFeedbackForField,
+	useFieldManager,
+	useFieldState
+} from '@iwsio/forms'
 import { useState } from 'react'
 
 // NOTE: leaving customError excluded so they report directly as-is.
@@ -28,7 +36,7 @@ export const Field = ({ name }: { name: string }) => {
 		// parsed
 		// text value treated like a number; another way of handling step/min/max
 		const value = +e.fields[name]
-		if (isNaN(value)) return setFieldError(name, 'Invalid') // numeric: handled as custom error
+		if (Number.isNaN(value)) return setFieldError(name, 'Invalid') // numeric: handled as custom error
 		if (value < 2) return setFieldError(name, 'Too low') // range low: handled as custom error
 		if (value > 99) return setFieldError(name, 'Too high') // range high: handled as custom error
 		if (value % 1 !== 0) return setFieldError(name, 'Invalid') // step rules: handled as custom error
@@ -57,25 +65,14 @@ export const Field = ({ name }: { name: string }) => {
 			</div>
 			<p className="mt-0">
 				This nuanced approach above shows a more responsive interaction. Try:
-				<code>submit</code>
-				, then enter:
-				<code>.1</code>
-				{' '}
-				<em>(shows Too low)</em>
-				,
-				{' '}
-				<code>backspace</code>
-				{' '}
-				<em>(will show invalid)</em>
-				,
-				{' '}
-				<code>backspace</code>
-				{' '}
-				<em>(shows required)</em>
+				<code>submit</code>, then enter:
+				<code>.1</code> <em>(shows Too low)</em>, <code>backspace</code> <em>(will show invalid)</em>,{' '}
+				<code>backspace</code> <em>(shows required)</em>
 			</p>
 			<p className="m-0">
 				<code>&lt;input type=&quot;number&quot;&gt;</code>
-				(below) does not do this. It only triggers onChange with number value differences and remains &quot;Invalid&quot; after clearing the text.
+				(below) does not do this. It only triggers onChange with number value differences and remains
+				&quot;Invalid&quot; after clearing the text.
 			</p>
 		</>
 	)
@@ -109,7 +106,11 @@ export const Field2 = ({ name }: { name: string }) => (
 
 export const ResetButton = () => {
 	const { reset } = useFieldManager()
-	return <button type="reset" className="btn" onClick={() => reset()}>Reset</button>
+	return (
+		<button type="reset" className="btn" onClick={() => reset()}>
+			Reset
+		</button>
+	)
 }
 
 export const InvalidFeedbackDemo = () => {
@@ -144,9 +145,13 @@ export const InvalidFeedbackDemo = () => {
 					<Field2 name="field2" />
 					<div className="flex flex-row gap-4">
 						<ResetButton />
-						<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>Submit</button>
+						<button type="submit" className={`btn ${success ? 'btn-success' : ''}`}>
+							Submit
+						</button>
 					</div>
-					<p><em>Submit with empty or any non-alpha character for error.</em></p>
+					<p>
+						<em>Submit with empty or any non-alpha character for error.</em>
+					</p>
 				</div>
 			</fieldset>
 		</ControlledFieldManager>

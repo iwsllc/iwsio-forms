@@ -11,7 +11,9 @@ describe('InvalidFeedbackForField', () => {
 			<>
 				<InputField name="field" required pattern="^\D+$" data-testid="input" />
 				<InvalidFeedbackForField name="field" data-testid="error" className="frogs" />
-				<button type="submit" data-testid="submit">submit</button>
+				<button type="submit" data-testid="submit">
+					submit
+				</button>
 			</>
 		)
 		render(<Test />, { wrapper: FieldManagerWrapper })

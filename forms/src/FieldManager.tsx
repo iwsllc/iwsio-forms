@@ -1,38 +1,38 @@
 import { FieldManagerContext } from './FieldManagerContext.js'
 import { FieldManagerForm } from './FieldManagerForm.js'
-import { FieldValues } from './types.js'
-import { ErrorMapping } from './useErrorMapping.js'
+import type { FieldValues } from './types.js'
+import type { ErrorMapping } from './useErrorMapping.js'
 import { useFieldState } from './useFieldState.js'
-import { ValidatedFormProps } from './ValidatedForm.js'
+import type { ValidatedFormProps } from './ValidatedForm.js'
 
 export interface FieldManagerProps extends Omit<ValidatedFormProps, 'onValidSubmit'> {
 	/**
-		 * Initial field values to setup the form with. If you want to change these after initialization, use the `setFieldValues` method from the `useFieldManager` hook.
-		 */
+	 * Initial field values to setup the form with. If you want to change these after initialization, use the `setFieldValues` method from the `useFieldManager` hook.
+	 */
 	fields: FieldValues
 	/**
-		 * Initial default values to setup the form with. If you want to change these after initialization, use the `setDefaultValues` method from the `useFieldManager` hook.
-		 */
+	 * Initial default values to setup the form with. If you want to change these after initialization, use the `setDefaultValues` method from the `useFieldManager` hook.
+	 */
 	defaultValues?: Record<string, string>
 
 	/**
-		 * Error mapping to be used for validation. If not provided, default error messages are used.
-		 */
+	 * Error mapping to be used for validation. If not provided, default error messages are used.
+	 */
 	errorMapping?: ErrorMapping
 	/**
-		 * Reseed `fields` and `defaultValues` whenever this value changes. Without it they are read
-		 * once, when the form is first constructed. See `useFieldState` for the full rationale.
-		 */
+	 * Reseed `fields` and `defaultValues` whenever this value changes. Without it they are read
+	 * once, when the form is first constructed. See `useFieldState` for the full rationale.
+	 */
 	resetKey?: string | number
 	/**
-		 * Callback to be called when form is valid and submitted. Provides current field values.
-		 */
+	 * Callback to be called when form is valid and submitted. Provides current field values.
+	 */
 	onValidSubmit?: (fields: FieldValues) => void
 	/**
-		 * If true, the form will be set to busy after a valid submit event is triggered and wait for `toggleBusy` to be called with a value of `false` to reset.
-		 * This is useful for forms that need to wait for a server response before allowing another submit.
-		 * Default value: false
-		 */
+	 * If true, the form will be set to busy after a valid submit event is triggered and wait for `toggleBusy` to be called with a value of `false` to reset.
+	 * This is useful for forms that need to wait for a server response before allowing another submit.
+	 * Default value: false
+	 */
 	holdBusyAfterSubmit?: boolean
 }
 
@@ -42,14 +42,19 @@ export interface FieldManagerProps extends Omit<ValidatedFormProps, 'onValidSubm
  * `onValidSubmit`: provides calls on submit when form is valid and provides current fields with values.
  * `ref` here will give access to the HTML Form element rendered.
  */
-export const FieldManager = ({ children, fields, defaultValues, errorMapping, resetKey, ...props }: FieldManagerProps) => {
+export const FieldManager = ({
+	children,
+	fields,
+	defaultValues,
+	errorMapping,
+	resetKey,
+	...props
+}: FieldManagerProps) => {
 	const fieldState = useFieldState(fields, { defaultValues, errorMapping, resetKey })
 
 	return (
 		<FieldManagerContext value={fieldState}>
-			<FieldManagerForm {...props}>
-				{children}
-			</FieldManagerForm>
+			<FieldManagerForm {...props}>{children}</FieldManagerForm>
 		</FieldManagerContext>
 	)
 }

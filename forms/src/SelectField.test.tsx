@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event'
 
 import { FieldManagerWrapper } from './__tests__/FieldManagerWrapper.js'
 import { SelectField } from './SelectField.js'
-import { FieldChangeEventHandler } from './types.js'
+import type { FieldChangeEventHandler } from './types.js'
 import { useFieldManager } from './useFieldManager.js'
 
 describe('SelectField', () => {
@@ -11,7 +11,7 @@ describe('SelectField', () => {
 		const CustomErrorSelect = () => {
 			const { setFieldError } = useFieldManager()
 			const handleChange = (e) => {
-				if (e.target.value === '2') setFieldError(e.target.name, 'Cannot select \'2\'.')
+				if (e.target.value === '2') setFieldError(e.target.name, "Cannot select '2'.")
 			}
 			return (
 				<SelectField name="field" onChange={handleChange} required data-testid="field">
@@ -19,7 +19,6 @@ describe('SelectField', () => {
 					<option>1</option>
 					<option>2</option>
 				</SelectField>
-
 			)
 		}
 		render(<CustomErrorSelect />, { wrapper: FieldManagerWrapper })
@@ -29,7 +28,9 @@ describe('SelectField', () => {
 
 		// basic validation fail
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.false
 
@@ -40,7 +41,9 @@ describe('SelectField', () => {
 		// basic validation pass
 		expect(select.value).to.eq('1')
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.true
 
@@ -49,18 +52,22 @@ describe('SelectField', () => {
 		// validation fail (from controlled state error)
 		expect(select.value).to.eq('2')
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.false
 
 		expect(select.validity.customError).to.be.true
-		expect(select.validationMessage).to.eq('Cannot select \'2\'.')
+		expect(select.validationMessage).to.eq("Cannot select '2'.")
 
 		await userEvent.selectOptions(select, '1')
 
 		expect(select.value).to.eq('1')
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.true
 	})
@@ -68,7 +75,7 @@ describe('SelectField', () => {
 		const CustomErrorSelect = () => {
 			const { setFieldError } = useFieldManager()
 			const handleChange: FieldChangeEventHandler = (e) => {
-				if (e.fields.field === '2') setFieldError('field', 'Cannot select \'2\'.')
+				if (e.fields.field === '2') setFieldError('field', "Cannot select '2'.")
 			}
 			return (
 				<SelectField name="field" onChange={handleChange} required data-testid="field">
@@ -76,7 +83,6 @@ describe('SelectField', () => {
 					<option>1</option>
 					<option>2</option>
 				</SelectField>
-
 			)
 		}
 		render(<CustomErrorSelect />, { wrapper: FieldManagerWrapper })
@@ -86,7 +92,9 @@ describe('SelectField', () => {
 
 		// basic validation fail
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.false
 
@@ -97,7 +105,9 @@ describe('SelectField', () => {
 		// basic validation pass
 		expect(select.value).to.eq('1')
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.true
 
@@ -106,18 +116,22 @@ describe('SelectField', () => {
 		// validation fail (from controlled state error)
 		expect(select.value).to.eq('2')
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.false
 
 		expect(select.validity.customError).to.be.true
-		expect(select.validationMessage).to.eq('Cannot select \'2\'.')
+		expect(select.validationMessage).to.eq("Cannot select '2'.")
 
 		await userEvent.selectOptions(select, '1')
 
 		expect(select.value).to.eq('1')
 
-		act(() => { select.checkValidity() })
+		act(() => {
+			select.checkValidity()
+		})
 
 		expect(select.validity.valid).to.be.true
 	})

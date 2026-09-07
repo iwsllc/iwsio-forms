@@ -1,7 +1,7 @@
-import { ChangeEventHandler } from 'react'
+import type { ChangeEventHandler } from 'react'
 
-import { Select, SelectProps } from './Select.js'
-import { FieldChangeEventHandler, FieldErrorHandler } from './types.js'
+import { Select, type SelectProps } from './Select.js'
+import type { FieldChangeEventHandler, FieldErrorHandler } from './types.js'
 import { useFieldManager } from './useFieldManager.js'
 
 export interface SelectFieldProps extends Omit<SelectProps, 'onChange'> {

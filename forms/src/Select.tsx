@@ -1,15 +1,32 @@
-import { ChangeEventHandler, ComponentProps, FormEventHandler, useEffect, useImperativeHandle, useRef } from 'react'
+import {
+	type ChangeEventHandler,
+	type ComponentProps,
+	type FormEventHandler,
+	useEffect,
+	useImperativeHandle,
+	useRef
+} from 'react'
 
-import { ValidationProps } from './types.js'
+import type { ValidationProps } from './types.js'
 
 export interface SelectProps extends ValidationProps, Omit<ComponentProps<'select'>, 'name'> {
 	name: string // name required
 }
 
-export const Select = ({ onFieldError, onInvalid, fieldError, name, onChange, value, children, ref, ...other }: SelectProps) => {
+export const Select = ({
+	onFieldError,
+	onInvalid,
+	fieldError,
+	name,
+	onChange,
+	value,
+	children,
+	ref,
+	...other
+}: SelectProps) => {
 	const localRef = useRef<HTMLSelectElement>(null)
 	// @ts-expect-error -- returning whole ref object
-	useImperativeHandle(ref, () => localRef.current, [localRef])
+	useImperativeHandle(ref, () => localRef.current, [])
 
 	const localOnChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
 		e.target.setCustomValidity('')
@@ -33,14 +50,7 @@ export const Select = ({ onFieldError, onInvalid, fieldError, name, onChange, va
 	}, [fieldError])
 
 	return (
-		<select
-			ref={localRef}
-			name={name}
-			value={value}
-			onInvalid={handleInvalid}
-			onChange={localOnChange}
-			{...other}
-		>
+		<select ref={localRef} name={name} value={value} onInvalid={handleInvalid} onChange={localOnChange} {...other}>
 			{children}
 		</select>
 	)
