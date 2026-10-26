@@ -25,12 +25,18 @@ export const FieldManagerForm = ({
 	reportValidity = false,
 	nativeValidation = false,
 	className = '',
+	onReset,
 	...props
 }: FieldManagerFormProps) => {
-	const { fields, setReportValidation, toggleFormBusy } = useFieldManager()
+	const { fields, reportValidation, setReportValidation, toggleFormBusy } = useFieldManager()
 	const handleLocalSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault()
 		setReportValidation(true)
+	}
+
+	const handleLocalReset: SubmitEventHandler<HTMLFormElement> = (e) => {
+		setReportValidation(false)
+		onReset?.(e)
 	}
 
 	const handleLocalValidSubmit = useCallback(() => {
@@ -46,6 +52,10 @@ export const FieldManagerForm = ({
 			nativeValidation={nativeValidation}
 			reportValidity={reportValidity}
 			className={className}
+			// One source for "this form has been validated": field state. Otherwise reset() empties the
+			// fields but the form keeps `was-validated`, and an emptied required field shows as invalid.
+			validated={reportValidation}
+			onReset={handleLocalReset}
 			onValidSubmit={handleLocalValidSubmit}
 			onSubmit={handleLocalSubmit}
 		>

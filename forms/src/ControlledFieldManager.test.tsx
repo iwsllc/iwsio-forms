@@ -102,4 +102,58 @@ describe('ControlledFieldManager', () => {
 		expect(container.querySelector('form[errorMapping]')).toBeFalsy()
 		expect(screen.getByTestId('form')).toBeTruthy()
 	})
+
+	test('fieldState.reset() after a submit clears was-validated, so an emptied required field is not shown invalid', async () => {
+		const Test = () => {
+			const fieldState = useFieldState({ body: '' })
+			return (
+				<ControlledFieldManager fieldState={fieldState} data-testid="form" onValidSubmit={() => fieldState.reset()}>
+					<InputField data-testid="body" name="body" required />
+					<button type="submit" data-testid="submit">
+						submit
+					</button>
+				</ControlledFieldManager>
+			)
+		}
+		render(<Test />)
+		const form = screen.getByTestId('form')
+
+		await userEvent.click(screen.getByTestId('submit'))
+		expect(form.className).to.match(/was-validated/)
+
+		await userEvent.type(screen.getByTestId('body'), 'hello')
+		await userEvent.click(screen.getByTestId('submit'))
+
+		expect((screen.getByTestId('body') as HTMLInputElement).value).to.eq('')
+		expect(form.className).not.to.match(/was-validated/)
+		expect(form.className).to.match(/needs-validation/)
+	})
+
+	test('a native form reset turns report validation off as well as was-validated', async () => {
+		const onReset = vi.fn()
+		const Test = () => {
+			const fieldState = useFieldState({ body: '' })
+			return (
+				<ControlledFieldManager fieldState={fieldState} data-testid="form" onReset={onReset}>
+					<InputField data-testid="body" name="body" required />
+					<span data-testid="report">{String(fieldState.reportValidation)}</span>
+					<button type="submit" data-testid="submit">
+						submit
+					</button>
+					<button type="reset" data-testid="reset">
+						reset
+					</button>
+				</ControlledFieldManager>
+			)
+		}
+		render(<Test />)
+
+		await userEvent.click(screen.getByTestId('submit'))
+		expect(screen.getByTestId('report').textContent).to.eq('true')
+		await userEvent.click(screen.getByTestId('reset'))
+
+		expect(screen.getByTestId('report').textContent).to.eq('false')
+		expect(screen.getByTestId('form').className).not.to.match(/was-validated/)
+		expect(onReset).toHaveBeenCalledOnce()
+	})
 })

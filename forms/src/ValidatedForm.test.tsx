@@ -78,4 +78,27 @@ describe('ValidatedForm', () => {
 			expect(form.className).not.to.match(/was-validated/i)
 		})
 	})
+
+	test('validated, when given, controls was-validated in place of the submit/reset tracking', async () => {
+		const { rerender } = render(
+			<ValidatedForm data-testid="form" validated={false}>
+				<button type="submit" data-testid="submit">
+					submit
+				</button>
+			</ValidatedForm>
+		)
+		const form = screen.getByTestId('form')
+
+		await userEvent.click(screen.getByTestId('submit'))
+		expect(form.className).not.to.match(/was-validated/)
+
+		rerender(
+			<ValidatedForm data-testid="form" validated>
+				<button type="submit" data-testid="submit">
+					submit
+				</button>
+			</ValidatedForm>
+		)
+		expect(form.className).to.match(/was-validated/)
+	})
 })

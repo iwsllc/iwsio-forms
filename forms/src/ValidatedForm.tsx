@@ -14,6 +14,12 @@ export interface ValidatedFormProps extends Omit<ComponentProps<'form'>, 'noVali
 	 * When true, relies on native browser validation. In other words: it toggles `noValidate` on the `<form/>`. When false, `noValidate` is true.
 	 */
 	nativeValidation?: boolean
+	/**
+	 * Controls the `was-validated` class. Leave unset and the form tracks it itself: on after a
+	 * submit, off after a native reset. `FieldManagerForm` sets it from field state's
+	 * `reportValidation`, so `fieldState.reset()` clears it too.
+	 */
+	validated?: boolean
 }
 
 export const ValidatedForm = ({
@@ -24,9 +30,11 @@ export const ValidatedForm = ({
 	onSubmit,
 	nativeValidation = false,
 	className = '',
+	validated,
 	...props
 }: ValidatedFormProps) => {
-	const [submitted, setSubmitted] = useState(false)
+	const [localSubmitted, setSubmitted] = useState(false)
+	const submitted = validated ?? localSubmitted
 
 	const onLocalSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
 		event.preventDefault()
